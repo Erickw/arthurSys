@@ -2,7 +2,6 @@
 /* eslint-disable require-jsdoc */
 const admin = require("firebase-admin");
 const db = admin.firestore();
-const requestsCollection = db.collection("requests");
 const customId = require("custom-id");
 
 const Comment = require("../models/Comment");
