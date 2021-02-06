@@ -20,21 +20,6 @@ class ProductController {
     return res.json(products);
   }
 
-  async getOne(req, res) {
-    const id = req.params.id;
-    const snapshot = await productsCollection.where("id", "==", id ).get();
-
-    const productsSnapshot = await db.collection(`users/${id}/products`).get();
-
-    if (snapshot.empty) {
-      return res.status(400).json({error: "Error to get user. No matching documents."});
-    }
-
-    productsSnapshot.forEach((doc) => {
-      return res.json({"user": "rr"});
-    });
-  }
-
   async store(req, res) {
     const product = req.body;
     const id = customId({});
