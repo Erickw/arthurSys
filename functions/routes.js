@@ -3,6 +3,7 @@ const {Router} = require("express");
 const userController = require("./src/controllers/UserController");
 const requestController = require("./src/controllers/RequestController");
 const productsController = require("./src/controllers/ProductController");
+const commentsController = require("./src/controllers/CommentController");
 const routes = new Router();
 
 // Users
@@ -22,6 +23,11 @@ routes.get("/products", productsController.index);
 routes.post("/products", productsController.store);
 routes.put("/products/:id", productsController.update);
 routes.delete("/products/:id", productsController.delete);
+
+// Comments
+routes.get("/comments/request/:id", commentsController.index);
+routes.post("/comments/request/:id", commentsController.store);
+routes.delete("/comments/", commentsController.delete);
 
 
 module.exports = routes;
