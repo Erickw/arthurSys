@@ -6,6 +6,10 @@ import Menu from "../components/Menu";
 const { Header, Footer, Sider, Content } = Layout;
 
 function MyApp({ Component, pageProps }) {
+  if(true) {
+   return <Component {...pageProps} />
+  }
+
   return (
     <>
       <GlobalStyle />
@@ -23,7 +27,6 @@ function MyApp({ Component, pageProps }) {
           </Footer>
         </Layout>
       </Layout>
-      
     </>
   )
 }
