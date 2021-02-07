@@ -6,12 +6,12 @@
   },
   {
     "title": "Paciente",
-    "dataIndex": "name",
-    "key": "name"
+    "dataIndex": "patientName",
+    "key": "patientName"
   },
   {
     "title": "Data",
-    "dataIndex": "name",
-    "key": "name"
+    "dataIndex": "date",
+    "key": "date"
   }
 ]
