@@ -4,7 +4,13 @@ const userController = require("./src/controllers/UserController");
 const requestController = require("./src/controllers/RequestController");
 const productsController = require("./src/controllers/ProductController");
 const commentsController = require("./src/controllers/CommentController");
+const sessionsController = require("./src/controllers/SessionController");
+
+const authMiddleware = require("./src/middlewares/auth");
+
 const routes = new Router();
+
+routes.use(authMiddleware);
 
 // Users
 routes.get("/users", userController.index);
@@ -28,6 +34,9 @@ routes.delete("/products/:id", productsController.delete);
 routes.get("/comments/request/:id", commentsController.index);
 routes.post("/comments/request/:id", commentsController.store);
 routes.delete("/comments/", commentsController.delete);
+
+// Session
+routes.post("/sessions/", sessionsController.store);
 
 
 module.exports = routes;
