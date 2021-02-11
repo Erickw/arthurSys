@@ -1,4 +1,5 @@
+require("dotenv").config();
 module.exports = {
-  secret: "b77093543ddab18ea8656828dde342cd",
-  expiresIn: "7d",
+  secret: process.env.APP_SECRET,
+  expiresIn: process.env.EXPIRES_IN,
 };

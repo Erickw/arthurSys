@@ -10,6 +10,9 @@ const authMiddleware = require("./src/middlewares/auth");
 
 const routes = new Router();
 
+// Session
+routes.post("/sessions/", sessionsController.store);
+
 routes.use(authMiddleware);
 
 // Users
@@ -34,9 +37,6 @@ routes.delete("/products/:id", productsController.delete);
 routes.get("/comments/request/:id", commentsController.index);
 routes.post("/comments/request/:id", commentsController.store);
 routes.delete("/comments/", commentsController.delete);
-
-// Session
-routes.post("/sessions/", sessionsController.store);
 
 
 module.exports = routes;
