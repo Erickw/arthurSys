@@ -10,10 +10,10 @@ const login: React.FC = () => {
         <div>
           <h2>Login</h2>
           <Form layout="vertical">
-            <Form.Item label="Email">
-              <Input />
+            <Form.Item label="Email" name="email" >
+              <Input type="email" />
             </Form.Item>
-            <Form.Item label="Senha">
+            <Form.Item label="Senha" name="password">
               <Input.Password />
             </Form.Item>
             <Button type="primary" htmlType="submit" block>Entrar</Button>

@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import {Menu as MenuAntd} from 'antd';
-import Logo from '../Logo/indes';
+import Logo from '../../Logo';
 const {Item, SubMenu, Divider} = MenuAntd;
 
 const services = [
