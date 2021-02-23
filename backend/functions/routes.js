@@ -10,6 +10,9 @@ const authMiddleware = require("./src/middlewares/auth");
 
 const routes = new Router();
 
+// Create User
+routes.post("/users", userController.store);
+
 // Session
 routes.post("/sessions/", sessionsController.store);
 

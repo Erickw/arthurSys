@@ -1,9 +1,9 @@
 /* eslint-disable require-jsdoc */
 const admin = require("firebase-admin");
 
-const firebaseConfig = require("../../config/firebase");
+
 const firebase = require("firebase");
-firebase.initializeApp(firebaseConfig);
+firebase.app();
 const auth = firebase.auth();
 
 const jwt = require("jsonwebtoken");
