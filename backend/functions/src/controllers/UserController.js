@@ -66,13 +66,24 @@ class UserController {
 
   async update(req, res) {
     const id = req.params.id;
+    const {email, name, password, newPassword} = req.body;
     const snapshot = await usersCollection.doc(id).get();
 
     if (snapshot.empty) {
       return res.status(400).json({error: "Error to update user. No matching documents."});
     }
 
-    await usersCollection.doc(id).set(req.body).catch((e) => console.log("Error: ", e.message));
+    try {
+      if (newPassword) {
+        await auth.signInWithEmailAndPassword(email, password);
+        const loggedUser = firebase.auth().currentUser;
+        await loggedUser.updatePassword(newPassword);
+      }
+    } catch (error) {
+      return res.status(406).json({error: error.message});
+    }
+
+    await usersCollection.doc(id).set({email, name}).catch((e) => console.log("Error: ", e.message));
     return res.json({message: "User updated with success:"});
   }
 

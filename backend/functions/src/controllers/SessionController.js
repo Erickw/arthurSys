@@ -16,35 +16,35 @@ const usersCollection = db.collection("users");
 class SessionController {
   async store(req, res) {
     const {email, password} = req.body;
-    const user = await auth.signInWithEmailAndPassword(email, password)
-        .catch((e) => console.log("Error: ", e.message));
+    // const user = await auth.signInWithEmailAndPassword(email, password)
+    //     .catch((e) => console.log("Error: ", e.message));
 
-    if (!user) {
-      return res.status(401).json({
-        error: "Not authorized, check your email or password"});
-    }
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      const snapshot = await usersCollection.where("email", "==", email).get();
 
-    const snapshot = await usersCollection.where("email", "==", email).get();
+      if (snapshot.empty) {
+        return res.status(400).json(
+            {error: "Error to get user info. No matching documents."});
+      }
 
-    if (snapshot.empty) {
-      return res.status(400).json(
-          {error: "Error to get user info. No matching documents."});
-    }
-
-    snapshot.forEach((doc) => {
-      const {id, email, name, admin} = new User(doc.data()).userInfo();
-      return res.json({
-        user: {
-          id,
-          email,
-          name,
-          admin,
-        },
-        token: jwt.sign({id}, authConfig.secret, {
-          expiresIn: authConfig.expiresIn,
-        }),
+      snapshot.forEach((doc) => {
+        const {id, email, name, admin} = new User(doc.data()).userInfo();
+        return res.json({
+          user: {
+            id,
+            email,
+            name,
+            admin,
+          },
+          token: jwt.sign({id}, authConfig.secret, {
+            expiresIn: authConfig.expiresIn,
+          }),
+        });
       });
-    });
+    } catch (error) {
+      return res.status(401).json({error: error.message});
+    }
   }
 }
 
