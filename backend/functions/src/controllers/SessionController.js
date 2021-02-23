@@ -16,8 +16,6 @@ const usersCollection = db.collection("users");
 class SessionController {
   async store(req, res) {
     const {email, password} = req.body;
-    // const user = await auth.signInWithEmailAndPassword(email, password)
-    //     .catch((e) => console.log("Error: ", e.message));
 
     try {
       await auth.signInWithEmailAndPassword(email, password);
