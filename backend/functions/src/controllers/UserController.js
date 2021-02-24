@@ -1,11 +1,10 @@
 /* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
-const firebase = require("firebase");
 const firebaseConfig = require("../../config/firebase");
-const admin = require("firebase-admin");
+const firebase = require("firebase");
 firebase.initializeApp(firebaseConfig);
 
-
+const admin = require("firebase-admin");
 const db = admin.firestore();
 const auth = firebase.auth();
 const usersCollection = db.collection("users");
