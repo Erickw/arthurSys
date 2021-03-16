@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Profissional",
+    "dataIndex": "name",
+    "key": "name"
+  },
+  {
+    "title": "Paciente",
+    "dataIndex": "patientName",
+    "key": "patientName"
+  },
+  {
+    "title": "Data",
+    "dataIndex": "date",
+    "key": "date"
+  }
+]

@@ -1,10 +1,24 @@
+/* eslint-disable max-len */
 const {Router} = require("express");
 
 const userController = require("./src/controllers/UserController");
 const requestController = require("./src/controllers/RequestController");
+const requestsByStatusController = require("./src/controllers/RequestsByStatusController");
 const productsController = require("./src/controllers/ProductController");
 const commentsController = require("./src/controllers/CommentController");
+const sessionsController = require("./src/controllers/SessionController");
+
+const authMiddleware = require("./src/middlewares/auth");
+
 const routes = new Router();
+
+// Create User
+routes.post("/users", userController.store);
+
+// Session
+routes.post("/sessions/", sessionsController.store);
+
+routes.use(authMiddleware);
 
 // Users
 routes.get("/users", userController.index);
@@ -14,6 +28,7 @@ routes.delete("/users/:id", userController.delete);
 
 // Requests
 routes.get("/requests", requestController.index);
+routes.get("/requests/:userId/:status", requestsByStatusController.index);
 routes.post("/requests", requestController.store);
 routes.put("/requests/:id", requestController.update);
 routes.delete("/requests/:id", requestController.delete);
