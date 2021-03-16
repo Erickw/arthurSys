@@ -3,8 +3,9 @@ import { Layout as LayoutANTD} from 'antd';
 import Menu from './Menu';
 import { useAuth } from '../../hooks/auth';
 import { useRouter } from 'next/router';
+import Header from '../Header';
 
-const { Header, Footer, Sider, Content } = LayoutANTD;
+const { Header: HeaderANTD, Footer, Sider, Content } = LayoutANTD;
 
 const Layout: React.FC = ({children}) => {
   const { isLogged } = useAuth();
@@ -20,23 +21,23 @@ const Layout: React.FC = ({children}) => {
   //   return <>{children}</>
   // }
   
-  return (<>{children}</>)
+  // return (<>{children}</>)
 
   return (
-    <Layout>
+    <LayoutANTD>
       <Sider>
         <Menu/>
       </Sider>
-      <Layout>
-        <Header>Header</Header>
+      <LayoutANTD>
+        <HeaderANTD><Header/></HeaderANTD>
         <Content style={{ minHeight: "calc(100vh - 134px)", padding: "24px 48px" }}>
           {children}
         </Content>
         <Footer style={{textAlign: "center"}}>
           Copyright © Litesense 2021
         </Footer>
-      </Layout>
-    </Layout>
+      </LayoutANTD>
+    </LayoutANTD>
   );
 }
 
