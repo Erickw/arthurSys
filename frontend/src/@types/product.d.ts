@@ -1,7 +1,7 @@
 type ProductProps = {
   id: string;
   name: string;
-  descriptions: string;
+  description: string;
   form: InputGroupProps[];
 };
 
@@ -17,10 +17,4 @@ type InputProps = {
   options?: string[];
 };
 
-type InputType =
-  | "string"
-  | "number"
-  | "select"
-  | "radio-group"
-  | "date"
-  | "file";
+type InputType = "string" | "number" | "select" | "date" | "file";

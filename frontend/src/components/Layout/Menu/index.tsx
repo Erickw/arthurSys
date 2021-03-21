@@ -1,40 +1,46 @@
-import React from 'react';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
-import {Menu as MenuAntd} from 'antd';
-import Logo from '../../Logo';
-const {Item, SubMenu, Divider} = MenuAntd;
+import React from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { Menu as MenuAntd } from "antd";
+import Logo from "../../Logo";
+const { Item, SubMenu, Divider } = MenuAntd;
 
 const services = [
   {
-    name: "Alinhadores Ortdônticos", 
-    route: "orthodontic-aligners"
+    name: "Alinhadores Ortdônticos",
+    route: "orthodontic-aligners",
   },
   {
     name: "Setup Digital Ortodôntico com Estagiamento",
-    route: "digital-orthodontic"
+    route: "digital-orthodontic",
   },
-]
+];
 const Menu: React.FC = () => {
   const router = useRouter();
 
   return (
     <MenuAntd mode="inline" theme="dark">
-      <Logo />
+      <div
+        style={{
+          margin: "64px auto 32px",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Logo />
+      </div>
       {services.map((service, index) => {
         return (
-          <SubMenu key={index.toString()} title={service.name} >
-              <Item>
-                <Link href={`/services/${service.route}/new`}>
-                  Novos
-                </Link>
-              </Item>
+          <SubMenu key={index.toString()} title={service.name}>
+            <Item>
+              <Link href={`/services/${service.route}/new`}>Novos</Link>
+            </Item>
             <Item>
               <Link href={`/services/${service.route}/in-progress`}>
                 Em Andamento
               </Link>
             </Item>
-            <Item >
+            <Item>
               <Link href={`/services/${service.route}/finished`}>
                 Finalizados
               </Link>
@@ -45,13 +51,14 @@ const Menu: React.FC = () => {
               </Link>
             </Item>
           </SubMenu>
-        )
+        );
       })}
-      <Divider/>
+      <Divider />
       <Item>
-        <Link href="/settings">
-          Configuracões
-        </Link>
+        <Link href="/new-product">Cria novo produto</Link>
+      </Item>
+      <Item>
+        <Link href="/settings">Configuracões</Link>
       </Item>
     </MenuAntd>
   );

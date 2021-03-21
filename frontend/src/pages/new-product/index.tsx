@@ -4,15 +4,23 @@ import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { InputsWrapper, InputGroupWrapper } from "./styles";
 import { v4 } from "uuid";
 import { useForm } from "antd/lib/form/Form";
+import API from "../../clients/api";
 
 const { Item, List, ErrorList } = Form;
 const { Title } = Typography;
 
 const NewProduct: React.FC = () => {
   const [form] = useForm();
-  const handleSubmit = useCallback((data) => {
+
+  const handleSubmit = useCallback(async (data) => {
     console.log(data);
+    await API.post("/products", {
+      ...data,
+    })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err, null, 2));
   }, []);
+
   const handleChange = useCallback((data) => {
     console.log(data);
   }, []);
@@ -112,9 +120,6 @@ const NewProduct: React.FC = () => {
                                   </Select.Option>
                                   <Select.Option value="select">
                                     Select
-                                  </Select.Option>
-                                  <Select.Option value="radio-group">
-                                    Radio Group
                                   </Select.Option>
                                   <Select.Option value="date">
                                     Date
