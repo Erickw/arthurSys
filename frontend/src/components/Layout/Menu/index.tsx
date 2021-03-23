@@ -1,18 +1,14 @@
 import React from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { Menu as MenuAntd } from "antd";
+import { Menu as MenuAntd, Divider } from "antd";
 import Logo from "../../Logo";
-const { Item, SubMenu, Divider } = MenuAntd;
+const { Item, SubMenu } = MenuAntd;
 
 const services = [
   {
-    name: "Alinhadores Ortdônticos",
-    route: "orthodontic-aligners",
-  },
-  {
-    name: "Setup Digital Ortodôntico com Estagiamento",
-    route: "digital-orthodontic",
+    name: "Produto Teste",
+    route: "produto-teste",
   },
 ];
 const Menu: React.FC = () => {
@@ -29,6 +25,9 @@ const Menu: React.FC = () => {
       >
         <Logo />
       </div>
+      <Divider orientation="left" plain style={{ color: "#fff" }}>
+        Solicitações
+      </Divider>
       {services.map((service, index) => {
         return (
           <SubMenu key={index.toString()} title={service.name}>
@@ -53,7 +52,15 @@ const Menu: React.FC = () => {
           </SubMenu>
         );
       })}
-      <Divider />
+      <Divider orientation="left" plain style={{ color: "#fff" }}>
+        Visão do cliente
+      </Divider>
+      <Item>
+        <Link href="/requests/teste">Solicitar Produto Teste</Link>
+      </Item>
+      <Divider orientation="left" plain style={{ color: "#fff" }}>
+        Admin
+      </Divider>
       <Item>
         <Link href="/new-product">Cria novo produto</Link>
       </Item>

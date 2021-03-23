@@ -1,8 +1,8 @@
 [
   {
     "title": "Profissional",
-    "dataIndex": "name",
-    "key": "name"
+    "dataIndex": "professionalName",
+    "key": "professionalName"
   },
   {
     "title": "Paciente",

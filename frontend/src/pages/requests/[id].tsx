@@ -29,7 +29,7 @@ const Requests: React.FC<RequestProps> = ({ product }) => {
     <>
       <Title>Nova {product.name}</Title>
       <Text type="secondary">{product.description}</Text>
-      <Form layout="vertical">
+      <Form layout="vertical" style={{ width: "40%" }}>
         {product.form.map((group) => (
           <div key={group.title.split(" ").join("-").toLowerCase()}>
             <Title level={3}>{group.title}</Title>
@@ -91,9 +91,9 @@ export async function getServerSideProps(context) {
                   label: "Digite um número",
                 },
                 {
-                  name: "radio-teste",
+                  name: "select-teste",
                   label: "Selecione uma opção",
-                  type: "radio-group",
+                  type: "select",
                   options: ["opção 1", "opção 2", "opção 3"],
                 },
                 {
