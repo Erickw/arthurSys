@@ -19,7 +19,7 @@ const register: React.FC = () => {
 
   async function handleFinish ({ name, email, password }: RegisterParams) {
     setIsSubmitting(true);
-    //await register({ name, email, password });
+    await register({ name, email, password });
     setIsSubmitting(false);
     message.success('Usuário criado com sucesso', 4);
     router.push('/login');
