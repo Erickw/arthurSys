@@ -1,31 +1,27 @@
-import 'antd/dist/antd.css';
-import GlobalStyle from "../styles/GlobalStyle"
-import { Layout } from 'antd';
-import Menu from "../components/Menu";
-
-const { Header, Footer, Sider, Content } = Layout;
+import "antd/dist/antd.css";
+import Head from "next/head";
+import { useRouter } from 'next/router';
+import Layout from "../components/Layout";
+import { AuthProvider } from "../hooks/auth";
+import GlobalStyle from "../styles/GlobalStyle";
 
 function MyApp({ Component, pageProps }) {
+  const { pathname } = useRouter();
   return (
-    <>
+    <AuthProvider>
+      <Head>
+        <title>Orto Setup</title>
+      </Head>
       <GlobalStyle />
-      <Layout>
-        <Sider>
-          <Menu/>
-        </Sider>
+      {pathname === '/login' || pathname === '/register' ? (
+        <Component {...pageProps} />
+      ): (
         <Layout>
-          <Header>Header</Header>
-          <Content style={{ minHeight: "calc(100vh - 134px)", padding: "24px 48px" }}>
-            <Component {...pageProps} />
-          </Content>
-          <Footer style={{textAlign: "center"}}>
-            Copyright © Litesense 2021
-          </Footer>
+          <Component {...pageProps} />
         </Layout>
-      </Layout>
-      
-    </>
-  )
+      )}
+    </AuthProvider>
+  );
 }
 
-export default MyApp
+export default MyApp;
