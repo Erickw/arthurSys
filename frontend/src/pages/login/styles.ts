@@ -22,6 +22,11 @@ export const LoginWrapper = styled.main`
     a {
       width: 100%;
     }
+    > div > div {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
     width: 35vw;
     display: flex;
     flex-direction: column;

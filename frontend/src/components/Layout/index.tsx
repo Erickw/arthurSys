@@ -11,11 +11,11 @@ const Layout: React.FC = ({children}) => {
   const { isLogged } = useAuth();
   const { push, pathname } = useRouter();
 
-  // useEffect(() => {
-  //   if(pathname !== '/login' && pathname !== '/register' && !isLogged)  {
-  //     push('/login')
-  //   }
-  // }, [isLogged, pathname])
+  useEffect(() => {
+    if(pathname !== '/login' && pathname !== '/register' && !isLogged)  {
+      push('/login')
+    }
+  }, [isLogged, pathname])
 
   // if(!isLogged) {
   //   return <>{children}</>
