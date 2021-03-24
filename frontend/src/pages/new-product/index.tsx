@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { Button, Form, Input, Select, Typography } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { InputsWrapper, InputGroupWrapper } from "./styles";
+import { InputsWrapper, InputGroupWrapper } from "../../styles/pages/new-product";
 import { v4 } from "uuid";
 import { useForm } from "antd/lib/form/Form";
 import API from "../../clients/api";
