@@ -1,12 +1,25 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const appearFromLeft = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
 
 export const LoginWrapper = styled.main`
   height: 100vh;
   display: flex;
+
+  animation: ${appearFromLeft} 1s;
   section {
     &.auxiliary {
       height: 100vh;
-      width: 65vw;
+      width: 60vw;
       background-color: #001529;
     }
     > div {
@@ -27,10 +40,20 @@ export const LoginWrapper = styled.main`
       justify-content: center;
       margin-bottom: 30px;
     }
-    width: 35vw;
+    width: 40vw;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
+
+  @media(max-width: 1000px) {
+    section {
+      &.auxiliary {
+        width: 0vw;
+      }
+      width: 100vw;
+    }
+  }
+
 `;
