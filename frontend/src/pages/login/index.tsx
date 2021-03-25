@@ -2,7 +2,7 @@ import { Button, Form, Input } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { LoginWrapper } from './styles';
+import { LoginWrapper } from '../../styles/pages/login';
 import Logo from '../../components/Logo';
 import { useAuth } from '../../hooks/auth';
 

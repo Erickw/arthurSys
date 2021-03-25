@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes } from 'styled-components';
 
 const appearFromLeft = keyframes`
   from {
@@ -47,7 +47,7 @@ export const LoginWrapper = styled.main`
     justify-content: center;
   }
 
-  @media(max-width: 1000px) {
+  @media (max-width: 1000px) {
     section {
       &.auxiliary {
         width: 0vw;
@@ -55,5 +55,4 @@ export const LoginWrapper = styled.main`
       width: 100vw;
     }
   }
-
 `;

@@ -1,10 +1,10 @@
-import React, { useCallback, useState } from "react";
-import { Button, Form, Input, Select, Typography } from "antd";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { InputsWrapper } from "./styles";
-import { v4 } from "uuid";
-import { useForm } from "antd/lib/form/Form";
-import API from "../../clients/api";
+import React, { useCallback, useState } from 'react';
+import { Button, Form, Input, Select, Typography } from 'antd';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { v4 } from 'uuid';
+import { useForm } from 'antd/lib/form/Form';
+import { InputsWrapper } from '../../styles/pages/new-product';
+import API from '../../clients/api';
 
 const { Item, List, ErrorList } = Form;
 const { Title } = Typography;
@@ -12,16 +12,16 @@ const { Title } = Typography;
 const NewProduct: React.FC = () => {
   const [form] = useForm();
 
-  const handleSubmit = useCallback(async (data) => {
+  const handleSubmit = useCallback(async data => {
     console.log(data);
-    await API.post("/products", {
+    await API.post('/products', {
       ...data,
     })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err, null, 2));
+      .then(res => console.log(res))
+      .catch(err => console.log(err, null, 2));
   }, []);
 
-  const handleChange = useCallback((data) => {
+  const handleChange = useCallback(data => {
     console.log(data);
   }, []);
 
@@ -31,7 +31,7 @@ const NewProduct: React.FC = () => {
       <Form
         layout="vertical"
         form={form}
-        style={{ width: "60%" }}
+        style={{ width: '60%' }}
         onFinish={handleSubmit}
       >
         <Item label="Nome do produto" name="name" required>
@@ -51,7 +51,7 @@ const NewProduct: React.FC = () => {
                       <MinusCircleOutlined
                         className="dynamic-delete-button"
                         onClick={() => remove(group.name)}
-                        style={{ marginLeft: "16px" }}
+                        style={{ marginLeft: '16px' }}
                       />
                     </Title>
                   }
@@ -59,17 +59,17 @@ const NewProduct: React.FC = () => {
                 >
                   <Item
                     label="Título do Grupo"
-                    name={[group.name, "title"]}
-                    fieldKey={[group.fieldKey, "title"]}
+                    name={[group.name, 'title']}
+                    fieldKey={[group.fieldKey, 'title']}
                     required
                   >
                     <Input />
                   </Item>
-                  <List name={[group.name, "fields"]}>
+                  <List name={[group.name, 'fields']}>
                     {(
                       fields,
                       { add: addField, remove: removeField },
-                      { errors: errorsFields }
+                      { errors: errorsFields },
                     ) => (
                       <>
                         {fields.map((field, index) => (
@@ -81,7 +81,7 @@ const NewProduct: React.FC = () => {
                                   <MinusCircleOutlined
                                     className="dynamic-delete-button"
                                     onClick={() => removeField(field.name)}
-                                    style={{ marginLeft: "16px" }}
+                                    style={{ marginLeft: '16px' }}
                                   />
                                 )}
                               </>
@@ -91,24 +91,24 @@ const NewProduct: React.FC = () => {
                             <InputsWrapper>
                               <Item
                                 label="Nome"
-                                name={[field.name, "name"]}
-                                fieldKey={[field.fieldKey, "name"]}
+                                name={[field.name, 'name']}
+                                fieldKey={[field.fieldKey, 'name']}
                                 required
                               >
                                 <Input />
                               </Item>
                               <Item
                                 label="Label"
-                                name={[field.name, "label"]}
-                                fieldKey={[field.fieldKey, "label"]}
+                                name={[field.name, 'label']}
+                                fieldKey={[field.fieldKey, 'label']}
                                 required
                               >
                                 <Input />
                               </Item>
                               <Item
                                 label="Tipo"
-                                name={[field.name, "type"]}
-                                fieldKey={[field.fieldKey, "type"]}
+                                name={[field.name, 'type']}
+                                fieldKey={[field.fieldKey, 'type']}
                                 required
                               >
                                 <Select defaultValue="string">
@@ -131,13 +131,10 @@ const NewProduct: React.FC = () => {
                               </Item>
                               <Item
                                 label="Opções"
-                                name={[field.name, "options"]}
-                                fieldKey={[field.fieldKey, "options"]}
+                                name={[field.name, 'options']}
+                                fieldKey={[field.fieldKey, 'options']}
                               >
-                                <Select
-                                  mode="tags"
-                                  tokenSeparators={[","]}
-                                ></Select>
+                                <Select mode="tags" tokenSeparators={[',']} />
                               </Item>
                             </InputsWrapper>
                           </Item>
