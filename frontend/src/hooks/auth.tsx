@@ -49,6 +49,7 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
     const token = localStorage.getItem('@OrtoSetup:token');
 
     if (token) {
+      setRefreshToken(token);
       setIsLogged(true);
     }
   }, []);

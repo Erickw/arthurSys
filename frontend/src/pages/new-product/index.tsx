@@ -1,29 +1,40 @@
+/* eslint-disable no-param-reassign */
 import React, { useCallback, useState } from 'react';
-import { Button, Form, Input, Select, Typography } from 'antd';
+import { Button, Form, Input, message, Select, Typography } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { v4 } from 'uuid';
 import { useForm } from 'antd/lib/form/Form';
+import { useRouter } from 'next/router';
 import { InputsWrapper } from '../../styles/pages/new-product';
 import API from '../../clients/api';
+import { useAuth } from '../../hooks/auth';
 
 const { Item, List, ErrorList } = Form;
 const { Title } = Typography;
 
 const NewProduct: React.FC = () => {
   const [form] = useForm();
+  const { refreshToken } = useAuth();
+  const { push } = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = useCallback(async data => {
-    console.log(data);
-    await API.post('/products', {
-      ...data,
-    })
-      .then(res => console.log(res))
-      .catch(err => console.log(err, null, 2));
-  }, []);
-
-  const handleChange = useCallback(data => {
-    console.log(data);
-  }, []);
+  const handleSubmit = useCallback(
+    async data => {
+      setIsSubmitting(true);
+      const config = {
+        headers: { Authorization: `Bearer ${refreshToken}` },
+      };
+      if (data.available === 'true') {
+        data.available = true;
+      } else {
+        data.available = false;
+      }
+      await API.post('/products', data, config);
+      setIsSubmitting(false);
+      message.success('Novo produto criado com sucesso!');
+      push('/');
+    },
+    [push, refreshToken],
+  );
 
   return (
     <>
@@ -34,13 +45,38 @@ const NewProduct: React.FC = () => {
         style={{ width: '60%' }}
         onFinish={handleSubmit}
       >
-        <Item label="Nome do produto" name="name" required>
+        <Item
+          label="Nome do produto"
+          name="name"
+          rules={[
+            { required: true, message: 'Por favor, insira o nome do produto!' },
+            {
+              whitespace: true,
+              message: 'Por favor, insira o nome do produto!',
+            },
+          ]}
+        >
           <Input />
         </Item>
         <Item label="Descrição do serviço" name="description">
           <Input.TextArea />
         </Item>
-        <List name="form">
+        <Item label="Valor" name="value">
+          <Input />
+        </Item>
+        <Item label="Pagamento" name="requiredPayment">
+          <Input />
+        </Item>
+        <Item label="Observações" name="notes">
+          <Input.TextArea />
+        </Item>
+        <Item label="Disponibilidade" name="available">
+          <Select defaultValue="true">
+            <Select.Option value="true">Disponível</Select.Option>
+            <Select.Option value="false">Não Disponível</Select.Option>
+          </Select>
+        </Item>
+        <List name="fields">
           {(groups, { add, remove }, { errors }) => (
             <>
               {groups.map((group, index) => (
@@ -55,13 +91,22 @@ const NewProduct: React.FC = () => {
                       />
                     </Title>
                   }
-                  key={index}
+                  key={group.name}
                 >
                   <Item
                     label="Título do Grupo"
                     name={[group.name, 'title']}
                     fieldKey={[group.fieldKey, 'title']}
-                    required
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Por favor, insira o título do grupo!',
+                      },
+                      {
+                        whitespace: true,
+                        message: 'Por favor, insira o título do grupo!',
+                      },
+                    ]}
                   >
                     <Input />
                   </Item>
@@ -72,12 +117,12 @@ const NewProduct: React.FC = () => {
                       { errors: errorsFields },
                     ) => (
                       <>
-                        {fields.map((field, index) => (
+                        {fields.map((field, fieldIndex) => (
                           <Item
                             label={
                               <>
-                                {`Input ${index + 1}`}
-                                {index > 0 && (
+                                {`Input ${fieldIndex + 1}`}
+                                {fieldIndex > 0 && (
                                   <MinusCircleOutlined
                                     className="dynamic-delete-button"
                                     onClick={() => removeField(field.name)}
@@ -86,14 +131,23 @@ const NewProduct: React.FC = () => {
                                 )}
                               </>
                             }
-                            key={index}
+                            key={field.name}
                           >
                             <InputsWrapper>
                               <Item
                                 label="Nome"
                                 name={[field.name, 'name']}
                                 fieldKey={[field.fieldKey, 'name']}
-                                required
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'Por favor, insira o nome!',
+                                  },
+                                  {
+                                    whitespace: true,
+                                    message: 'Por favor, insira o nome!',
+                                  },
+                                ]}
                               >
                                 <Input />
                               </Item>
@@ -101,7 +155,16 @@ const NewProduct: React.FC = () => {
                                 label="Label"
                                 name={[field.name, 'label']}
                                 fieldKey={[field.fieldKey, 'label']}
-                                required
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'Por favor, insira a label!',
+                                  },
+                                  {
+                                    whitespace: true,
+                                    message: 'Por favor, insira a label!',
+                                  },
+                                ]}
                               >
                                 <Input />
                               </Item>
@@ -109,7 +172,16 @@ const NewProduct: React.FC = () => {
                                 label="Tipo"
                                 name={[field.name, 'type']}
                                 fieldKey={[field.fieldKey, 'type']}
-                                required
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'Por favor, selecione o tipo!',
+                                  },
+                                  {
+                                    whitespace: true,
+                                    message: 'Por favor, selecione o tipo!',
+                                  },
+                                ]}
                               >
                                 <Select defaultValue="string">
                                   <Select.Option value="string">
@@ -170,7 +242,7 @@ const NewProduct: React.FC = () => {
             </>
           )}
         </List>
-        <Button block type="primary" htmlType="submit">
+        <Button block type="primary" htmlType="submit" loading={isSubmitting}>
           Criar Produto
         </Button>
       </Form>
