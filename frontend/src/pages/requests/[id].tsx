@@ -1,4 +1,13 @@
-import { Button, Form, Input, message, Typography } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Select,
+  Typography,
+  DatePicker,
+} from 'antd';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import api from '../../clients/api';
@@ -23,19 +32,27 @@ export default function Requests({ product }: RequestProps): JSX.Element {
       request.productId = product.id;
       request.status = 'novo';
       request.date = new Date();
+      request.fields = JSON.stringify(
+        request.fields.map((field, index) => ({
+          title: product.fields[index].title,
+          fields: { ...field },
+        })),
+      );
       setIsSubmitting(true);
-      await api.post('/requests', data);
+      await api.post('/requests', request);
       setIsSubmitting(false);
       message.success(`Solicitação do ${product.name} criada com sucesso!`);
       push('/');
     },
-    [product.id, product.name, push, user.id],
+    [product.fields, product.id, product.name, push, user.id],
   );
 
   return (
     <>
       <Title>Nova Solicitação</Title>
       <Form layout="vertical" onFinish={handleSubmit} style={{ width: '40%' }}>
+        <h2>Dados do paciente</h2>
+
         <Item
           label="Nome do paciente"
           name="patientName"
@@ -68,6 +85,107 @@ export default function Requests({ product }: RequestProps): JSX.Element {
         >
           <Input />
         </Item>
+
+        {product.fields?.map((field, index) => (
+          <>
+            <h2>{field.title}</h2>
+            {field.fields?.map(fieldItem => (
+              <>
+                {fieldItem.type === 'string' && (
+                  <Item
+                    label={fieldItem.label}
+                    name={['fields', index, fieldItem.name]}
+                    rules={[
+                      {
+                        required: true,
+                        message: `Por favor, preencha esse campo!`,
+                      },
+                      {
+                        whitespace: true,
+                        message: 'Por favor, preencha esse campo',
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Item>
+                )}
+                {fieldItem.type === 'number' && (
+                  <Item
+                    label={fieldItem.label}
+                    name={['fields', index, fieldItem.name]}
+                    rules={[
+                      {
+                        required: true,
+                        message: `Por favor, preencha esse campo!`,
+                      },
+                      {
+                        whitespace: true,
+                        message: 'Por favor, preencha esse campo',
+                      },
+                    ]}
+                  >
+                    <Input type="number" />
+                  </Item>
+                )}
+                {fieldItem.type === 'select' && (
+                  <Item
+                    label={fieldItem.label}
+                    name={['fields', index, fieldItem.name]}
+                    rules={[
+                      {
+                        required: true,
+                        message: `Por favor, preencha esse campo!`,
+                      },
+                      {
+                        whitespace: true,
+                        message: 'Por favor, preencha esse campo',
+                      },
+                    ]}
+                  >
+                    <Select>
+                      {fieldItem.options.map(option => (
+                        <Select.Option value={option}>{option}</Select.Option>
+                      ))}
+                    </Select>
+                  </Item>
+                )}
+                {fieldItem.type === 'date' && (
+                  <Item
+                    label={fieldItem.label}
+                    name={['fields', index, fieldItem.name]}
+                    fieldKey={['fields', index, fieldItem.name]}
+                    rules={[
+                      {
+                        required: true,
+                        message: `Por favor, preencha esse campo!`,
+                      },
+                    ]}
+                  >
+                    <DatePicker format="DD/MM/YYYY" />
+                  </Item>
+                )}
+                {fieldItem.type === 'file' && (
+                  <Item
+                    label={fieldItem.label}
+                    name={['fields', index, fieldItem.name]}
+                    rules={[
+                      {
+                        required: true,
+                        message: `Por favor, preencha esse campo!`,
+                      },
+                      {
+                        whitespace: true,
+                        message: 'Por favor, preencha esse campo',
+                      },
+                    ]}
+                  >
+                    <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                  </Item>
+                )}
+              </>
+            ))}
+          </>
+        ))}
 
         <h2>Endereço</h2>
 
