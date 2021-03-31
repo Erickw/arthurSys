@@ -5,6 +5,7 @@ const userController = require("./src/controllers/UserController");
 const requestController = require("./src/controllers/RequestController");
 const requestsByStatusController = require("./src/controllers/RequestsByStatusController");
 const productsController = require("./src/controllers/ProductController");
+const uniqProductController = require("./src/controllers/UniqueProductController");
 const commentsController = require("./src/controllers/CommentController");
 const sessionsController = require("./src/controllers/SessionController");
 
@@ -35,6 +36,7 @@ routes.delete("/requests/:id", requestController.delete);
 
 // Products
 routes.get("/products", productsController.index);
+routes.get("/products/:id", uniqProductController.index);
 routes.post("/products", productsController.store);
 routes.put("/products/:id", productsController.update);
 routes.delete("/products/:id", productsController.delete);
