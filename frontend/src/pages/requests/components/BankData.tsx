@@ -10,9 +10,11 @@ export default function BankData({ bankInfo }: BankInfoProps): JSX.Element {
     <>
       <h2>Dados bancários</h2>
       <Descriptions title="">
-        <Descriptions.Item label="Indentificação">
-          {bankInfo.identification}
-        </Descriptions.Item>
+        {bankInfo.identification && (
+          <Descriptions.Item label="Indentificação">
+            {bankInfo.identification}
+          </Descriptions.Item>
+        )}
         <Descriptions.Item label="Banco">{bankInfo.bank}</Descriptions.Item>
         <Descriptions.Item label="Agência">{bankInfo.agency}</Descriptions.Item>
         <Descriptions.Item label="Conta bancária">
