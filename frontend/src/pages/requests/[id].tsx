@@ -4,7 +4,6 @@ import React, { useCallback, useState } from 'react';
 import api from '../../clients/api';
 import { useAuth } from '../../hooks/auth';
 import AddressForm from './components/AddressForm';
-import BankData from './components/BankData';
 import PatientForm from './components/PatientForm';
 import ProductDynamicForm from './components/ProductDynamicForm';
 
