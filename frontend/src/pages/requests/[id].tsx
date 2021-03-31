@@ -4,7 +4,7 @@ import React, { useCallback, useState } from 'react';
 import api from '../../clients/api';
 import { useAuth } from '../../hooks/auth';
 import AddressForm from './components/AddressForm';
-import BankDataForm from './components/BankDataForm';
+import BankData from './components/BankData';
 import PatientForm from './components/PatientForm';
 import ProductDynamicForm from './components/ProductDynamicForm';
 
@@ -45,6 +45,8 @@ export default function Requests({ product }: RequestProps): JSX.Element {
     <>
       <Title>Nova Solicitação</Title>
       <Form layout="vertical" onFinish={handleSubmit} style={{ width: '40%' }}>
+        <BankData bankInfo={product.bankInfo} />
+
         <h2>Dados do paciente</h2>
 
         <PatientForm />
@@ -54,10 +56,6 @@ export default function Requests({ product }: RequestProps): JSX.Element {
         <h2>Endereço</h2>
 
         <AddressForm />
-
-        <h2>Dados bancários</h2>
-
-        <BankDataForm />
 
         <Button type="primary" htmlType="submit" loading={isSubmitting} block>
           Enviar

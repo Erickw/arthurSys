@@ -1,10 +1,11 @@
-import React from 'react';
-import { Typography, Table } from 'antd';
-import axios from 'axios';
-import tableColumns from './tableColumns.json';
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useState } from 'react';
+import { Typography, Table, Space, Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import api from '../../../clients/api';
 
 const { Title } = Typography;
+const { confirm } = Modal;
 
 interface ServiceProps {
   title: string;
@@ -12,11 +13,58 @@ interface ServiceProps {
 }
 
 export default function Service({ title, data }: ServiceProps): JSX.Element {
+  const [requests, setRequests] = useState<RequestProps[] | undefined>(data);
+
+  function delteProductModal(requestId: string) {
+    confirm({
+      title: `Você tem certeza que deseja remover a solicitação ${requestId}`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Essa requisição será permanentemente removida do sistema.',
+      okText: 'Sim',
+      okType: 'danger',
+      cancelText: 'Não',
+      async onOk() {
+        await api.delete(`/requests/${requestId}`);
+        setRequests(
+          requests.filter(requestItem => requestItem.id !== requestId),
+        );
+      },
+    });
+  }
+
+  const columns = [
+    {
+      title: 'Paciente',
+      dataIndex: 'patientName',
+      key: 'patientName',
+    },
+    {
+      title: 'Produto',
+      dataIndex: 'productId',
+      key: 'productId',
+    },
+    {
+      title: 'Data',
+      dataIndex: 'date',
+      key: 'date',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        <Space size="middle">
+          <a>Editar</a>
+          <a onClick={() => delteProductModal(record.id)}>Delete</a>
+        </Space>
+      ),
+    },
+  ];
+
   return (
     <>
       <Title level={2}>{title}</Title>
       <section>
-        <Table columns={tableColumns} dataSource={data} />
+        <Table columns={columns} dataSource={requests} />
       </section>
     </>
   );
@@ -32,47 +80,3 @@ Service.getInitialProps = async ({ query: { status } }) => {
     }));
   return { title: status, data: product };
 };
-
-/*
-export async function getServerSideProps(ctx): Promise<ServiceProps> {
-  const { service, status } = ctx.query;
-  console.log(status);
-  console.log(service);
-  let sufix = '';
-  switch (status) {
-    case 'new':
-      sufix = 'Novo';
-      break;
-    case 'in-progress':
-      sufix = 'Em Progresso';
-      break;
-    case 'finished':
-      sufix = 'Finalizados';
-      break;
-    case 'cancelled':
-      sufix = 'Cancelados';
-      break;
-    default:
-      sufix = ' ';
-      break;
-  }
-  function jsUcfirst(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-  const produto = service
-    .split('-')
-    .map(word => jsUcfirst(word))
-    .join(' ');
-
-  const response = await api.get('/requests');
-  const requests = response.data.map(
-    request => request.status === status,
-  ) as RequestProps[];
-
-  return {
-    props: {
-      title: `${produto} ${sufix}`,
-      data: requests,
-    },
-  };
-} */

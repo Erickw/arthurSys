@@ -8,7 +8,6 @@ type RequestProps = {
   status: string;
   date: Date;
   address: Address;
-  bankInfo: BankInfo;
 };
 
 type Address = {
@@ -19,13 +18,4 @@ type Address = {
   district: string;
   postalCode: number;
   number: number;
-};
-
-type BankInfo = {
-  bankAccount: string;
-  bank: string;
-  identification: string;
-  value: number;
-  note: string;
-  agency: string;
 };

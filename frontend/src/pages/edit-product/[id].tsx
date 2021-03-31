@@ -46,6 +46,14 @@ export default function EditProduct({
       requiredPayment: product.requiredPayment,
       notes: product.notes,
       available: product.available,
+      bankInfo: {
+        agency: product.bankInfo.agency,
+        value: product.bankInfo.value,
+        bankAccount: product.bankInfo.bankAccount,
+        bank: product.bankInfo.bank,
+        identification: product.bankInfo.identification,
+        note: product.bankInfo.note,
+      },
       fields:
         product.fields.length === 0
           ? []
@@ -79,6 +87,7 @@ export default function EditProduct({
         style={{ width: '60%' }}
         onFinish={handleSubmit}
       >
+        <h2>Dados do produto</h2>
         <Item
           label="Nome do produto"
           name="name"
@@ -110,6 +119,98 @@ export default function EditProduct({
             <Select.Option value="false">Não Disponível</Select.Option>
           </Select>
         </Item>
+
+        <h2>Dados bancários</h2>
+
+        <Item
+          label="Identificação"
+          name={['bankInfo', 'identification']}
+          rules={[
+            {
+              required: true,
+              message: 'Por favor, insira a indentificação!',
+            },
+            {
+              whitespace: true,
+              message: 'Por favor, insira a indentificação!',
+            },
+          ]}
+        >
+          <Input />
+        </Item>
+
+        <Item label="Note" name={['bankInfo', 'note']}>
+          <Input />
+        </Item>
+
+        <Item
+          label="Valor"
+          name={['bankInfo', 'value']}
+          rules={[
+            {
+              required: true,
+              message: 'Por favor, insira o valor!',
+            },
+            {
+              whitespace: true,
+              message: 'Por favor, insira o valor!',
+            },
+          ]}
+        >
+          <Input />
+        </Item>
+
+        <Item
+          label="Conta bancária"
+          name={['bankInfo', 'bankAccount']}
+          rules={[
+            {
+              required: true,
+              message: 'Por favor, insira a conta bancária!',
+            },
+            {
+              whitespace: true,
+              message: 'Por favor, insira a conta bancária!',
+            },
+          ]}
+        >
+          <Input />
+        </Item>
+
+        <Item
+          label="Banco"
+          name={['bankInfo', 'bank']}
+          rules={[
+            {
+              required: true,
+              message: 'Por favor, insira o banco!',
+            },
+            {
+              whitespace: true,
+              message: 'Por favor, insira o banco!',
+            },
+          ]}
+        >
+          <Input />
+        </Item>
+
+        <Item
+          label="Agência"
+          name={['bankInfo', 'agency']}
+          rules={[
+            {
+              required: true,
+              message: 'Por favor, insira a agência!',
+            },
+            {
+              whitespace: true,
+              message: 'Por favor, insira a agência!',
+            },
+          ]}
+        >
+          <Input />
+        </Item>
+
         <List name="fields">
           {(groups, { add, remove }, { errors }) => (
             <>
