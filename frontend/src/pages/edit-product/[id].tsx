@@ -70,6 +70,12 @@ export default function EditProduct({
   }, [
     form,
     product.available,
+    product.bankInfo.agency,
+    product.bankInfo.bank,
+    product.bankInfo.bankAccount,
+    product.bankInfo.identification,
+    product.bankInfo.note,
+    product.bankInfo.value,
     product.description,
     product.fields,
     product.name,

@@ -1,7 +1,5 @@
-import { Input, Form, Descriptions } from 'antd';
+import { Descriptions } from 'antd';
 import React from 'react';
-
-const { Item } = Form;
 
 interface BankInfoProps {
   bankInfo: BankInfo;
