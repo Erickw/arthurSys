@@ -11,7 +11,7 @@ import { Content } from '../../styles/pages/products';
 const { confirm } = Modal;
 
 const Products: React.FC = () => {
-  const { refreshToken } = useAuth();
+  const { refreshToken, user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<ProductProps[]>([]);
 
@@ -48,10 +48,12 @@ const Products: React.FC = () => {
         renderItem={item => (
           <List.Item
             key={item.id}
-            actions={[
-              <Link href={`/edit-product/${item.id}`}>Editar</Link>,
-              <a onClick={() => delteProductModal(item)}>Deletar</a>,
-            ]}
+            actions={
+              user.admin && [
+                <Link href={`/edit-product/${item.id}`}>Editar</Link>,
+                <a onClick={() => delteProductModal(item)}>Deletar</a>,
+              ]
+            }
           >
             <List.Item.Meta
               title={<Link href={`/requests/${item.id}`}>{item.name}</Link>}

@@ -167,6 +167,7 @@ const NewProduct: React.FC = () => {
                                 label="Tipo"
                                 name={[field.name, 'type']}
                                 fieldKey={[field.fieldKey, 'type']}
+                                initialValue="string"
                                 rules={[
                                   {
                                     required: true,
@@ -178,7 +179,7 @@ const NewProduct: React.FC = () => {
                                   },
                                 ]}
                               >
-                                <Select defaultValue="string">
+                                <Select>
                                   <Select.Option value="string">
                                     Texto
                                   </Select.Option>
