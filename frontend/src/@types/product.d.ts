@@ -6,11 +6,11 @@ type ProductProps = {
   requiredPayment: number;
   notes: string;
   available: boolean;
-  bankInfo: BankInfo;
+  bankInfo: BankInfoProps;
   fields: InputGroupProps[];
 };
 
-type BankInfo = {
+type BankInfoProps = {
   bankAccount: string;
   bank: string;
   identification: string;
