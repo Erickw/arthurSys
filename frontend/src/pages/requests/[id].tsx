@@ -1,4 +1,4 @@
-import { Button, Form, message, Typography } from 'antd';
+import { Button, Descriptions, Form, message, Typography } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import api from '../../clients/api';
@@ -45,7 +45,32 @@ export default function Requests({ product }: RequestProps): JSX.Element {
     <>
       <Title>Nova Solicitação</Title>
       <Form layout="vertical" onFinish={handleSubmit} style={{ width: '40%' }}>
-        <BankData bankInfo={product.bankInfo} />
+        <h2>Dados bancários</h2>
+        <Descriptions title="">
+          <Descriptions.Item label="Indentificação">
+            {product.bankInfo.identification}
+          </Descriptions.Item>
+          <Descriptions.Item label="Banco">
+            {product.bankInfo.bank}
+          </Descriptions.Item>
+          <Descriptions.Item label="Agência">
+            {product.bankInfo.agency}
+          </Descriptions.Item>
+          <Descriptions.Item label="Conta bancária">
+            {product.bankInfo.bankAccount}
+          </Descriptions.Item>
+          <Descriptions.Item label="Valor">
+            {new Intl.NumberFormat('pt-br', {
+              style: 'currency',
+              currency: 'BRL',
+            }).format(product.bankInfo.value)}
+          </Descriptions.Item>
+          {product.bankInfo.note && (
+            <Descriptions.Item label="Nota">
+              {product.bankInfo.note}
+            </Descriptions.Item>
+          )}
+        </Descriptions>
 
         <h2>Dados do paciente</h2>
 
