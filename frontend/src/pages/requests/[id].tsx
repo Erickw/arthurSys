@@ -256,9 +256,6 @@ export default function Requests({ product }: RequestProps): JSX.Element {
 
 Requests.getInitialProps = async ({ query: { id } }) => {
   const response = await api.get(`products/${id}`);
-  const product = response.data.map(requestItem => ({
-    ...requestItem,
-    key: requestItem.id,
-  }));
+  const product = response.data;
   return { product };
 };

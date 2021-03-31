@@ -24,7 +24,12 @@ export default function Service({ title, data }: ServiceProps): JSX.Element {
 
 Service.getInitialProps = async ({ query: { status } }) => {
   const response = await api.get(`requests/`);
-  const product = response.data.filter(request => request.status === status);
+  const product = response.data
+    .filter(request => request.status === status)
+    .map(requestItem => ({
+      ...requestItem,
+      key: requestItem.id,
+    }));
   return { title: status, data: product };
 };
 
