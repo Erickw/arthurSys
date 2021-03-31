@@ -1,16 +1,22 @@
 /* eslint-disable no-param-reassign */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Form, Input, message, Select, Typography } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import { useRouter } from 'next/router';
 import { InputsWrapper } from '../../styles/pages/new-product';
-import API from '../../clients/api';
+import api from '../../clients/api';
 
 const { Item, List, ErrorList } = Form;
 const { Title } = Typography;
 
-const NewProduct: React.FC = () => {
+type EditProductProps = {
+  product: ProductProps;
+};
+
+export default function EditProduct({
+  product,
+}: EditProductProps): JSX.Element {
   const [form] = useForm();
   const { push } = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,17 +29,50 @@ const NewProduct: React.FC = () => {
       } else {
         data.available = false;
       }
-      await API.post('/products', data);
+      data.id = product.id;
+      await api.put(`/products/${product.id}`, data);
       setIsSubmitting(false);
-      message.success('Novo produto criado com sucesso!');
-      push('/');
+      message.success(`Produto editado com sucesso!`);
+      push('/products');
     },
-    [push],
+    [product.id, push],
   );
+
+  useEffect(() => {
+    form.setFieldsValue({
+      name: product.name,
+      description: product.description,
+      value: product.value,
+      requiredPayment: product.requiredPayment,
+      notes: product.notes,
+      available: product.available,
+      fields:
+        product.fields.length === 0
+          ? []
+          : product.fields.map(field => ({
+              title: field.title,
+              fields: field.fields.map(fieldItem => ({
+                name: fieldItem.name,
+                label: fieldItem.label,
+                type: fieldItem.type,
+                options: fieldItem.options,
+              })),
+            })),
+    });
+  }, [
+    form,
+    product.available,
+    product.description,
+    product.fields,
+    product.name,
+    product.notes,
+    product.requiredPayment,
+    product.value,
+  ]);
 
   return (
     <>
-      <Title>Novo Produto</Title>
+      <Title>Editar Produto</Title>
       <Form
         layout="vertical"
         form={form}
@@ -238,11 +277,15 @@ const NewProduct: React.FC = () => {
           )}
         </List>
         <Button block type="primary" htmlType="submit" loading={isSubmitting}>
-          Criar Produto
+          Editar Produto
         </Button>
       </Form>
     </>
   );
-};
+}
 
-export default NewProduct;
+EditProduct.getInitialProps = async ({ query: { id } }) => {
+  const response = await api.get(`products`);
+  const product = response.data.find(productItem => productItem.id === id);
+  return { product };
+};

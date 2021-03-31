@@ -27,6 +27,7 @@ interface AuthContextData {
 }
 
 interface User {
+  id: string;
   name: string;
   email: string;
   password: string;
@@ -40,17 +41,20 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User>({ admin: true } as User);
+  const [user, setUser] = useState<User>({} as User);
   const [refreshToken, setRefreshToken] = useState('');
   const [isLogged, setIsLogged] = useState(false);
   const { push } = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem('@OrtoSetup:token');
+    const userFromLocalStorage = localStorage.getItem('@OrtoSetup:user');
 
-    if (token) {
+    if (token && userFromLocalStorage) {
+      setUser(JSON.parse(userFromLocalStorage));
       setRefreshToken(token);
       setIsLogged(true);
+      api.defaults.headers.authorization = `Bearer ${token}`;
     }
   }, []);
 
@@ -84,6 +88,7 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
           '@OrtoSetup:user',
           JSON.stringify(userFromResponse),
         );
+        api.defaults.headers.authorization = `Bearer ${token}`;
         push('/');
       } catch (err) {
         message.error('Credenciais invalidas!');

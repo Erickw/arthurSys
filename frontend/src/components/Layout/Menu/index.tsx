@@ -21,17 +21,8 @@ interface Products {
 }
 
 const Menu: React.FC = () => {
+  const { user } = useAuth();
   const { push } = useRouter();
-  const { refreshToken } = useAuth();
-  const [products, setProducts] = useState<Products[]>([]);
-
-  useEffect(() => {
-    api
-      .get('/products', {
-        headers: { Authorization: `Bearer ${refreshToken}` },
-      })
-      .then(response => setProducts(response.data));
-  }, [refreshToken, push]);
 
   return (
     <MenuAntd mode="inline" theme="dark">
@@ -81,23 +72,23 @@ const Menu: React.FC = () => {
       >
         Visão do cliente
       </Divider>
-      <SubMenu key="solicitar" title="Solicitar" style={{ color: '#fff' }}>
-        {products.map(product => (
-          <Item key={product.id}>
-            <Link href="/requests/teste">{product.name}</Link>
-          </Item>
-        ))}
-      </SubMenu>
-      <Divider
-        orientation="left"
-        plain
-        style={{ color: '#fff', marginLeft: 5.5 }}
-      >
-        Admin
-      </Divider>
       <Item>
-        <Link href="/new-product">Cria novo produto</Link>
+        <Link href="/products">Solicitar produto</Link>
       </Item>
+      {user.admin && (
+        <>
+          <Divider
+            orientation="left"
+            plain
+            style={{ color: '#fff', marginLeft: 5.5 }}
+          >
+            Admin
+          </Divider>
+          <Item>
+            <Link href="/new-product">Cria novo produto</Link>
+          </Item>
+        </>
+      )}
       <Item>
         <Link href="/settings">Configuracões</Link>
       </Item>

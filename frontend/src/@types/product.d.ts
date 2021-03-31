@@ -2,7 +2,11 @@ type ProductProps = {
   id: string;
   name: string;
   description: string;
-  form: InputGroupProps[];
+  value: number;
+  requiredPayment: number;
+  notes: string;
+  available: boolean;
+  fields: InputGroupProps[];
 };
 
 type InputGroupProps = {
@@ -17,4 +21,4 @@ type InputProps = {
   options?: string[];
 };
 
-type InputType = "string" | "number" | "select" | "date" | "file";
+type InputType = 'string' | 'number' | 'select' | 'date' | 'file';
