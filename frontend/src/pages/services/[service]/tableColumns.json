@@ -1,13 +1,13 @@
 [
   {
-    "title": "Profissional",
-    "dataIndex": "professionalName",
-    "key": "professionalName"
-  },
-  {
     "title": "Paciente",
     "dataIndex": "patientName",
     "key": "patientName"
+  },
+  {
+    "title": "Produto",
+    "dataIndex": "productId",
+    "key": "productId"
   },
   {
     "title": "Data",

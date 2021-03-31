@@ -285,7 +285,7 @@ export default function EditProduct({
 }
 
 EditProduct.getInitialProps = async ({ query: { id } }) => {
-  const response = await api.get(`products`);
-  const product = response.data.find(productItem => productItem.id === id);
+  const response = await api.get(`products/${id}`);
+  const product = response.data;
   return { product };
 };

@@ -45,20 +45,20 @@ const Menu: React.FC = () => {
             style={{ color: '#fff' }}
           >
             <Item>
-              <Link href={`/services/${service.route}/new`}>Novos</Link>
+              <Link href={`/services/${service.route}/novo`}>Novos</Link>
             </Item>
             <Item>
-              <Link href={`/services/${service.route}/in-progress`}>
+              <Link href={`/services/${service.route}/em-progresso`}>
                 Em Andamento
               </Link>
             </Item>
             <Item>
-              <Link href={`/services/${service.route}/finished`}>
+              <Link href={`/services/${service.route}/finalizada`}>
                 Finalizados
               </Link>
             </Item>
             <Item>
-              <Link href={`/services/${service.route}/cancelled`}>
+              <Link href={`/services/${service.route}/cancelada`}>
                 Cancelados
               </Link>
             </Item>

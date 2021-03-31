@@ -1,20 +1,17 @@
-import React from "react";
-import { Typography, Table } from "antd";
-import tableColumns from "./tableColumns.json";
-import axios from "axios";
+import React from 'react';
+import { Typography, Table } from 'antd';
+import axios from 'axios';
+import tableColumns from './tableColumns.json';
+import api from '../../../clients/api';
 
 const { Title } = Typography;
 
 interface ServiceProps {
   title: string;
-  data: Array<{
-    key: number;
-    professionalName: string;
-    patientName: string;
-    date: Date;
-  }>;
+  data: RequestProps[] | undefined;
 }
-const Service: React.FC<ServiceProps> = ({ title, data }) => {
+
+export default function Service({ title, data }: ServiceProps): JSX.Element {
   return (
     <>
       <Title level={2}>{title}</Title>
@@ -23,65 +20,54 @@ const Service: React.FC<ServiceProps> = ({ title, data }) => {
       </section>
     </>
   );
+}
+
+Service.getInitialProps = async ({ query: { status } }) => {
+  const response = await api.get(`requests/`);
+  const product = response.data.filter(request => request.status === status);
+  return { title: status, data: product };
 };
-export async function getServerSideProps(ctx) {
+
+/*
+export async function getServerSideProps(ctx): Promise<ServiceProps> {
   const { service, status } = ctx.query;
-  var sufix = "";
+  console.log(status);
+  console.log(service);
+  let sufix = '';
   switch (status) {
-    case "new":
-      sufix = "Novo";
+    case 'new':
+      sufix = 'Novo';
       break;
-    case "in-progress":
-      sufix = "Em Progresso";
+    case 'in-progress':
+      sufix = 'Em Progresso';
       break;
-    case "finished":
-      sufix = "Finalizados";
+    case 'finished':
+      sufix = 'Finalizados';
       break;
-    case "cancelled":
-      sufix = "Cancelados";
+    case 'cancelled':
+      sufix = 'Cancelados';
       break;
     default:
-      sufix = " ";
+      sufix = ' ';
       break;
   }
   function jsUcfirst(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
   const produto = service
-    .split("-")
-    .map((word) => jsUcfirst(word))
-    .join(" ");
-    
+    .split('-')
+    .map(word => jsUcfirst(word))
+    .join(' ');
+
+  const response = await api.get('/requests');
+  const requests = response.data.map(
+    request => request.status === status,
+  ) as RequestProps[];
+
   return {
     props: {
       title: `${produto} ${sufix}`,
-      data: [
-        {
-          key: 1,
-          professionalName: "John doe",
-          patientName: "John Doe",
-          date: new Date().toLocaleDateString(),
-        },
-        {
-          key: 2,
-          professionalName: "John doe",
-          patientName: "John Doe",
-          date: new Date().toLocaleDateString(),
-        },
-        {
-          key: 3,
-          professionalName: "John doe",
-          patientName: "John Doe",
-          date: new Date().toLocaleDateString(),
-        },
-        {
-          key: 4,
-          professionalName: "John doe",
-          patientName: "John Doe",
-          date: new Date().toLocaleDateString(),
-        },
-      ],
+      data: requests,
     },
   };
-}
-export default Service;
+} */
