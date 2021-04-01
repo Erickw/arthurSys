@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { Menu as MenuAntd, Divider } from 'antd';
 import { useRouter } from 'next/router';
 import Logo from '../../Logo';
-import api from '../../../clients/api';
 import { useAuth } from '../../../hooks/auth';
 
 const { Item, SubMenu } = MenuAntd;
@@ -14,11 +13,6 @@ const services = [
     route: 'solicitacoes',
   },
 ];
-
-interface Products {
-  id: string;
-  name: string;
-}
 
 const Menu: React.FC = () => {
   const { user } = useAuth();
@@ -86,6 +80,9 @@ const Menu: React.FC = () => {
           </Divider>
           <Item>
             <Link href="/new-product">Cria novo produto</Link>
+          </Item>
+          <Item>
+            <Link href="/register">Registrar usuário</Link>
           </Item>
         </>
       )}

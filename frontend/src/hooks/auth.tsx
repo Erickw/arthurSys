@@ -4,7 +4,6 @@ import React, {
   useContext,
   useCallback,
   useEffect,
-  useMemo,
   ReactNode,
 } from 'react';
 import { useRouter } from 'next/router';
@@ -16,11 +15,7 @@ interface AuthContextData {
   user: User;
   setUser: (data: User) => void;
   refreshToken: string;
-  register: (data: {
-    name: string;
-    email: string;
-    password: string;
-  }) => Promise<void>;
+  register: (data: RegisterProps) => Promise<void>;
   login: (data: { email: string; password: string }) => Promise<void>;
   logout: () => void;
   isLogged: boolean;
@@ -28,6 +23,13 @@ interface AuthContextData {
 
 interface User {
   id: string;
+  name: string;
+  email: string;
+  password: string;
+  admin: boolean;
+}
+
+interface RegisterProps {
   name: string;
   email: string;
   password: string;
@@ -61,14 +63,17 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
   // const isLogged = true;
   // useMemo(() => !!Object.keys(user).length, [user])
 
-  const register = useCallback(async ({ name, email, password }) => {
-    try {
-      const userToRegister = { name, email, password };
-      await api.post('/users', userToRegister);
-    } catch (err) {
-      message.error('Erro ao fazer registro, por favor tente novamente.');
-    }
-  }, []);
+  const register = useCallback(
+    async ({ name, email, password, admin }: RegisterProps) => {
+      try {
+        const userToRegister = { name, email, password, admin };
+        const response = await api.post('/users', userToRegister);
+      } catch (err) {
+        message.error('Erro ao fazer registro, por favor tente novamente.');
+      }
+    },
+    [],
+  );
 
   const login = useCallback(
     async ({ email, password }) => {

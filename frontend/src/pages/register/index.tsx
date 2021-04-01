@@ -1,4 +1,4 @@
-import { Button, Form, Input, message } from 'antd';
+import { Button, Checkbox, Form, Input, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -10,26 +10,32 @@ interface RegisterParams {
   name: string;
   email: string;
   password: string;
+  admin: boolean;
 }
 
 const Register: React.FC = () => {
-  const { register, isLogged } = useAuth();
+  const { register, isLogged, user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { push } = useRouter();
 
-  async function handleFinish({ name, email, password }: RegisterParams) {
+  async function handleFinish({
+    name,
+    email,
+    password,
+    admin = false,
+  }: RegisterParams) {
     setIsSubmitting(true);
-    await register({ name, email, password });
+    await register({ name, email, password, admin });
     setIsSubmitting(false);
     message.success('Usuário criado com sucesso', 4);
     push('/login');
   }
 
   useEffect(() => {
-    if (isLogged) {
+    if (isLogged && !user.admin) {
       push('/');
     }
-  }, [isLogged, push]);
+  }, [isLogged, push, user.admin]);
 
   return (
     <LoginWrapper>
@@ -80,6 +86,13 @@ const Register: React.FC = () => {
             >
               <Input.Password />
             </Form.Item>
+
+            {user.admin && (
+              <Form.Item name="admin" valuePropName="checked">
+                <Checkbox>Admin</Checkbox>
+              </Form.Item>
+            )}
+
             <Button
               type="primary"
               htmlType="submit"
@@ -89,7 +102,11 @@ const Register: React.FC = () => {
               Registrar
             </Button>
           </Form>
-          <Link href="/login">Voltar para login</Link>
+          {user.admin ? (
+            <Link href="/">Voltar para home</Link>
+          ) : (
+            <Link href="/login">Voltar para login</Link>
+          )}
         </div>
       </section>
       <section className="auxiliary" />
