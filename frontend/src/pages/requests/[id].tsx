@@ -25,12 +25,10 @@ export default function Requests({ product }: RequestProps): JSX.Element {
       request.productId = product.id;
       request.status = 'novo';
       request.date = new Date();
-      request.fields = JSON.stringify(
-        request.fields.map((field, index) => ({
-          title: product.fields[index].title,
-          fields: { ...field },
-        })),
-      );
+      request.fieldsValues = request.fieldsValues.map((field, index) => ({
+        title: product.fields[index].title,
+        fields: { ...field },
+      }));
       setIsSubmitting(true);
       await api.post('/requests', request);
       setIsSubmitting(false);

@@ -18,12 +18,12 @@ export default function ProductDynamicForm({
         fields.map((field, index) => (
           <>
             <h2>{field.title}</h2>
-            {field.fields?.map(fieldItem => (
+            {field.fields.map(fieldItem => (
               <>
                 {fieldItem.type === 'string' && (
                   <Item
                     label={fieldItem.label}
-                    name={['fields', index, fieldItem.name]}
+                    name={['fieldsValues', index, fieldItem.name]}
                     rules={[
                       {
                         required: true,
@@ -41,7 +41,7 @@ export default function ProductDynamicForm({
                 {fieldItem.type === 'number' && (
                   <Item
                     label={fieldItem.label}
-                    name={['fields', index, fieldItem.name]}
+                    name={['fieldsValues', index, fieldItem.name]}
                     rules={[
                       {
                         required: true,
@@ -59,7 +59,7 @@ export default function ProductDynamicForm({
                 {fieldItem.type === 'select' && (
                   <Item
                     label={fieldItem.label}
-                    name={['fields', index, fieldItem.name]}
+                    name={['fieldsValues', index, fieldItem.name]}
                     rules={[
                       {
                         required: true,
@@ -81,8 +81,8 @@ export default function ProductDynamicForm({
                 {fieldItem.type === 'date' && (
                   <Item
                     label={fieldItem.label}
-                    name={['fields', index, fieldItem.name]}
-                    fieldKey={['fields', index, fieldItem.name]}
+                    name={['fieldsValues', index, fieldItem.name]}
+                    fieldKey={['fieldsValues', index, fieldItem.name]}
                     rules={[
                       {
                         required: true,
@@ -96,7 +96,7 @@ export default function ProductDynamicForm({
                 {fieldItem.type === 'file' && (
                   <Item
                     label={fieldItem.label}
-                    name={['fields', index, fieldItem.name]}
+                    name={['fieldsValues', index, fieldItem.name]}
                     rules={[
                       {
                         required: true,

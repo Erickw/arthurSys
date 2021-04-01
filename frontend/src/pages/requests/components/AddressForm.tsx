@@ -70,6 +70,24 @@ export default function AddressForm(): JSX.Element {
       >
         <Input />
       </Item>
+
+      <Item
+        label="Rua"
+        name={['address', 'street']}
+        rules={[
+          {
+            required: true,
+            message: 'Por favor, insira a rua!',
+          },
+          {
+            whitespace: true,
+            message: 'Por favor, insira a rua!',
+          },
+        ]}
+      >
+        <Input />
+      </Item>
+
       <Item
         label="Número"
         name={['address', 'number']}

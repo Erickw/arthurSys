@@ -1,13 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type RequestProps = {
   key?: string;
   id: string;
   userId: string;
-  productionId: string;
+  productId: string;
   patientName: string;
   patientEmail: string;
   status: string;
   date: Date;
   address: Address;
+  fieldsValues: RequestGroupProps[];
+};
+
+type RequestGroupProps = {
+  title: string;
+  fields: RequestGroupInputsProps[];
+};
+
+type RequestGroupInputsProps = {
+  [x: string]: string;
 };
 
 type Address = {
