@@ -7,24 +7,18 @@ import api from '../../clients/api';
 import { useAuth } from '../../hooks/auth';
 import AddressForm from '../requests/components/AddressForm';
 import PatientForm from '../requests/components/PatientForm';
-import ProductDynamicForm from '../requests/components/ProductDynamicForm';
+import RequestDynamicForm from './components/RequestDynamicForm';
 
 const { Title } = Typography;
-
-interface DynamicValues {
-  [x: string]: string;
-}
 
 type EditRequestProps = {
   product: ProductProps;
   request: RequestProps;
-  dynamicValues: DynamicValues;
 };
 
 export default function EditRequest({
   product,
   request,
-  dynamicValues,
 }: EditRequestProps): JSX.Element {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { push } = useRouter();
@@ -38,10 +32,6 @@ export default function EditRequest({
       requestToUpdate.productId = product.id;
       requestToUpdate.status = 'novo';
       requestToUpdate.date = new Date();
-      // requestToUpdate.fields = requestToUpdate.fields.map((field, index) => ({
-      //  title: product.fields[index].title,
-      //  fields: { ...field },
-      // }));
       setIsSubmitting(true);
       await api.put(`/requests/${request.id}`, requestToUpdate);
       setIsSubmitting(false);
@@ -71,10 +61,10 @@ export default function EditRequest({
             number: request.address.number,
             complement: request.address.complement,
           },
-          fieldsValues: dynamicValues,
         }}
         style={{ width: '40%' }}
       >
+        {console.log(request)}
         <h2>Dados bancários</h2>
         <Descriptions title="">
           <Descriptions.Item label="Indentificação">
@@ -106,7 +96,10 @@ export default function EditRequest({
 
         <PatientForm />
 
-        <ProductDynamicForm fields={product.fields} />
+        <RequestDynamicForm
+          fieldsFromProduct={product.fields}
+          fieldsFromRequest={request.fieldsValues}
+        />
 
         <h2>Endereço</h2>
 
@@ -128,5 +121,6 @@ EditRequest.getInitialProps = async ({ query: { id } }) => {
 
   const responseProduct = await api.get(`products/${request.productId}`);
   const product = responseProduct.data;
+
   return { product, request };
 };
