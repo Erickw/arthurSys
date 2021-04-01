@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Typography, Table, Space, Modal, Descriptions } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Link from 'next/link';
@@ -34,6 +34,10 @@ export default function Service({ title, data }: ServiceProps): JSX.Element {
       },
     });
   }
+
+  useEffect(() => {
+    setRequests(data);
+  }, [data]);
 
   const columns = [
     {
