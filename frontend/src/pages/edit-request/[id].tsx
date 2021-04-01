@@ -64,7 +64,6 @@ export default function EditRequest({
         }}
         style={{ width: '40%' }}
       >
-        {console.log(request)}
         <h2>Dados bancários</h2>
         <Descriptions title="">
           <Descriptions.Item label="Indentificação">

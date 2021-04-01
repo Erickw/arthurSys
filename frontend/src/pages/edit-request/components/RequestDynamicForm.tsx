@@ -18,8 +18,6 @@ export default function RequestDynamicForm({
 }: RequestDynamicFormProps): JSX.Element {
   return (
     <>
-      {console.log(fieldsFromProduct)}
-      {console.log(fieldsFromRequest)}
       {fieldsFromProduct &&
         fieldsFromProduct.map((field, index) => (
           <>
