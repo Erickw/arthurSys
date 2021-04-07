@@ -7,7 +7,7 @@ interface DisplayRequestInfoProps {
   product: ProductProps;
 }
 
-export function DisplayRequestInfo({
+function DisplayRequestInfo({
   product,
   request,
 }: DisplayRequestInfoProps): JSX.Element {
@@ -98,3 +98,5 @@ export function DisplayRequestInfo({
     </RequestInfo>
   );
 }
+
+export default DisplayRequestInfo;

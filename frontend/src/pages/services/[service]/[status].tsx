@@ -5,7 +5,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import api from '../../../clients/api';
 
-import { DisplayRequestInfo } from './components/DisplayRequestInfo';
+import DisplayRequestInfo from './components/DisplayRequestInfo';
 import { useAuth } from '../../../hooks/auth';
 
 const { Title } = Typography;
