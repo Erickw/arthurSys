@@ -1,22 +1,27 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react';
-import { Typography, Table, Space, Modal, Descriptions } from 'antd';
+import { Typography, Table, Space, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import api from '../../../clients/api';
 
-import { RequestInfo } from '../../../styles/pages/request';
+import { DisplayRequestInfo } from './components/DisplayRequestInfo';
+import { useAuth } from '../../../hooks/auth';
 
 const { Title } = Typography;
 const { confirm } = Modal;
 
 interface ServiceProps {
-  title: string;
-  data: RequestProps[] | undefined;
+  status: string;
+  products: ProductProps[];
 }
 
-export default function Service({ title, data }: ServiceProps): JSX.Element {
-  const [requests, setRequests] = useState<RequestProps[] | undefined>(data);
+export default function Service({
+  status,
+  products,
+}: ServiceProps): JSX.Element {
+  const [requests, setRequests] = useState<RequestProps[] | undefined>();
+  const { user } = useAuth();
 
   function deleteRequestModal(requestId: string) {
     confirm({
@@ -36,8 +41,24 @@ export default function Service({ title, data }: ServiceProps): JSX.Element {
   }
 
   useEffect(() => {
-    setRequests(data);
-  }, [data]);
+    if (user.admin) {
+      api
+        .get(`/requests/${status}`)
+        .then(response =>
+          setRequests(
+            response.data.map(request => ({ ...request, key: request.id })),
+          ),
+        );
+    } else {
+      api
+        .get(`/requests/${user.id}/${status}`)
+        .then(response =>
+          setRequests(
+            response.data.map(request => ({ ...request, key: request.id })),
+          ),
+        );
+    }
+  }, [status, user.admin, user.id]);
 
   const columns = [
     {
@@ -75,57 +96,21 @@ export default function Service({ title, data }: ServiceProps): JSX.Element {
     },
   ];
 
-  function displayRequestInfo(request: RequestProps) {
-    return (
-      <RequestInfo>
-        <Descriptions title="Endereço" size="default" column={8}>
-          <Descriptions.Item label="Estado">
-            {request.address.state}
-          </Descriptions.Item>
-          <Descriptions.Item label="Cidade">
-            {request.address.city}
-          </Descriptions.Item>
-          <Descriptions.Item label="CEP">
-            {request.address.postalCode}
-          </Descriptions.Item>
-          <Descriptions.Item label="Bairro">
-            {request.address.district}
-          </Descriptions.Item>
-          <Descriptions.Item label="Rua">
-            {request.address.street}
-          </Descriptions.Item>
-          <Descriptions.Item label="Número">
-            {request.address.number}
-          </Descriptions.Item>
-        </Descriptions>
-
-        <Descriptions title="Requisção" size="default" column={8}>
-          <Descriptions.Item label="Nome do paciente">
-            {request.patientName}
-          </Descriptions.Item>
-          <Descriptions.Item label="Email do paciente">
-            {request.patientEmail}
-          </Descriptions.Item>
-          <Descriptions.Item label="Produto">
-            {request.productId}
-          </Descriptions.Item>
-          <Descriptions.Item label="Data">
-            {new Intl.DateTimeFormat('pt-br').format(new Date(request.date))}
-          </Descriptions.Item>
-        </Descriptions>
-      </RequestInfo>
-    );
-  }
-
   return (
     <>
-      <Title level={2}>{title}</Title>
+      <Title level={2}>{status}</Title>
       <section>
         <Table
           columns={columns}
           dataSource={requests}
           expandable={{
-            expandedRowRender: record => displayRequestInfo(record),
+            expandedRowRender: (record: RequestProps) =>
+              DisplayRequestInfo({
+                request: record,
+                product: products.find(
+                  product => product.id === record.productId,
+                ),
+              }),
           }}
         />
       </section>
@@ -134,12 +119,7 @@ export default function Service({ title, data }: ServiceProps): JSX.Element {
 }
 
 Service.getInitialProps = async ({ query: { status } }) => {
-  const response = await api.get(`/requests`);
-  const request = response.data
-    .filter(requestFromApi => requestFromApi.status === status)
-    .map(requestItem => ({
-      ...requestItem,
-      key: requestItem.id,
-    }));
-  return { title: status, data: request };
+  const productsFromApi = await api.get('/products');
+  const products = productsFromApi.data;
+  return { status, products };
 };
