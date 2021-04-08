@@ -21,6 +21,7 @@ interface ServiceProps {
 export default function Service({ status }: ServiceProps): JSX.Element {
   const [requests, setRequests] = useState<RequestProps[] | undefined>();
   const { user } = useAuth();
+  const [tableIsLoading, setTableIsLoading] = useState(false);
 
   function deleteRequestModal(requestId: string) {
     confirm({
@@ -42,6 +43,30 @@ export default function Service({ status }: ServiceProps): JSX.Element {
   function handleDisplayRequestInfo(request: RequestProps) {
     return (
       <RequestInfo>
+        {/* <Descriptions
+        title="Produto"
+        layout="vertical"
+        bordered
+        column={{ xxl: 12, xl: 8, lg: 5, md: 5, sm: 2, xs: 1 }}
+      >
+        <Descriptions.Item
+          labelStyle={{ width: '130px', padding: '10px' }}
+          label="Nome do produto"
+        >
+          {product.name}
+        </Descriptions.Item>
+        <Descriptions.Item label="Descrição">
+          {product.description}
+        </Descriptions.Item>
+        <Descriptions.Item label="Valor">{product.value}</Descriptions.Item>
+        <Descriptions.Item label="Pagamento">
+          {product.requiredPayment}
+        </Descriptions.Item>
+        <Descriptions.Item label="Nota">{product.notes}</Descriptions.Item>
+        <Descriptions.Item label="Disponibilidade">
+          {product.available ? 'Disponível' : 'Indisponível'}
+        </Descriptions.Item>
+      </Descriptions> */}
         <Descriptions
           title="Endereço"
           layout="vertical"
@@ -105,22 +130,21 @@ export default function Service({ status }: ServiceProps): JSX.Element {
   }
 
   useEffect(() => {
+    setTableIsLoading(true);
     if (user.admin) {
-      api
-        .get(`/requests/${status}`)
-        .then(response =>
-          setRequests(
-            response.data.map(request => ({ ...request, key: request.id })),
-          ),
+      api.get(`/requests/${status}`).then(response => {
+        setRequests(
+          response.data.map(request => ({ ...request, key: request.id })),
         );
+        setTableIsLoading(false);
+      });
     } else {
-      api
-        .get(`/requests/${user.id}/${status}`)
-        .then(response =>
-          setRequests(
-            response.data.map(request => ({ ...request, key: request.id })),
-          ),
+      api.get(`/requests/${user.id}/${status}`).then(response => {
+        setRequests(
+          response.data.map(request => ({ ...request, key: request.id })),
         );
+        setTableIsLoading(false);
+      });
     }
   }, [status, user.admin, user.id]);
 
@@ -167,6 +191,7 @@ export default function Service({ status }: ServiceProps): JSX.Element {
         <Table
           columns={columns}
           dataSource={requests}
+          loading={tableIsLoading}
           expandable={{
             expandedRowRender: (record: RequestProps) =>
               handleDisplayRequestInfo(record),
@@ -176,6 +201,14 @@ export default function Service({ status }: ServiceProps): JSX.Element {
     </>
   );
 }
+
+// export const getServerSideProps: GetServerSideProps = async context => {
+//  console.log(context);
+//  console.log('cheogu');
+//  return {
+//    props: { status: 'novo' },
+//  };
+// };
 
 Service.getInitialProps = async ({ query: { status } }) => {
   // const productsFromApi = await api.get('/products');
