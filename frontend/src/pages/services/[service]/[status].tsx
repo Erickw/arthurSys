@@ -2,13 +2,13 @@
 /* eslint-disable react/require-default-props */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react';
-import { Typography, Table, Space, Modal } from 'antd';
+import { Typography, Table, Space, Modal, Descriptions } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import api from '../../../clients/api';
 
-import DisplayRequestInfo from './components/DisplayRequestInfo';
 import { useAuth } from '../../../hooks/auth';
+import { RequestInfo } from '../../../styles/pages/request';
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -37,6 +37,71 @@ export default function Service({ status }: ServiceProps): JSX.Element {
         );
       },
     });
+  }
+
+  function handleDisplayRequestInfo(request: RequestProps) {
+    return (
+      <RequestInfo>
+        <Descriptions
+          title="Endereço"
+          layout="vertical"
+          bordered
+          column={{ xxl: 12, xl: 8, lg: 5, md: 5, sm: 2, xs: 1 }}
+        >
+          <Descriptions.Item label="Estado">
+            {request.address.state}
+          </Descriptions.Item>
+          <Descriptions.Item label="Cidade">
+            {request.address.city}
+          </Descriptions.Item>
+          <Descriptions.Item label="CEP">
+            {request.address.postalCode}
+          </Descriptions.Item>
+          <Descriptions.Item label="Bairro">
+            {request.address.district}
+          </Descriptions.Item>
+          <Descriptions.Item label="Rua">
+            {request.address.street}
+          </Descriptions.Item>
+          <Descriptions.Item label="Número">
+            {request.address.number}
+          </Descriptions.Item>
+        </Descriptions>
+
+        <Descriptions
+          title="Requisção"
+          layout="vertical"
+          bordered
+          column={{ xxl: 12, xl: 8, lg: 5, md: 5, sm: 2, xs: 1 }}
+        >
+          <Descriptions.Item label="Nome do paciente">
+            {request.patientName}
+          </Descriptions.Item>
+          <Descriptions.Item label="Email do paciente">
+            {request.patientEmail}
+          </Descriptions.Item>
+          <Descriptions.Item label="Produto">
+            {request.productId}
+          </Descriptions.Item>
+          <Descriptions.Item label="Data">
+            {new Intl.DateTimeFormat('pt-br').format(new Date(request.date))}
+          </Descriptions.Item>
+        </Descriptions>
+
+        <Descriptions
+          title="Informações adicionais do produto"
+          layout="vertical"
+          bordered
+          column={{ xxl: 12, xl: 8, lg: 5, md: 5, sm: 2, xs: 1 }}
+        >
+          {request.fieldsValues.map(fieldValue =>
+            Object.entries(fieldValue.fields).map(item => (
+              <Descriptions.Item label={item[0]}>{item[1]}</Descriptions.Item>
+            )),
+          )}
+        </Descriptions>
+      </RequestInfo>
+    );
   }
 
   useEffect(() => {
@@ -104,9 +169,7 @@ export default function Service({ status }: ServiceProps): JSX.Element {
           dataSource={requests}
           expandable={{
             expandedRowRender: (record: RequestProps) =>
-              DisplayRequestInfo({
-                request: record,
-              }),
+              handleDisplayRequestInfo(record),
           }}
         />
       </section>
