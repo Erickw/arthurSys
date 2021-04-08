@@ -82,8 +82,8 @@ export default function Service({
       title: 'Data',
       dataIndex: 'date',
       key: 'date',
-      render: ({ date }: RequestProps) => (
-        <span>{new Intl.DateTimeFormat('pt-BR').format(date)}</span>
+      render: (date: Date) => (
+        <span>{new Intl.DateTimeFormat('pt-BR').format(new Date(date))}</span>
       ),
     },
     {

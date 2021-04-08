@@ -19,10 +19,7 @@ export default function DisplayRequestInfo({
         bordered
         column={{ xxl: 12, xl: 8, lg: 5, md: 5, sm: 2, xs: 1 }}
       >
-        <Descriptions.Item
-          labelStyle={{ width: '130px', padding: '10px' }}
-          label="Nome do produto"
-        >
+        <Descriptions.Item label="Nome do produto">
           {product.name}
         </Descriptions.Item>
         <Descriptions.Item label="Descrição">
