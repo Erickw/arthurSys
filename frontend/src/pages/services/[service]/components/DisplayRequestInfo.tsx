@@ -1,19 +1,18 @@
+/* eslint-disable react/no-unused-prop-types */
+/* eslint-disable react/require-default-props */
 import { Descriptions } from 'antd';
 import React from 'react';
 import { RequestInfo } from '../../../../styles/pages/request';
 
 interface DisplayRequestInfoProps {
   request: RequestProps;
-  product: ProductProps;
+  product?: ProductProps;
 }
 
-function DisplayRequestInfo({
-  product,
-  request,
-}: DisplayRequestInfoProps): JSX.Element {
+function DisplayRequestInfo({ request }: DisplayRequestInfoProps): JSX.Element {
   return (
     <RequestInfo>
-      <Descriptions
+      {/* <Descriptions
         title="Produto"
         layout="vertical"
         bordered
@@ -36,7 +35,7 @@ function DisplayRequestInfo({
         <Descriptions.Item label="Disponibilidade">
           {product.available ? 'Disponível' : 'Indisponível'}
         </Descriptions.Item>
-      </Descriptions>
+      </Descriptions> */}
       <Descriptions
         title="Endereço"
         layout="vertical"
