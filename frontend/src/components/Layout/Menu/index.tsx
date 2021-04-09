@@ -84,6 +84,9 @@ const Menu: React.FC = () => {
           <Item>
             <Link href="/register">Registrar usuário</Link>
           </Item>
+          <Item>
+            <Link href="/users-table">Tabela de usuários</Link>
+          </Item>
         </>
       )}
       <Item>
