@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, message } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -14,7 +14,7 @@ interface RegisterParams {
 }
 
 const Register: React.FC = () => {
-  const { register, isLogged, user } = useAuth();
+  const { register, isLogged } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { push } = useRouter();
 
@@ -32,10 +32,10 @@ const Register: React.FC = () => {
   }
 
   useEffect(() => {
-    if (isLogged && !user.admin) {
+    if (isLogged) {
       push('/');
     }
-  }, [isLogged, push, user.admin]);
+  }, [isLogged, push]);
 
   return (
     <LoginWrapper>
@@ -87,12 +87,6 @@ const Register: React.FC = () => {
               <Input.Password />
             </Form.Item>
 
-            {user.admin && (
-              <Form.Item name="admin" valuePropName="checked">
-                <Checkbox>Admin</Checkbox>
-              </Form.Item>
-            )}
-
             <Button
               type="primary"
               htmlType="submit"
@@ -102,11 +96,7 @@ const Register: React.FC = () => {
               Registrar
             </Button>
           </Form>
-          {user.admin ? (
-            <Link href="/">Voltar para home</Link>
-          ) : (
-            <Link href="/login">Voltar para login</Link>
-          )}
+          <Link href="/login">Voltar para login</Link>
         </div>
       </section>
       <section className="auxiliary" />

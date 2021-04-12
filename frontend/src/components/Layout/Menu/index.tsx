@@ -82,9 +82,6 @@ const Menu: React.FC = () => {
             <Link href="/new-product">Cria novo produto</Link>
           </Item>
           <Item>
-            <Link href="/register">Registrar usuário</Link>
-          </Item>
-          <Item>
             <Link href="/users-table">Tabela de usuários</Link>
           </Item>
         </>
