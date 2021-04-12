@@ -15,6 +15,7 @@ import {
 import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import api from '../../clients/api';
 import CreateUserModal from './components/CreateUserModal';
+import EditUserModal from './components/EditUserModal';
 
 interface User {
   id: string;
@@ -35,6 +36,8 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
   );
 
   const [createUserModalVisible, setCreateUserModalVisible] = useState(false);
+  const [editUserModalVisible, setEditUserModalVisible] = useState(false);
+  const [userToEdit, setUserToEdit] = useState<User>({} as User);
 
   function deleteRequestModal(user: User) {
     confirm({
@@ -53,8 +56,20 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
     });
   }
 
+  function handleEditUser(user: User) {
+    setUserToEdit(user);
+    setEditUserModalVisible(true);
+  }
+
   async function handleCloseCreateUserModal() {
     setCreateUserModalVisible(false);
+    const usersFromApi = await api.get('/users');
+    const updateStateUsers = usersFromApi.data;
+    setStateUsers(updateStateUsers);
+  }
+
+  async function handleCloseEditUserModal() {
+    setEditUserModalVisible(false);
     const usersFromApi = await api.get('/users');
     const updateStateUsers = usersFromApi.data;
     setStateUsers(updateStateUsers);
@@ -154,6 +169,7 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
+          <a onClick={() => handleEditUser(record)}>Editar</a>
           <a onClick={() => deleteRequestModal(record)}>Deletar</a>
         </Space>
       ),
@@ -176,6 +192,12 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
       <CreateUserModal
         close={() => handleCloseCreateUserModal()}
         modalVisible={createUserModalVisible}
+      />
+
+      <EditUserModal
+        close={() => handleCloseEditUserModal()}
+        modalVisible={editUserModalVisible}
+        user={userToEdit}
       />
 
       <Table
