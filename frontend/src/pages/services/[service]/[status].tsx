@@ -87,12 +87,12 @@ export default function Service({
       ),
     },
     {
-      title: 'Action',
+      title: 'Opções',
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
           <Link href={`/edit-request/${record.id}`}>Editar</Link>
-          <a onClick={() => deleteRequestModal(record.id)}>Delete</a>
+          <a onClick={() => deleteRequestModal(record.id)}>Deletar</a>
         </Space>
       ),
     },

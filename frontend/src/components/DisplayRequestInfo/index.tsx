@@ -13,27 +13,29 @@ export default function DisplayRequestInfo({
 }: DisplayRequestInfoProps): JSX.Element {
   return (
     <RequestInfo>
-      <Descriptions
-        title="Produto"
-        layout="vertical"
-        bordered
-        column={{ xxl: 12, xl: 8, lg: 5, md: 5, sm: 2, xs: 1 }}
-      >
-        <Descriptions.Item label="Nome do produto">
-          {product.name}
-        </Descriptions.Item>
-        <Descriptions.Item label="Descrição">
-          {product.description}
-        </Descriptions.Item>
-        <Descriptions.Item label="Valor">{product.value}</Descriptions.Item>
-        <Descriptions.Item label="Pagamento">
-          {product.requiredPayment}
-        </Descriptions.Item>
-        <Descriptions.Item label="Nota">{product.notes}</Descriptions.Item>
-        <Descriptions.Item label="Disponibilidade">
-          {product.available ? 'Disponível' : 'Indisponível'}
-        </Descriptions.Item>
-      </Descriptions>
+      {product && (
+        <Descriptions
+          title="Produto"
+          layout="vertical"
+          bordered
+          column={{ xxl: 12, xl: 8, lg: 5, md: 5, sm: 2, xs: 1 }}
+        >
+          <Descriptions.Item label="Nome do produto">
+            {product.name}
+          </Descriptions.Item>
+          <Descriptions.Item label="Descrição">
+            {product.description}
+          </Descriptions.Item>
+          <Descriptions.Item label="Valor">{product.value}</Descriptions.Item>
+          <Descriptions.Item label="Pagamento">
+            {product.requiredPayment}
+          </Descriptions.Item>
+          <Descriptions.Item label="Nota">{product.notes}</Descriptions.Item>
+          <Descriptions.Item label="Disponibilidade">
+            {product.available ? 'Disponível' : 'Indisponível'}
+          </Descriptions.Item>
+        </Descriptions>
+      )}
 
       <Descriptions
         title="Endereço"
