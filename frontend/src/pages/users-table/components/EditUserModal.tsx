@@ -25,7 +25,7 @@ interface EditUserModalProps {
 export default function EditUserModal({
   modalVisible,
   close,
-  user,
+  user = { id: '', name: '', email: '', admin: false },
 }: EditUserModalProps): JSX.Element {
   const [isSubmitting, setIsSubmitting] = useState(false);
 

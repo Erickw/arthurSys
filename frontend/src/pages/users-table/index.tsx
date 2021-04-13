@@ -37,7 +37,7 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
 
   const [createUserModalVisible, setCreateUserModalVisible] = useState(false);
   const [editUserModalVisible, setEditUserModalVisible] = useState(false);
-  const [userToEdit, setUserToEdit] = useState<User>({} as User);
+  const [userToEdit, setUserToEdit] = useState<User>(undefined);
 
   function deleteRequestModal(user: User) {
     confirm({
@@ -65,23 +65,15 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
     setCreateUserModalVisible(false);
     const usersFromApi = await api.get('/users');
     const updateStateUsers = usersFromApi.data;
-    setStateUsers(updateStateUsers);
+    setStateUsers(updateStateUsers.map(user => ({ ...user, key: user.id })));
   }
 
   async function handleCloseEditUserModal() {
     setEditUserModalVisible(false);
     const usersFromApi = await api.get('/users');
     const updateStateUsers = usersFromApi.data;
-    setStateUsers(updateStateUsers);
+    setStateUsers(updateStateUsers.map(user => ({ ...user, key: user.id })));
   }
-
-  const handleSearch = tableConfirm => {
-    tableConfirm();
-  };
-
-  const handleReset = clearFilters => {
-    clearFilters();
-  };
 
   const getColumnSearchProps = dataIndex => ({
     filterDropdown: ({
@@ -92,29 +84,25 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
     }) => (
       <div style={{ padding: 8 }}>
         <Input
-          placeholder={`Search ${dataIndex}`}
+          placeholder="Procurar"
           value={selectedKeys[0]}
           onChange={e =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
-          onPressEnter={() => handleSearch(confirm)}
+          onPressEnter={confirm}
           style={{ width: 188, marginBottom: 8, display: 'block' }}
         />
         <Space>
           <Button
             type="primary"
-            onClick={() => handleSearch(confirm)}
+            onClick={confirm}
             icon={<SearchOutlined />}
             size="small"
             style={{ width: 90 }}
           >
             Search
           </Button>
-          <Button
-            onClick={() => handleReset(clearFilters)}
-            size="small"
-            style={{ width: 90 }}
-          >
+          <Button onClick={clearFilters} size="small" style={{ width: 90 }}>
             Reset
           </Button>
         </Space>
@@ -194,11 +182,13 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
         modalVisible={createUserModalVisible}
       />
 
-      <EditUserModal
-        close={() => handleCloseEditUserModal()}
-        modalVisible={editUserModalVisible}
-        user={userToEdit}
-      />
+      {userToEdit && (
+        <EditUserModal
+          close={() => handleCloseEditUserModal()}
+          modalVisible={editUserModalVisible}
+          user={userToEdit}
+        />
+      )}
 
       <Table
         columns={columns}
