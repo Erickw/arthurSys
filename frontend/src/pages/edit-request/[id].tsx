@@ -1,6 +1,7 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-return-assign */
 import { Button, Descriptions, Form, message, Typography } from 'antd';
+import { useForm } from 'antd/lib/form/Form';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import api from '../../clients/api';
@@ -23,6 +24,7 @@ export default function EditRequest({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { push } = useRouter();
   const { user } = useAuth();
+  const [form] = useForm();
 
   const handleSubmit = useCallback(
     async data => {
@@ -32,13 +34,19 @@ export default function EditRequest({
       requestToUpdate.productId = product.id;
       requestToUpdate.status = 'novo';
       requestToUpdate.date = new Date();
+      requestToUpdate.fieldsValues = requestToUpdate.fieldsValues.map(
+        (field, index) => ({
+          title: product.fields[index].title,
+          fields: { ...field },
+        }),
+      );
       setIsSubmitting(true);
       await api.put(`/requests/${request.id}`, requestToUpdate);
       setIsSubmitting(false);
       message.success(`Solicitação do ${product.name} criada com sucesso!`);
       push('/');
     },
-    [product.id, product.name, push, request.id, user.id],
+    [product.fields, product.id, product.name, push, request.id, user.id],
   );
 
   return (
@@ -46,6 +54,7 @@ export default function EditRequest({
       <Title>Editar Solicitação</Title>
       <Form
         layout="vertical"
+        form={form}
         onFinish={handleSubmit}
         initialValues={{
           patientName: request.patientName,
@@ -98,6 +107,11 @@ export default function EditRequest({
         <RequestDynamicForm
           fieldsFromProduct={product.fields}
           fieldsFromRequest={request.fieldsValues}
+          onUpdateFile={(url: string, index: number, fieldItemName: string) => {
+            const { fieldsValues } = form.getFieldsValue();
+            fieldsValues[index][fieldItemName] = url;
+            form.setFieldsValue({ fieldsValues });
+          }}
         />
 
         <h2>Endereço</h2>

@@ -1,4 +1,5 @@
 import { Button, Descriptions, Form, message, Typography } from 'antd';
+import { useForm } from 'antd/lib/form/Form';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import api from '../../clients/api';
@@ -17,6 +18,7 @@ export default function Requests({ product }: RequestProps): JSX.Element {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { push } = useRouter();
   const { user } = useAuth();
+  const [form] = useForm();
 
   const handleSubmit = useCallback(
     async data => {
@@ -41,7 +43,12 @@ export default function Requests({ product }: RequestProps): JSX.Element {
   return (
     <>
       <Title>Nova Solicitação</Title>
-      <Form layout="vertical" onFinish={handleSubmit} style={{ width: '40%' }}>
+      <Form
+        layout="vertical"
+        form={form}
+        onFinish={handleSubmit}
+        style={{ width: '40%' }}
+      >
         <h2>Dados bancários</h2>
         <Descriptions title="">
           <Descriptions.Item label="Indentificação">
@@ -70,10 +77,16 @@ export default function Requests({ product }: RequestProps): JSX.Element {
         </Descriptions>
 
         <h2>Dados do paciente</h2>
-
         <PatientForm />
 
-        <ProductDynamicForm fields={product.fields} />
+        <ProductDynamicForm
+          fields={product.fields}
+          onUpdateFile={(url: string, index: number, fieldItemName: string) => {
+            const { fieldsValues } = form.getFieldsValue();
+            fieldsValues[index][fieldItemName] = url;
+            form.setFieldsValue({ fieldsValues });
+          }}
+        />
 
         <h2>Endereço</h2>
 

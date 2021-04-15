@@ -11,6 +11,19 @@ export default function DisplayRequestInfo({
   request,
   product,
 }: DisplayRequestInfoProps): JSX.Element {
+  function displayCorrectFormatData(item) {
+    const data = item;
+    if (data.slice(0, 38) === 'https://firebasestorage.googleapis.com') {
+      return (
+        <a href={data} target="_blank" rel="noreferrer">
+          {data}
+        </a>
+      );
+    }
+
+    return data;
+  }
+
   return (
     <RequestInfo>
       {product && (
@@ -91,7 +104,9 @@ export default function DisplayRequestInfo({
       >
         {request.fieldsValues.map(fieldValue =>
           Object.entries(fieldValue.fields).map(item => (
-            <Descriptions.Item label={item[0]}>{item[1]}</Descriptions.Item>
+            <Descriptions.Item label={item[0]}>
+              {displayCorrectFormatData(item[1])}
+            </Descriptions.Item>
           )),
         )}
       </Descriptions>
