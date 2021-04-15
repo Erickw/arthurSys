@@ -2,20 +2,12 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from 'react';
-import {
-  Button,
-  Card,
-  Descriptions,
-  Input,
-  Modal,
-  Space,
-  Table,
-  Tag,
-} from 'antd';
-import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Card, Descriptions, Modal, Space, Table, Tag } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import api from '../../clients/api';
 import CreateUserModal from './components/CreateUserModal';
 import EditUserModal from './components/EditUserModal';
+import { getColumnSearchProps } from '../../components/ColumnSearch';
 
 interface User {
   id: string;
@@ -74,56 +66,6 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
     const updateStateUsers = usersFromApi.data;
     setStateUsers(updateStateUsers.map(user => ({ ...user, key: user.id })));
   }
-
-  const getColumnSearchProps = dataIndex => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-    }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          placeholder="Procurar"
-          value={selectedKeys[0]}
-          onChange={e =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={confirm}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={confirm}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Search
-          </Button>
-          <Button onClick={clearFilters} size="small" style={{ width: 90 }}>
-            Reset
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: filtered => (
-      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex]
-        ? record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase())
-        : '',
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => 100);
-      }
-    },
-  });
 
   const columns = [
     {

@@ -9,6 +9,7 @@ import api from '../../../clients/api';
 
 import { useAuth } from '../../../hooks/auth';
 import DisplayRequestInfo from '../../../components/DisplayRequestInfo';
+import { getColumnSearchProps } from '../../../components/ColumnSearch';
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -67,21 +68,25 @@ export default function Service({
       title: 'Paciente',
       dataIndex: 'patientName',
       key: 'patientName',
+      ...getColumnSearchProps('patientName'),
     },
     {
       title: 'Requisição',
       dataIndex: 'id',
       key: 'id',
+      ...getColumnSearchProps('id'),
     },
     {
       title: 'Produto',
       dataIndex: 'productId',
       key: 'productId',
+      ...getColumnSearchProps('productId'),
     },
     {
       title: 'Data',
       dataIndex: 'date',
       key: 'date',
+      sorter: (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
       render: (date: Date) => (
         <span>{new Intl.DateTimeFormat('pt-BR').format(new Date(date))}</span>
       ),

@@ -34,8 +34,10 @@ const Products: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    api.get('/products').then(response => setProducts(response.data));
-    setLoading(false);
+    api.get('/products').then(response => {
+      setProducts(response.data);
+      setLoading(false);
+    });
   }, [refreshToken]);
   return (
     <Card bordered={false}>
