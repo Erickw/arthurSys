@@ -130,6 +130,7 @@ export default function ProductDynamicForm({
                       onChange={file =>
                         handleUpload(file, index, fieldItem.name)
                       }
+                      beforeUpload={() => false}
                     >
                       <p className="ant-upload-drag-icon">
                         <InboxOutlined />
