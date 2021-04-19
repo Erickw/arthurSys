@@ -31,13 +31,10 @@ export default function DisplayRequestInfo({
           title="Produto"
           layout="vertical"
           bordered
-          column={{ xxl: 12, xl: 8, lg: 5, md: 5, sm: 2, xs: 1 }}
+          column={{ xxl: 5, xl: 5, lg: 5, md: 5, sm: 1, xs: 1 }}
         >
           <Descriptions.Item label="Nome do produto">
             {product.name}
-          </Descriptions.Item>
-          <Descriptions.Item label="Descrição">
-            {product.description}
           </Descriptions.Item>
           <Descriptions.Item label="Valor">{product.value}</Descriptions.Item>
           <Descriptions.Item label="Pagamento">
@@ -46,6 +43,9 @@ export default function DisplayRequestInfo({
           <Descriptions.Item label="Nota">{product.notes}</Descriptions.Item>
           <Descriptions.Item label="Disponibilidade">
             {product.available ? 'Disponível' : 'Indisponível'}
+          </Descriptions.Item>
+          <Descriptions.Item span={5} label="Descrição">
+            {product.description}
           </Descriptions.Item>
         </Descriptions>
       )}
@@ -100,7 +100,7 @@ export default function DisplayRequestInfo({
         title="Informações adicionais do produto"
         layout="vertical"
         bordered
-        column={{ xxl: 12, xl: 8, lg: 5, md: 5, sm: 2, xs: 1 }}
+        column={{ xxl: 5, xl: 3, lg: 2, md: 2, sm: 1, xs: 1 }}
       >
         {request.fieldsValues.map(fieldValue =>
           Object.entries(fieldValue.fields).map(item => (
