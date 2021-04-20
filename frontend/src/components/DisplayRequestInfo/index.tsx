@@ -1,6 +1,7 @@
 import { Descriptions } from 'antd';
 import React from 'react';
 import { RequestInfo } from '../../styles/pages/request';
+import { convertSnakeCaseToNormal } from '../../utils/utils';
 
 interface DisplayRequestInfoProps {
   request: RequestProps;
@@ -104,7 +105,7 @@ export default function DisplayRequestInfo({
       >
         {request.fieldsValues.map(fieldValue =>
           Object.entries(fieldValue.fields).map(item => (
-            <Descriptions.Item label={item[0]}>
+            <Descriptions.Item label={convertSnakeCaseToNormal(item[0])}>
               {displayCorrectFormatData(item[1])}
             </Descriptions.Item>
           )),

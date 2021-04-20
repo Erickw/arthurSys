@@ -1,7 +1,7 @@
 export function convertToSnakeCase(string: string): string {
-  return string
-    .replace(/\W+/g, ' ')
-    .split(/ |\B(?=[A-Z])/)
-    .map(word => word.toLowerCase())
-    .join('_');
+  return string.replace(/ /g, '_');
+}
+
+export function convertSnakeCaseToNormal(string: string): string {
+  return string.replace(/_/g, ' ');
 }
