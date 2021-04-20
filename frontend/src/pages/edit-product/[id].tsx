@@ -1,11 +1,12 @@
 /* eslint-disable no-param-reassign */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { Button, Form, Input, message, Select, Typography } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import { useRouter } from 'next/router';
 import { InputsWrapper } from '../../styles/pages/new-product';
 import api from '../../clients/api';
+import { convertToSnakeCase } from '../../utils/utils';
 
 const { Item, List, ErrorList } = Form;
 const { Title } = Typography;
@@ -21,6 +22,8 @@ export default function EditProduct({
   const { push } = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const forceUpdate = useReducer(() => ({}), {})[1] as () => void;
+
   const handleSubmit = useCallback(
     async data => {
       setIsSubmitting(true);
@@ -30,6 +33,15 @@ export default function EditProduct({
         data.available = false;
       }
       data.id = product.id;
+      // convert the name in the dynamic fields to snakecase
+      data.fields = data.fields.map(field => ({
+        title: field.title,
+        fields: field.fields.map(fieldItem => ({
+          ...fieldItem,
+          label: fieldItem.name,
+          name: convertToSnakeCase(fieldItem.name),
+        })),
+      }));
       await api.put(`/products/${product.id}`, data);
       setIsSubmitting(false);
       message.success(`Produto editado com sucesso!`);
@@ -146,23 +158,6 @@ export default function EditProduct({
         </Item>
 
         <Item label="Note" name={['bankInfo', 'note']}>
-          <Input />
-        </Item>
-
-        <Item
-          label="Valor"
-          name={['bankInfo', 'value']}
-          rules={[
-            {
-              required: true,
-              message: 'Por favor, insira o valor!',
-            },
-            {
-              whitespace: true,
-              message: 'Por favor, insira o valor!',
-            },
-          ]}
-        >
           <Input />
         </Item>
 
@@ -293,23 +288,6 @@ export default function EditProduct({
                                 <Input />
                               </Item>
                               <Item
-                                label="Label"
-                                name={[field.name, 'label']}
-                                fieldKey={[field.fieldKey, 'label']}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: 'Por favor, insira a label!',
-                                  },
-                                  {
-                                    whitespace: true,
-                                    message: 'Por favor, insira a label!',
-                                  },
-                                ]}
-                              >
-                                <Input />
-                              </Item>
-                              <Item
                                 label="Tipo"
                                 name={[field.name, 'type']}
                                 fieldKey={[field.fieldKey, 'type']}
@@ -324,7 +302,10 @@ export default function EditProduct({
                                   },
                                 ]}
                               >
-                                <Select defaultValue="string">
+                                <Select
+                                  defaultValue="string"
+                                  onSelect={() => forceUpdate()}
+                                >
                                   <Select.Option value="string">
                                     Texto
                                   </Select.Option>
@@ -342,13 +323,17 @@ export default function EditProduct({
                                   </Select.Option>
                                 </Select>
                               </Item>
-                              <Item
-                                label="Opções"
-                                name={[field.name, 'options']}
-                                fieldKey={[field.fieldKey, 'options']}
-                              >
-                                <Select mode="tags" tokenSeparators={[',']} />
-                              </Item>
+                              {form.getFieldsValue().fields[index].fields[
+                                fieldIndex
+                              ]?.type === 'select' && (
+                                <Item
+                                  label="Opções"
+                                  name={[field.name, 'options']}
+                                  fieldKey={[field.fieldKey, 'options']}
+                                >
+                                  <Select mode="tags" tokenSeparators={[',']} />
+                                </Item>
+                              )}
                             </InputsWrapper>
                           </Item>
                         ))}
