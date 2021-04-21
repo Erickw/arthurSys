@@ -34,14 +34,16 @@ export default function EditProduct({
       }
       data.id = product.id;
       // convert the name in the dynamic fields to snakecase
-      data.fields = data.fields.map(field => ({
-        title: field.title,
-        fields: field.fields.map(fieldItem => ({
-          ...fieldItem,
-          label: fieldItem.name,
-          name: convertToSnakeCase(fieldItem.name),
-        })),
-      }));
+      if (data.fields) {
+        data.fields = data.fields.map(field => ({
+          title: field.title,
+          fields: field.fields.map(fieldItem => ({
+            ...fieldItem,
+            label: fieldItem.name,
+            name: convertToSnakeCase(fieldItem.name),
+          })),
+        }));
+      }
       await api.put(`/products/${product.id}`, data);
       setIsSubmitting(false);
       message.success(`Produto editado com sucesso!`);

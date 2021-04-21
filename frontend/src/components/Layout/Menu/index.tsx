@@ -67,7 +67,7 @@ const Menu: React.FC = () => {
         Visão do cliente
       </Divider>
       <Item>
-        <Link href="/products">Produtos</Link>
+        <Link href="/products">Nova solicitação</Link>
       </Item>
       {user.admin && (
         <>

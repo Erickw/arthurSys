@@ -27,14 +27,16 @@ const NewProduct: React.FC = () => {
         data.available = false;
       }
       // convert the name in the dynamic fields to snakecase
-      data.fields = data.fields.map(field => ({
-        title: field.title,
-        fields: field.fields.map(fieldItem => ({
-          ...fieldItem,
-          label: fieldItem.name,
-          name: convertToSnakeCase(fieldItem.name),
-        })),
-      }));
+      if (data.fields) {
+        data.fields = data.fields.map(field => ({
+          title: field.title,
+          fields: field.fields.map(fieldItem => ({
+            ...fieldItem,
+            label: fieldItem.name,
+            name: convertToSnakeCase(fieldItem.name),
+          })),
+        }));
+      }
       await API.post('/products', data);
       setIsSubmitting(false);
       message.success('Novo produto criado com sucesso!');
