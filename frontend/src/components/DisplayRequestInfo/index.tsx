@@ -15,11 +15,27 @@ export default function DisplayRequestInfo({
   function displayCorrectFormatData(item) {
     const data = item;
     if (data.slice(0, 38) === 'https://firebasestorage.googleapis.com') {
+      const fileName = data.substring(
+        data.lastIndexOf('/') + 1,
+        data.lastIndexOf('?'),
+      );
       return (
         <a href={data} target="_blank" rel="noreferrer">
-          {data}
+          {fileName}
         </a>
       );
+    }
+
+    if (data.substr(data.length - 1) === 'Z') {
+      // verify if data pass is a date, if is a date return in date format
+      try {
+        const dateString = new Intl.DateTimeFormat('pt-br').format(
+          new Date(data),
+        );
+        return dateString;
+      } catch (err) {
+        return data;
+      }
     }
 
     return data;
