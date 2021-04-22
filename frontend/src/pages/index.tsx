@@ -106,9 +106,7 @@ export default function Home({ status = 'novo' }: ServiceProps): JSX.Element {
 
   return (
     <>
-      <Title level={2}>
-        {status.charAt(0).toUpperCase() + status.substr(1)}
-      </Title>
+      <Title level={2}>Requisições Novas</Title>
       <section>
         <Table
           columns={columns}

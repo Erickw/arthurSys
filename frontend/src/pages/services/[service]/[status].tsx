@@ -44,6 +44,23 @@ export default function Service({
     });
   }
 
+  function displayPageTitle() {
+    if (status === 'novo') {
+      return 'Requisições novas';
+    }
+    if (status === 'em-progresso') {
+      return 'Requisições em andamento';
+    }
+    if (status === 'finalizada') {
+      return 'Requisições finalizadas';
+    }
+    if (status === 'cancelada') {
+      return 'Requisições canceladas';
+    }
+
+    return 'Requisições';
+  }
+
   useEffect(() => {
     setTableIsLoading(true);
     if (user.admin) {
@@ -105,9 +122,7 @@ export default function Service({
 
   return (
     <>
-      <Title level={2}>
-        {status.charAt(0).toUpperCase() + status.substr(1)}
-      </Title>
+      <Title level={2}>{displayPageTitle()}</Title>
       <section>
         <Table
           columns={columns}
