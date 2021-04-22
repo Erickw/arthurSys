@@ -105,7 +105,9 @@ export default function Service({
 
   return (
     <>
-      <Title level={2}>{status}</Title>
+      <Title level={2}>
+        {status.charAt(0).toUpperCase() + status.substr(1)}
+      </Title>
       <section>
         <Table
           columns={columns}

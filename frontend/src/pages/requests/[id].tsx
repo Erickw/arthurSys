@@ -1,12 +1,4 @@
-import {
-  Button,
-  Card,
-  Descriptions,
-  Form,
-  message,
-  PageHeader,
-  Typography,
-} from 'antd';
+import { Button, Card, Descriptions, Form, message, PageHeader } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
@@ -15,8 +7,6 @@ import { useAuth } from '../../hooks/auth';
 import AddressForm from './components/AddressForm';
 import PatientForm from './components/PatientForm';
 import ProductDynamicForm from './components/ProductDynamicForm';
-
-const { Title } = Typography;
 
 type RequestProps = {
   product: ProductProps;
@@ -100,7 +90,6 @@ export default function Requests({ product }: RequestProps): JSX.Element {
         >
           <h2>Dados do paciente</h2>
           <PatientForm />
-
           <ProductDynamicForm
             fields={product.fields}
             onUpdateFile={(
@@ -113,11 +102,8 @@ export default function Requests({ product }: RequestProps): JSX.Element {
               form.setFieldsValue({ fieldsValues });
             }}
           />
-
           <h2>Endereço</h2>
-
           <AddressForm />
-
           <Button type="primary" htmlType="submit" loading={isSubmitting} block>
             Enviar
           </Button>
