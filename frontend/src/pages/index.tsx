@@ -21,7 +21,6 @@ interface ServiceProps {
 
 export default function Home({ status = 'novo' }: ServiceProps): JSX.Element {
   const [requests, setRequests] = useState<RequestProps[] | undefined>();
-  const [products, setProducts] = useState<ProductProps[]>([]);
   const { user, refreshToken } = useAuth();
   const [tableIsLoading, setTableIsLoading] = useState(false);
 
@@ -45,7 +44,6 @@ export default function Home({ status = 'novo' }: ServiceProps): JSX.Element {
   useEffect(() => {
     if (refreshToken) {
       setTableIsLoading(true);
-      api.get('/products').then(response => setProducts(response.data));
       if (user.admin) {
         api.get(`/requests/${status}`).then(response => {
           setRequests(
@@ -66,16 +64,19 @@ export default function Home({ status = 'novo' }: ServiceProps): JSX.Element {
 
   const columns = [
     {
+      title: 'Requisição',
+      dataIndex: 'id',
+      key: 'id',
+      render: (request: string) => (
+        <Link href={`/request-info/${request}`}>{request}</Link>
+      ),
+      ...getColumnSearchProps('id'),
+    },
+    {
       title: 'Paciente',
       dataIndex: 'patientName',
       key: 'patientName',
       ...getColumnSearchProps('patientName'),
-    },
-    {
-      title: 'Requisição',
-      dataIndex: 'id',
-      key: 'id',
-      ...getColumnSearchProps('id'),
     },
     {
       title: 'Produto',
@@ -112,15 +113,6 @@ export default function Home({ status = 'novo' }: ServiceProps): JSX.Element {
           columns={columns}
           dataSource={requests}
           loading={tableIsLoading}
-          expandable={{
-            expandedRowRender: (record: RequestProps) =>
-              DisplayRequestInfo({
-                request: record,
-                product: products.find(
-                  product => product.id === record.productId,
-                ),
-              }),
-          }}
         />
       </section>
     </>

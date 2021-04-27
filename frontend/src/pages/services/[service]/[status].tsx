@@ -8,7 +8,6 @@ import Link from 'next/link';
 import api from '../../../clients/api';
 
 import { useAuth } from '../../../hooks/auth';
-import DisplayRequestInfo from '../../../components/DisplayRequestInfo';
 import { getColumnSearchProps } from '../../../components/ColumnSearch';
 
 const { Title } = Typography;
@@ -16,13 +15,9 @@ const { confirm } = Modal;
 
 interface ServiceProps {
   status: string;
-  products?: ProductProps[];
 }
 
-export default function Service({
-  status,
-  products,
-}: ServiceProps): JSX.Element {
+export default function Service({ status }: ServiceProps): JSX.Element {
   const [requests, setRequests] = useState<RequestProps[] | undefined>();
   const { user } = useAuth();
   const [tableIsLoading, setTableIsLoading] = useState(false);
@@ -82,16 +77,19 @@ export default function Service({
 
   const columns = [
     {
+      title: 'Requisição',
+      dataIndex: 'id',
+      key: 'id',
+      render: (request: string) => (
+        <Link href={`/request-info/${request}`}>{request}</Link>
+      ),
+      ...getColumnSearchProps('id'),
+    },
+    {
       title: 'Paciente',
       dataIndex: 'patientName',
       key: 'patientName',
       ...getColumnSearchProps('patientName'),
-    },
-    {
-      title: 'Requisição',
-      dataIndex: 'id',
-      key: 'id',
-      ...getColumnSearchProps('id'),
     },
     {
       title: 'Produto',
@@ -128,15 +126,6 @@ export default function Service({
           columns={columns}
           dataSource={requests}
           loading={tableIsLoading}
-          expandable={{
-            expandedRowRender: (record: RequestProps) =>
-              DisplayRequestInfo({
-                request: record,
-                product: products.find(
-                  product => product.id === record.productId,
-                ),
-              }),
-          }}
         />
       </section>
     </>
@@ -144,7 +133,5 @@ export default function Service({
 }
 
 Service.getInitialProps = async ({ query: { status } }) => {
-  const productsFromApi = await api.get('/products');
-  const products = productsFromApi.data;
-  return { status, products };
+  return { status };
 };
