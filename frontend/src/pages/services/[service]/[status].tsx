@@ -2,9 +2,10 @@
 /* eslint-disable react/require-default-props */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react';
-import { Typography, Table, Space, Modal } from 'antd';
+import { Typography, Table, Space, Modal, Button } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import api from '../../../clients/api';
 
 import { useAuth } from '../../../hooks/auth';
@@ -18,6 +19,7 @@ interface ServiceProps {
 }
 
 export default function Service({ status }: ServiceProps): JSX.Element {
+  const { push } = useRouter();
   const [requests, setRequests] = useState<RequestProps[] | undefined>();
   const { user } = useAuth();
   const [tableIsLoading, setTableIsLoading] = useState(false);
@@ -58,21 +60,36 @@ export default function Service({ status }: ServiceProps): JSX.Element {
 
   useEffect(() => {
     setTableIsLoading(true);
-    if (user.admin) {
-      api.get(`/requests/${status}`).then(response => {
-        setRequests(
-          response.data.map(request => ({ ...request, key: request.id })),
-        );
-        setTableIsLoading(false);
-      });
-    } else {
-      api.get(`/requests/${user.id}/${status}`).then(response => {
-        setRequests(
-          response.data.map(request => ({ ...request, key: request.id })),
-        );
-        setTableIsLoading(false);
-      });
-    }
+    api.get('/products').then(response => {
+      const prodcutsFromApi = response.data;
+      if (user.admin) {
+        api.get(`/requests/${status}`).then(requestsresponse => {
+          setRequests(
+            requestsresponse.data.map(request => ({
+              ...request,
+              key: request.id,
+              productName: prodcutsFromApi.find(
+                product => product.id === request.productId,
+              ).name,
+            })),
+          );
+          setTableIsLoading(false);
+        });
+      } else {
+        api.get(`/requests/${user.id}/${status}`).then(requestsresponse => {
+          setRequests(
+            requestsresponse.data.map(request => ({
+              ...request,
+              key: request.id,
+              productName: prodcutsFromApi.find(
+                product => product.id === request.productId,
+              ).name,
+            })),
+          );
+          setTableIsLoading(false);
+        });
+      }
+    });
   }, [status, user.admin, user.id]);
 
   const columns = [
@@ -81,9 +98,10 @@ export default function Service({ status }: ServiceProps): JSX.Element {
       dataIndex: 'id',
       key: 'id',
       render: (request: string) => (
-        <Link href={`/request-info/${request}`}>{request}</Link>
+        <Button type="primary" onClick={() => push(`/request-info/${request}`)}>
+          Vizualizar requisição
+        </Button>
       ),
-      ...getColumnSearchProps('id'),
     },
     {
       title: 'Paciente',
@@ -93,9 +111,9 @@ export default function Service({ status }: ServiceProps): JSX.Element {
     },
     {
       title: 'Produto',
-      dataIndex: 'productId',
-      key: 'productId',
-      ...getColumnSearchProps('productId'),
+      dataIndex: 'productName',
+      key: 'productName',
+      ...getColumnSearchProps('productName'),
     },
     {
       title: 'Data',
