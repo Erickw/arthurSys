@@ -1,4 +1,13 @@
-import { Button, Card, Descriptions, Form, message, PageHeader } from 'antd';
+import {
+  Button,
+  Card,
+  Col,
+  Descriptions,
+  Form,
+  message,
+  PageHeader,
+  Row,
+} from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
@@ -44,7 +53,7 @@ export default function Requests({ product }: RequestProps): JSX.Element {
       <PageHeader
         title="Nova Solicitação"
         ghost={false}
-        style={{ marginBottom: 20 }}
+        style={{ marginBottom: 20, minWidth: 450 }}
         subTitle={product.name}
       >
         <Descriptions
@@ -69,12 +78,6 @@ export default function Requests({ product }: RequestProps): JSX.Element {
           >
             {product.bankInfo.bankAccount}
           </Descriptions.Item>
-          <Descriptions.Item label="Valor" labelStyle={{ fontWeight: 600 }}>
-            {new Intl.NumberFormat('pt-br', {
-              style: 'currency',
-              currency: 'BRL',
-            }).format(product.bankInfo.value)}
-          </Descriptions.Item>
           {product.bankInfo.note && (
             <Descriptions.Item label="Nota" labelStyle={{ fontWeight: 600 }}>
               {product.bankInfo.note}
@@ -82,34 +85,38 @@ export default function Requests({ product }: RequestProps): JSX.Element {
           )}
         </Descriptions>
       </PageHeader>
-      <Card bordered={false}>
-        <Form
-          layout="vertical"
-          form={form}
-          onFinish={handleSubmit}
-          style={{ width: '40%' }}
-        >
-          <h2>Dados do paciente</h2>
-          <PatientForm />
-          <ProductDynamicForm
-            form={form}
-            fields={product.fields}
-            onUpdateFile={(
-              url: string,
-              index: number,
-              fieldItemName: string,
-            ) => {
-              const { fieldsValues } = form.getFieldsValue();
-              fieldsValues[index][fieldItemName] = url;
-              form.setFieldsValue({ fieldsValues });
-            }}
-          />
-          <h2>Endereço</h2>
-          <AddressForm />
-          <Button type="primary" htmlType="submit" loading={isSubmitting} block>
-            Enviar
-          </Button>
-        </Form>
+      <Card bordered={false} style={{ minWidth: 450 }}>
+        <Row>
+          <Col xxl={12} xl={16} lg={22} md={24} sm={24} xs={24}>
+            <Form layout="vertical" form={form} onFinish={handleSubmit}>
+              <h2>Dados do paciente</h2>
+              <PatientForm />
+              <ProductDynamicForm
+                form={form}
+                fields={product.fields}
+                onUpdateFile={(
+                  url: string,
+                  index: number,
+                  fieldItemName: string,
+                ) => {
+                  const { fieldsValues } = form.getFieldsValue();
+                  fieldsValues[index][fieldItemName] = url;
+                  form.setFieldsValue({ fieldsValues });
+                }}
+              />
+              <h2>Endereço</h2>
+              <AddressForm />
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isSubmitting}
+                block
+              >
+                Enviar
+              </Button>
+            </Form>
+          </Col>
+        </Row>
       </Card>
     </>
   );

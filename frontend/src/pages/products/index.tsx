@@ -69,10 +69,10 @@ const Products: React.FC = () => {
       <PageHeader
         title="Escolha um produto abaixo"
         ghost={false}
-        style={{ marginBottom: 20 }}
+        style={{ marginBottom: 20, minWidth: 450 }}
       >
         <Row align="middle" justify="center">
-          <Col span={12}>
+          <Col xxl={12} xl={14} lg={16} md={18} sm={22} xs={22}>
             <Input.Search
               enterButton
               allowClear
@@ -83,7 +83,7 @@ const Products: React.FC = () => {
           </Col>
         </Row>
       </PageHeader>
-      <Card bordered={false}>
+      <Card bordered={false} style={{ minWidth: 450 }}>
         <List
           size="large"
           loading={products.length === 0 ? loading : false}

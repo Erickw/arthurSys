@@ -110,7 +110,7 @@ export default function Comments({
   return (
     <Card
       title="Comentários"
-      style={{ marginTop: 24 }}
+      style={{ marginTop: 24, minWidth: 450 }}
       bordered={false}
       loading={isLoadingComments}
     >

@@ -1,6 +1,16 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-return-assign */
-import { Button, Descriptions, Form, message, Typography } from 'antd';
+import {
+  Button,
+  Card,
+  Col,
+  Descriptions,
+  Form,
+  message,
+  PageHeader,
+  Row,
+  Typography,
+} from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
@@ -51,78 +61,99 @@ export default function EditRequest({
 
   return (
     <>
-      <Title>Editar Solicitação</Title>
-      <Form
-        layout="vertical"
-        form={form}
-        onFinish={handleSubmit}
-        initialValues={{
-          patientName: request.patientName,
-          patientEmail: request.patientEmail,
-          status: request.status,
-          date: request.date,
-          address: {
-            state: request.address.state,
-            city: request.address.city,
-            postalCode: request.address.postalCode,
-            district: request.address.district,
-            street: request.address.street,
-            number: request.address.number,
-            complement: request.address.complement,
-          },
-        }}
-        style={{ width: '40%' }}
+      <PageHeader
+        title="Editar Solicitação"
+        ghost={false}
+        style={{ marginBottom: 20, minWidth: 450 }}
+        subTitle={product.name}
       >
-        <h2>Dados bancários</h2>
-        <Descriptions title="">
-          <Descriptions.Item label="Indentificação">
+        <Descriptions
+          title="Dados bancários"
+          column={{ xxl: 3, xl: 2, lg: 2, md: 1, sm: 1, xs: 1 }}
+        >
+          <Descriptions.Item
+            label="Indentificação"
+            labelStyle={{ fontWeight: 600 }}
+          >
             {product.bankInfo.identification}
           </Descriptions.Item>
-          <Descriptions.Item label="Banco">
+          <Descriptions.Item label="Banco" labelStyle={{ fontWeight: 600 }}>
             {product.bankInfo.bank}
           </Descriptions.Item>
-          <Descriptions.Item label="Agência">
+          <Descriptions.Item label="Agência" labelStyle={{ fontWeight: 600 }}>
             {product.bankInfo.agency}
           </Descriptions.Item>
-          <Descriptions.Item label="Conta bancária">
+          <Descriptions.Item
+            label="Conta bancária"
+            labelStyle={{ fontWeight: 600 }}
+          >
             {product.bankInfo.bankAccount}
           </Descriptions.Item>
-          <Descriptions.Item label="Valor">
-            {new Intl.NumberFormat('pt-br', {
-              style: 'currency',
-              currency: 'BRL',
-            }).format(product.bankInfo.value)}
-          </Descriptions.Item>
           {product.bankInfo.note && (
-            <Descriptions.Item label="Nota">
+            <Descriptions.Item label="Nota" labelStyle={{ fontWeight: 600 }}>
               {product.bankInfo.note}
             </Descriptions.Item>
           )}
         </Descriptions>
+      </PageHeader>
+      <Card bordered={false} style={{ minWidth: 450 }}>
+        <Row>
+          <Col xxl={12} xl={16} lg={22} md={24} sm={24} xs={24}>
+            <Form
+              layout="vertical"
+              form={form}
+              onFinish={handleSubmit}
+              initialValues={{
+                patientName: request.patientName,
+                patientEmail: request.patientEmail,
+                status: request.status,
+                date: request.date,
+                address: {
+                  state: request.address.state,
+                  city: request.address.city,
+                  postalCode: request.address.postalCode,
+                  district: request.address.district,
+                  street: request.address.street,
+                  number: request.address.number,
+                  complement: request.address.complement,
+                },
+              }}
+            >
+              <h2>Dados do paciente</h2>
 
-        <h2>Dados do paciente</h2>
+              <PatientForm />
 
-        <PatientForm />
+              <RequestDynamicForm
+                form={form}
+                fieldsFromProduct={product.fields}
+                fieldsFromRequest={request.fieldsValues}
+                onUpdateFile={(
+                  url: string,
+                  index: number,
+                  fieldItemName: string,
+                ) => {
+                  const { fieldsValues } = form.getFieldsValue();
+                  fieldsValues[index][fieldItemName] = url;
+                  form.setFieldsValue({ fieldsValues });
+                }}
+              />
 
-        <RequestDynamicForm
-          form={form}
-          fieldsFromProduct={product.fields}
-          fieldsFromRequest={request.fieldsValues}
-          onUpdateFile={(url: string, index: number, fieldItemName: string) => {
-            const { fieldsValues } = form.getFieldsValue();
-            fieldsValues[index][fieldItemName] = url;
-            form.setFieldsValue({ fieldsValues });
-          }}
-        />
+              <h2>Endereço</h2>
 
-        <h2>Endereço</h2>
+              <AddressForm />
 
-        <AddressForm />
-
-        <Button type="primary" htmlType="submit" loading={isSubmitting} block>
-          Enviar
-        </Button>
-      </Form>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isSubmitting}
+                block
+              >
+                Enviar
+              </Button>
+            </Form>
+          </Col>
+        </Row>
+      </Card>
     </>
   );
 }

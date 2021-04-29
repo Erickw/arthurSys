@@ -1,17 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable react/require-default-props */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react';
-import { Typography, Table, Space, Modal, Button } from 'antd';
+import { Table, Space, Modal, Button, PageHeader, Card } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { ColumnsType } from 'antd/lib/table';
 import api from '../../../clients/api';
 
 import { useAuth } from '../../../hooks/auth';
 import { getColumnSearchProps } from '../../../components/ColumnSearch';
 
-const { Title } = Typography;
 const { confirm } = Modal;
 
 interface ServiceProps {
@@ -92,11 +93,12 @@ export default function Service({ status }: ServiceProps): JSX.Element {
     });
   }, [status, user.admin, user.id]);
 
-  const columns = [
+  const columns: ColumnsType<any> = [
     {
       title: 'Requisição',
       dataIndex: 'id',
       key: 'id',
+      responsive: ['lg'],
       render: (request: string) => (
         <Button type="primary" onClick={() => push(`/request-info/${request}`)}>
           Vizualizar requisição
@@ -104,15 +106,30 @@ export default function Service({ status }: ServiceProps): JSX.Element {
       ),
     },
     {
-      title: 'Paciente',
+      title: () => {
+        return typeof window !== 'undefined' && window.innerWidth < 991
+          ? 'Paciente - Produto'
+          : 'Paciente';
+      },
       dataIndex: 'patientName',
       key: 'patientName',
+      render: (text, record) =>
+        typeof window !== 'undefined' && window.innerWidth < 991 ? (
+          <>
+            {record.patientName}
+            <br />
+            {record.productName}
+          </>
+        ) : (
+          record.patientName
+        ),
       ...getColumnSearchProps('patientName'),
     },
     {
       title: 'Produto',
       dataIndex: 'productName',
       key: 'productName',
+      responsive: ['lg'],
       ...getColumnSearchProps('productName'),
     },
     {
@@ -127,8 +144,12 @@ export default function Service({ status }: ServiceProps): JSX.Element {
     {
       title: 'Opções',
       key: 'action',
+      responsive: ['sm'],
       render: (text, record) => (
         <Space size="middle">
+          {typeof window !== 'undefined' && window.innerWidth < 991 && (
+            <Link href={`/request-info/${record.id}`}>Requisição</Link>
+          )}
           <Link href={`/edit-request/${record.id}`}>Editar</Link>
           <a onClick={() => deleteRequestModal(record.id)}>Deletar</a>
         </Space>
@@ -138,14 +159,18 @@ export default function Service({ status }: ServiceProps): JSX.Element {
 
   return (
     <>
-      <Title level={2}>{displayPageTitle()}</Title>
-      <section>
+      <PageHeader
+        title={displayPageTitle()}
+        ghost={false}
+        style={{ marginBottom: 24, minWidth: 450 }}
+      />
+      <Card bordered={false} style={{ minWidth: 450 }}>
         <Table
           columns={columns}
           dataSource={requests}
           loading={tableIsLoading}
         />
-      </section>
+      </Card>
     </>
   );
 }

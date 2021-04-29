@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from 'react';
 import { Button, Card, Descriptions, Modal, Space, Table, Tag } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { ColumnsType } from 'antd/lib/table';
 import api from '../../clients/api';
 import CreateUserModal from './components/CreateUserModal';
 import EditUserModal from './components/EditUserModal';
@@ -67,7 +69,7 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
     setStateUsers(updateStateUsers.map(user => ({ ...user, key: user.id })));
   }
 
-  const columns = [
+  const columns: ColumnsType<any> = [
     {
       title: 'Nome',
       dataIndex: 'name',
@@ -78,12 +80,14 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
+      responsive: ['lg'],
       ...getColumnSearchProps('email'),
     },
     {
       title: 'Admin',
       dataIndex: 'admin',
       key: 'admin',
+      responsive: ['md'],
       // eslint-disable-next-line no-nested-ternary
       sorter: (a, b) => (a.admin === b.admin ? 0 : a.admin ? -1 : 1),
       render: record => (
@@ -107,7 +111,7 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
   ];
 
   return (
-    <Card bordered>
+    <Card bordered style={{ minWidth: 450 }}>
       <Descriptions title="Tabela de usuários">
         <Descriptions.Item style={{ float: 'right' }}>
           <Button

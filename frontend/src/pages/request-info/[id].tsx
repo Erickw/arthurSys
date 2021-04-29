@@ -58,16 +58,16 @@ export default function RequestInfo({
         title={`Requisição ${request.id}`}
         ghost={false}
         subTitle={product.name}
-        style={{ marginBottom: 24 }}
+        style={{ marginBottom: 24, minWidth: 450 }}
       />
       <RequestDisplay>
-        <Card>
+        <Card bordered={false} style={{ minWidth: 450 }}>
           {product && (
             <Descriptions
               title="Produto"
               layout="vertical"
               bordered
-              column={{ xxl: 5, xl: 5, lg: 5, md: 5, sm: 1, xs: 1 }}
+              column={{ xxl: 5, xl: 5, lg: 5, md: 4, sm: 1, xs: 1 }}
             >
               <Descriptions.Item label="Nome do produto">
                 {product.name}
@@ -94,7 +94,7 @@ export default function RequestInfo({
             title="Endereço"
             layout="vertical"
             bordered
-            column={{ xxl: 12, xl: 8, lg: 5, md: 5, sm: 2, xs: 1 }}
+            column={{ xxl: 12, xl: 8, lg: 5, md: 3, sm: 2, xs: 1 }}
           >
             <Descriptions.Item label="Estado">
               {request.address.state}
@@ -120,7 +120,7 @@ export default function RequestInfo({
             title="Requisção"
             layout="vertical"
             bordered
-            column={{ xxl: 12, xl: 8, lg: 5, md: 5, sm: 2, xs: 1 }}
+            column={{ xxl: 12, xl: 8, lg: 5, md: 3, sm: 2, xs: 1 }}
           >
             <Descriptions.Item label="Nome do paciente">
               {request.patientName}
