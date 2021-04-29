@@ -105,6 +105,7 @@ export default function EditRequest({
         <PatientForm />
 
         <RequestDynamicForm
+          form={form}
           fieldsFromProduct={product.fields}
           fieldsFromRequest={request.fieldsValues}
           onUpdateFile={(url: string, index: number, fieldItemName: string) => {

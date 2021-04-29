@@ -29,6 +29,7 @@ export default function Requests({ product }: RequestProps): JSX.Element {
         title: product.fields[index].title,
         fields: { ...field },
       }));
+
       setIsSubmitting(true);
       await api.post('/requests', request);
       setIsSubmitting(false);
@@ -91,6 +92,7 @@ export default function Requests({ product }: RequestProps): JSX.Element {
           <h2>Dados do paciente</h2>
           <PatientForm />
           <ProductDynamicForm
+            form={form}
             fields={product.fields}
             onUpdateFile={(
               url: string,

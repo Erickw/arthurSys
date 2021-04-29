@@ -1,23 +1,41 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-nested-ternary */
+/* eslint-disable prefer-destructuring */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/require-default-props */
-import { InboxOutlined } from '@ant-design/icons';
-import { Input, Form, Select, DatePicker, Upload, message } from 'antd';
-import React from 'react';
+import { InboxOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import {
+  Input,
+  Form,
+  Select,
+  DatePicker,
+  Upload,
+  message,
+  FormInstance,
+  Tooltip,
+} from 'antd';
+import React, { useReducer, useState } from 'react';
 
 import { app } from '../../../config/firebase';
 
 const { Item } = Form;
 const { Dragger } = Upload;
 interface ProductDynamicFormProps {
+  form: FormInstance;
   fields?: InputGroupProps[];
   onUpdateFile: (url: string, index: number, fieldItemName: string) => void;
 }
 
 export default function ProductDynamicForm({
+  form,
   fields,
   onUpdateFile,
 }: ProductDynamicFormProps): JSX.Element {
+  const forceUpdate = useReducer(() => ({}), {})[1] as () => void;
+
+  const [isFirstValueChanged, setIsFirstValueChanged] = useState(true);
+
   async function handleUpload(info, index, fieldItemName) {
     const { file } = info;
     const storageRef = app.storage().ref();
@@ -31,6 +49,27 @@ export default function ProductDynamicForm({
     } else if (file.status === 'error') {
       message.error(`${info.file.name} falha no envio do arquivo.`);
     }
+  }
+
+  function handleAlternativeOutput(
+    index: number,
+    fieldName: string,
+    fieldsData: any,
+  ) {
+    const checkValue = fieldsData[index][fieldName];
+    if (String(checkValue).toLowerCase() === 'outro') {
+      return true;
+    }
+    return false;
+  }
+
+  function handleBackToDefaultDynamicOptions(index: number, fieldItem: any) {
+    const dynamicFields = form.getFieldsValue().fieldsValues;
+    dynamicFields[index][fieldItem.name] = fieldItem.options[0];
+    form.setFieldsValue({
+      fieldsValues: dynamicFields,
+    });
+    forceUpdate();
   }
 
   return (
@@ -78,26 +117,97 @@ export default function ProductDynamicForm({
                   </Item>
                 )}
                 {fieldItem.type === 'select' && (
-                  <Item
-                    label={fieldItem.label}
-                    name={['fieldsValues', index, fieldItem.name]}
-                    rules={[
-                      {
-                        required: true,
-                        message: `Por favor, preencha esse campo!`,
-                      },
-                      {
-                        whitespace: true,
-                        message: 'Por favor, preencha esse campo',
-                      },
-                    ]}
-                  >
-                    <Select>
-                      {fieldItem.options.map(option => (
-                        <Select.Option value={option}>{option}</Select.Option>
-                      ))}
-                    </Select>
-                  </Item>
+                  <>
+                    {isFirstValueChanged ? (
+                      <Item
+                        label={fieldItem.label}
+                        name={['fieldsValues', index, fieldItem.name]}
+                        rules={[
+                          {
+                            required: true,
+                            message: `Por favor, preencha esse campo!`,
+                          },
+                          {
+                            whitespace: true,
+                            message: 'Por favor, preencha esse campo',
+                          },
+                        ]}
+                      >
+                        <Select
+                          onSelect={() => {
+                            forceUpdate();
+                            setIsFirstValueChanged(false);
+                          }}
+                        >
+                          {fieldItem.options.map(option => (
+                            <Select.Option value={option}>
+                              {option}
+                            </Select.Option>
+                          ))}
+                        </Select>
+                      </Item>
+                    ) : handleAlternativeOutput(
+                        index,
+                        fieldItem.name,
+                        form.getFieldsValue().fieldsValues,
+                      ) ? (
+                      <Item
+                        label={
+                          <>
+                            {fieldItem.label}
+                            <Tooltip title="Voltar para opções anteriores">
+                              <MinusCircleOutlined
+                                className="dynamic-delete-button"
+                                onClick={() =>
+                                  handleBackToDefaultDynamicOptions(
+                                    index,
+                                    fieldItem,
+                                  )
+                                }
+                                style={{ marginLeft: '16px' }}
+                              />
+                            </Tooltip>
+                          </>
+                        }
+                        name={['fieldsValues', index, fieldItem.name]}
+                        rules={[
+                          {
+                            required: true,
+                            message: `Por favor, preencha esse campo!`,
+                          },
+                          {
+                            whitespace: true,
+                            message: 'Por favor, preencha esse campo',
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Item>
+                    ) : (
+                      <Item
+                        label={fieldItem.label}
+                        name={['fieldsValues', index, fieldItem.name]}
+                        rules={[
+                          {
+                            required: true,
+                            message: `Por favor, preencha esse campo!`,
+                          },
+                          {
+                            whitespace: true,
+                            message: 'Por favor, preencha esse campo',
+                          },
+                        ]}
+                      >
+                        <Select onSelect={() => forceUpdate()}>
+                          {fieldItem.options.map(option => (
+                            <Select.Option value={option}>
+                              {option}
+                            </Select.Option>
+                          ))}
+                        </Select>
+                      </Item>
+                    )}
+                  </>
                 )}
                 {fieldItem.type === 'date' && (
                   <Item
