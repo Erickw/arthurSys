@@ -19,7 +19,6 @@ const Header: React.FC = () => {
 
   return (
     <PageHeader
-      onBack={back}
       extra={[
         <Dropdown
           key="dropdown"
@@ -32,7 +31,7 @@ const Header: React.FC = () => {
           </span>
         </Dropdown>,
       ]}
-      style={{ height: '100%' }}
+      style={{ height: '100%', minWidth: 470 }}
     />
   );
 };

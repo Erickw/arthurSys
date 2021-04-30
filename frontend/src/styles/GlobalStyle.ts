@@ -13,11 +13,8 @@ export default createGlobalStyle`
     cursor: pointer;
   }
 
-  body {
-    min-width: 700px;
-  }
-
   html, body {
     font-family: 'Roboto', sans-serif;
+    overflow-y: hidden
   }
 `;

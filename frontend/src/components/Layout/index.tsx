@@ -28,7 +28,7 @@ const Layout: React.FC = ({ children }: LayoutProps) => {
   // return (<>{children}</>)
 
   return (
-    <LayoutANTD>
+    <LayoutANTD style={{ width: 720 }}>
       <Sider>
         <Menu />
       </Sider>
