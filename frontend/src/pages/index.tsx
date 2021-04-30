@@ -130,7 +130,6 @@ export default function Home({ status = 'novo' }: ServiceProps): JSX.Element {
     {
       title: 'Opções',
       key: 'action',
-      responsive: ['sm'],
       render: (text, record) => (
         <Space size="middle">
           {typeof window !== 'undefined' && window.innerWidth < 991 && (

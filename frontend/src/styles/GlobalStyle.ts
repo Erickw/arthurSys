@@ -15,6 +15,6 @@ export default createGlobalStyle`
 
   html, body {
     font-family: 'Roboto', sans-serif;
-    overflow-y: hidden
+    overflow-y: scroll
   }
 `;
