@@ -7,8 +7,10 @@ import React, {
   ReactNode,
 } from 'react';
 import { useRouter } from 'next/router';
-
+import Cookies from 'js-cookie';
 import { message } from 'antd';
+
+import { auth, db } from '../config/firebase';
 import api from '../clients/api';
 
 interface AuthContextData {
@@ -49,11 +51,11 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
   const { push } = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('@OrtoSetup:token');
-    const userFromLocalStorage = localStorage.getItem('@OrtoSetup:user');
+    const token = Cookies.get('@OrtoSetup:token');
+    const userFromLocalStorage = Cookies.getJSON('@OrtoSetup:user');
 
     if (token && userFromLocalStorage) {
-      setUser(JSON.parse(userFromLocalStorage));
+      setUser(userFromLocalStorage);
       setRefreshToken(token);
       setIsLogged(true);
       api.defaults.headers.authorization = `Bearer ${token}`;
@@ -88,11 +90,8 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
         setIsLogged(true);
         setRefreshToken(token);
         setUser(userFromResponse);
-        localStorage.setItem('@OrtoSetup:token', token);
-        localStorage.setItem(
-          '@OrtoSetup:user',
-          JSON.stringify(userFromResponse),
-        );
+        Cookies.set('token', token);
+        Cookies.set('user', JSON.stringify(userFromResponse));
         api.defaults.headers.authorization = `Bearer ${token}`;
         push('/');
       } catch (err) {
@@ -106,8 +105,8 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
     setIsLogged(false);
     setRefreshToken('');
     setUser({} as User);
-    localStorage.removeItem('@OrtoSetup:token');
-    localStorage.removeItem('@OrtoSetup:user');
+    Cookies.remove('token');
+    Cookies.remove('user');
   }, []);
 
   return (
