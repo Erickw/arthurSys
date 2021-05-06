@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { Menu as MenuAntd, Divider } from 'antd';
+import { Menu as MenuAntd } from 'antd';
 import { useRouter } from 'next/router';
+import {
+  CreditCardOutlined,
+  TeamOutlined,
+  PieChartOutlined,
+  SettingOutlined,
+} from '@ant-design/icons';
 import Logo from '../../Logo';
 import { useAuth } from '../../../hooks/auth';
+
+import { LogoDiv } from '../../../styles/components/menu';
 
 const { Item, SubMenu } = MenuAntd;
 
@@ -14,29 +22,30 @@ const services = [
   },
 ];
 
-const Menu: React.FC = () => {
+type Menutheme = 'light' | 'dark';
+
+interface MenuProps {
+  theme: Menutheme;
+}
+
+const Menu: React.FC<MenuProps> = ({ theme }: MenuProps) => {
   const { user } = useAuth();
   const { push } = useRouter();
+  const [isCollapsed] = useState(true);
 
   return (
-    <MenuAntd mode="inline" theme="dark">
-      <div
-        style={{
-          margin: '64px auto 32px',
-          display: 'flex',
-          justifyContent: 'center',
-          cursor: 'pointer',
-        }}
-        onClick={() => push('/')}
-      >
-        <Logo />
-      </div>
+    <MenuAntd mode="inline" theme={theme} inlineCollapsed={isCollapsed}>
+      {isCollapsed && (
+        <LogoDiv onClick={() => push('/')}>
+          <Logo />
+        </LogoDiv>
+      )}
       {services.map((service, index) => {
         return (
           <SubMenu
             key={index.toString()}
             title={service.name}
-            style={{ color: '#fff' }}
+            icon={<PieChartOutlined />}
           >
             <Item>
               <Link href={`/services/${service.route}/novo`}>Novos</Link>
@@ -59,34 +68,20 @@ const Menu: React.FC = () => {
           </SubMenu>
         );
       })}
-      <Divider
-        orientation="left"
-        plain
-        style={{ color: '#fff', marginLeft: 5.5 }}
-      >
-        Visão do cliente
-      </Divider>
-      <Item>
+      <Item title="Nova solicitaçã" icon={<CreditCardOutlined />}>
         <Link href="/products">Nova solicitação</Link>
       </Item>
       {user.admin && (
-        <>
-          <Divider
-            orientation="left"
-            plain
-            style={{ color: '#fff', marginLeft: 5.5 }}
-          >
-            Admin
-          </Divider>
+        <SubMenu title="Área administrativa" icon={<TeamOutlined />}>
           <Item>
-            <Link href="/new-product">Cria novo produto</Link>
+            <Link href="/new-product">Criar novo produto</Link>
           </Item>
           <Item>
             <Link href="/users-table">Tabela de usuários</Link>
           </Item>
-        </>
+        </SubMenu>
       )}
-      <Item>
+      <Item icon={<SettingOutlined />}>
         <Link href="/settings">Configuracões</Link>
       </Item>
     </MenuAntd>

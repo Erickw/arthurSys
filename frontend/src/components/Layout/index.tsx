@@ -1,19 +1,23 @@
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { Layout as LayoutANTD } from 'antd';
 import { useRouter } from 'next/router';
 import Menu from './Menu';
 import { useAuth } from '../../hooks/auth';
 import Header from '../Header';
 
-const { Header: HeaderANTD, Footer, Sider, Content } = LayoutANTD;
+const { Footer, Sider, Content } = LayoutANTD;
 
 interface LayoutProps {
   children: ReactNode;
 }
 
+type Menutheme = 'light' | 'dark';
+
 const Layout: React.FC = ({ children }: LayoutProps) => {
   const { isLogged } = useAuth();
   const { push, pathname } = useRouter();
+
+  const [theme, setTheme] = useState<Menutheme>('dark');
 
   useEffect(() => {
     if (pathname !== '/login' && pathname !== '/register' && !isLogged) {
@@ -21,21 +25,16 @@ const Layout: React.FC = ({ children }: LayoutProps) => {
     }
   }, [isLogged, pathname, push]);
 
-  // if(!isLogged) {
-  //   return <>{children}</>
-  // }
-
-  // return (<>{children}</>)
-
   return (
     <LayoutANTD style={{ minWidth: 720 }}>
-      <Sider>
-        <Menu />
+      <Sider breakpoint="lg" collapsedWidth="80" theme={theme}>
+        <Menu theme={theme} />
       </Sider>
       <LayoutANTD>
-        <HeaderANTD>
-          <Header />
-        </HeaderANTD>
+        <Header
+          theme={theme}
+          handleChangeTheme={themeSelected => setTheme(themeSelected)}
+        />
         <Content
           style={{ minHeight: 'calc(100vh - 134px)', padding: '24px 48px' }}
         >
