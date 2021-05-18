@@ -2,6 +2,7 @@ import { Button, Form, Input } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
 import { LoginWrapper } from '../../styles/pages/login';
 import Logo from '../../components/Logo';
 import { useAuth } from '../../hooks/auth';
@@ -75,3 +76,9 @@ const Login: React.FC = () => {
 };
 
 export default Login;
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  return {
+    props: {},
+  };
+};

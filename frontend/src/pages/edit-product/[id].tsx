@@ -139,7 +139,7 @@ export default function EditProduct({
                 <Input />
               </Item>
               <Item label="Descrição do serviço" name="description">
-                <Input.TextArea />
+                <Input.TextArea autoSize={{ minRows: 2, maxRows: 6 }} />
               </Item>
               <Item label="Valor" name="value">
                 <Input />
@@ -148,7 +148,7 @@ export default function EditProduct({
                 <Input />
               </Item>
               <Item label="Observações" name="notes">
-                <Input.TextArea />
+                <Input.TextArea autoSize={{ minRows: 2, maxRows: 10 }} />
               </Item>
               <Item label="Disponibilidade" name="available">
                 <Select defaultValue="true">

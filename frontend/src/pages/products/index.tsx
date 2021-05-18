@@ -11,8 +11,9 @@ import {
   Row,
   Col,
 } from 'antd';
+import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import api from '../../clients/api';
 import { useAuth } from '../../hooks/auth';
 
@@ -20,13 +21,15 @@ import { Content } from '../../styles/pages/products';
 
 const { confirm } = Modal;
 
-const Products: React.FC = () => {
-  const { refreshToken, user } = useAuth();
+interface ProductsProps {
+  products: ProductProps[];
+}
+
+const Products: React.FC<ProductsProps> = ({ products }: ProductsProps) => {
+  const { user } = useAuth();
   const { push } = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [products, setProducts] = useState<ProductProps[]>([]);
   const [productsDisplayed, setProductsDisplayed] = useState<ProductProps[]>(
-    [],
+    products,
   );
 
   function deleteProductModal(product: ProductProps) {
@@ -42,7 +45,7 @@ const Products: React.FC = () => {
         const productsUpdated = products.filter(
           productItem => productItem.id !== product.id,
         );
-        setProducts(productsUpdated);
+        // setProducts(productsUpdated);
         setProductsDisplayed(productsUpdated);
       },
     });
@@ -56,14 +59,6 @@ const Products: React.FC = () => {
     setProductsDisplayed(test);
   }
 
-  useEffect(() => {
-    setLoading(true);
-    api.get('/products').then(response => {
-      setProducts(response.data);
-      setProductsDisplayed(response.data);
-      setLoading(false);
-    });
-  }, [refreshToken]);
   return (
     <>
       <PageHeader
@@ -86,7 +81,6 @@ const Products: React.FC = () => {
       <Card bordered={false} style={{ minWidth: 450 }}>
         <List
           size="large"
-          loading={products.length === 0 ? loading : false}
           rowKey="id"
           itemLayout="vertical"
           dataSource={productsDisplayed}
@@ -94,24 +88,33 @@ const Products: React.FC = () => {
             <List.Item
               key={item.id}
               actions={
-                user.admin && [
-                  <Button
-                    type="primary"
-                    onClick={() => push(`/requests/${item.id}`)}
-                  >
-                    Solicitar Agora
-                  </Button>,
-                  <Button onClick={() => push(`/edit-product/${item.id}`)}>
-                    Editar
-                  </Button>,
-                  <Button
-                    type="primary"
-                    danger
-                    onClick={() => deleteProductModal(item)}
-                  >
-                    Deletar
-                  </Button>,
-                ]
+                user.admin
+                  ? [
+                      <Button
+                        type="primary"
+                        onClick={() => push(`/requests/${item.id}`)}
+                      >
+                        Solicitar Agora
+                      </Button>,
+                      <Button onClick={() => push(`/edit-product/${item.id}`)}>
+                        Editar
+                      </Button>,
+                      <Button
+                        type="primary"
+                        danger
+                        onClick={() => deleteProductModal(item)}
+                      >
+                        Deletar
+                      </Button>,
+                    ]
+                  : [
+                      <Button
+                        type="primary"
+                        onClick={() => push(`/requests/${item.id}`)}
+                      >
+                        Solicitar Agora
+                      </Button>,
+                    ]
               }
             >
               <List.Item.Meta
@@ -143,3 +146,17 @@ const Products: React.FC = () => {
 };
 
 export default Products;
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const { token } = req.cookies;
+
+  const response = await api.get('/products', {
+    headers: {
+      Authorization: `Basic ${token}`,
+    },
+  });
+  const products = response.data;
+  return {
+    props: { products },
+  };
+};

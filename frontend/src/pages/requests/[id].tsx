@@ -84,6 +84,9 @@ export default function Requests({ product }: RequestProps): JSX.Element {
             </Descriptions.Item>
           )}
         </Descriptions>
+
+        <h3>Observações</h3>
+        <p>{product.notes}</p>
       </PageHeader>
       <Card bordered={false} style={{ minWidth: 450 }}>
         <Row>

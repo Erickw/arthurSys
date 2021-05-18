@@ -15,6 +15,7 @@ import {
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import { useRouter } from 'next/router';
+import { min } from 'moment';
 import { InputsWrapper } from '../../styles/pages/new-product';
 import API from '../../clients/api';
 import { convertToSnakeCase } from '../../utils/utils';
@@ -85,7 +86,7 @@ const NewProduct: React.FC = () => {
                 <Input />
               </Item>
               <Item label="Descrição do serviço" name="description">
-                <Input.TextArea />
+                <Input.TextArea autoSize={{ minRows: 2, maxRows: 6 }} />
               </Item>
               <Item label="Valor" name="value">
                 <Input />
@@ -94,7 +95,7 @@ const NewProduct: React.FC = () => {
                 <Input />
               </Item>
               <Item label="Observações" name="notes">
-                <Input.TextArea />
+                <Input.TextArea autoSize={{ minRows: 2, maxRows: 10 }} />
               </Item>
               <Item label="Disponibilidade" name="available">
                 <Select defaultValue="true">

@@ -8,6 +8,6 @@ const settings: React.FC = () => {
       <h1>Settings</h1>
     </>
   );
-}
+};
 
 export default settings;
