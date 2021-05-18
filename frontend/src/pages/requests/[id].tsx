@@ -85,8 +85,8 @@ export default function Requests({ product }: RequestProps): JSX.Element {
           )}
         </Descriptions>
 
-        <h3>Observações</h3>
-        <p>{product.notes}</p>
+        <h3 style={{ fontSize: 16, fontWeight: 'bold' }}>Observações</h3>
+        <p style={{ whiteSpace: 'break-spaces' }}>{product.notes}</p>
       </PageHeader>
       <Card bordered={false} style={{ minWidth: 450 }}>
         <Row>
