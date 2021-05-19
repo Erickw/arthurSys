@@ -67,7 +67,7 @@ export default function RequestInfo({
               title="Produto"
               layout="vertical"
               bordered
-              column={{ xxl: 5, xl: 5, lg: 5, md: 4, sm: 1, xs: 1 }}
+              column={{ xxl: 4, xl: 4, lg: 4, md: 4, sm: 1, xs: 1 }}
             >
               <Descriptions.Item label="Nome do produto">
                 {product.name}
@@ -78,14 +78,14 @@ export default function RequestInfo({
               <Descriptions.Item label="Pagamento">
                 {product.requiredPayment}
               </Descriptions.Item>
-              <Descriptions.Item label="Nota">
-                {product.notes}
-              </Descriptions.Item>
               <Descriptions.Item label="Disponibilidade">
                 {product.available ? 'Disponível' : 'Indisponível'}
               </Descriptions.Item>
               <Descriptions.Item span={5} label="Descrição">
                 {product.description}
+              </Descriptions.Item>
+              <Descriptions.Item span={5} label="Nota">
+                {product.notes}
               </Descriptions.Item>
             </Descriptions>
           )}
