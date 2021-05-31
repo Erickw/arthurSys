@@ -9,9 +9,9 @@ import {
   message,
   PageHeader,
   Row,
-  Typography,
 } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
+import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import api from '../../clients/api';
@@ -19,8 +19,6 @@ import { useAuth } from '../../hooks/auth';
 import AddressForm from '../requests/components/AddressForm';
 import PatientForm from '../requests/components/PatientForm';
 import RequestDynamicForm from './components/RequestDynamicForm';
-
-const { Title } = Typography;
 
 type EditRequestProps = {
   product: ProductProps;
@@ -158,14 +156,31 @@ export default function EditRequest({
   );
 }
 
-EditRequest.getInitialProps = async ({ query: { id } }) => {
-  const responseRequest = await api.get(`requests`);
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query: { id },
+}) => {
+  const { token } = req.cookies;
+
+  const responseRequest = await api.get(`/requests`, {
+    headers: {
+      Authorization: `Basic ${token}`,
+    },
+  });
+
   const request = responseRequest.data.find(
     requestItem => requestItem.id === id,
   );
 
-  const responseProduct = await api.get(`products/${request.productId}`);
+  const responseProduct = await api.get(`products/${request.productId}`, {
+    headers: {
+      Authorization: `Basic ${token}`,
+    },
+  });
+
   const product = responseProduct.data;
 
-  return { product, request };
+  return {
+    props: { product, request },
+  };
 };

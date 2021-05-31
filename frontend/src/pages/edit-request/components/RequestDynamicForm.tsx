@@ -180,6 +180,9 @@ export default function RequestDynamicForm({
                           </>
                         }
                         name={['fieldsValues', index, fieldItem.name]}
+                        initialValue={
+                          fieldsFromRequest[index].fields[fieldItem.name]
+                        }
                         rules={[
                           {
                             required: true,
@@ -197,6 +200,9 @@ export default function RequestDynamicForm({
                       <Item
                         label={fieldItem.label}
                         name={['fieldsValues', index, fieldItem.name]}
+                        initialValue={
+                          fieldsFromRequest[index].fields[fieldItem.name]
+                        }
                         rules={[
                           {
                             required: true,
@@ -243,7 +249,7 @@ export default function RequestDynamicForm({
                     name={['fieldsValues', index, fieldItem.name]}
                     fieldKey={['fieldsValues', index, fieldItem.name]}
                     initialValue={
-                      fieldsFromRequest[index].fields[fieldItem.name]
+                      fieldsFromRequest[index]?.fields[fieldItem.name]
                     }
                     rules={[
                       {

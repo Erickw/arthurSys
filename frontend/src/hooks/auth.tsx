@@ -51,8 +51,8 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
   const { push } = useRouter();
 
   useEffect(() => {
-    const token = Cookies.get('@OrtoSetup:token');
-    const userFromLocalStorage = Cookies.getJSON('@OrtoSetup:user');
+    const token = Cookies.get('token');
+    const userFromLocalStorage = Cookies.getJSON('user');
 
     if (token && userFromLocalStorage) {
       setUser(userFromLocalStorage);

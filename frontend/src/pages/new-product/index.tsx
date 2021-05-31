@@ -15,7 +15,6 @@ import {
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import { useRouter } from 'next/router';
-import { min } from 'moment';
 import { InputsWrapper } from '../../styles/pages/new-product';
 import API from '../../clients/api';
 import { convertToSnakeCase } from '../../utils/utils';

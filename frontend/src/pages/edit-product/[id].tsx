@@ -15,6 +15,7 @@ import {
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
 import { InputsWrapper } from '../../styles/pages/new-product';
 import api from '../../clients/api';
 import { convertToSnakeCase } from '../../utils/utils';
@@ -65,49 +66,20 @@ export default function EditProduct({
 
   useEffect(() => {
     form.setFieldsValue({
-      name: product.name,
-      description: product.description,
-      value: product.value,
-      requiredPayment: product.requiredPayment,
-      notes: product.notes,
-      available: product.available,
-      bankInfo: {
-        agency: product.bankInfo.agency,
-        value: product.bankInfo.value,
-        bankAccount: product.bankInfo.bankAccount,
-        bank: product.bankInfo.bank,
-        identification: product.bankInfo.identification,
-        note: product.bankInfo.note,
-      },
       fields:
         product.fields.length === 0
           ? []
           : product.fields.map(field => ({
               title: field.title,
               fields: field.fields.map(fieldItem => ({
-                name: fieldItem.name,
+                name: fieldItem.label,
                 label: fieldItem.label,
                 type: fieldItem.type,
                 options: fieldItem.options,
               })),
             })),
     });
-  }, [
-    form,
-    product.available,
-    product.bankInfo.agency,
-    product.bankInfo.bank,
-    product.bankInfo.bankAccount,
-    product.bankInfo.identification,
-    product.bankInfo.note,
-    product.bankInfo.value,
-    product.description,
-    product.fields,
-    product.name,
-    product.notes,
-    product.requiredPayment,
-    product.value,
-  ]);
+  }, [form, product.fields]);
 
   return (
     <>
@@ -125,6 +97,7 @@ export default function EditProduct({
               <Item
                 label="Nome do produto"
                 name="name"
+                initialValue={product.name}
                 rules={[
                   {
                     required: true,
@@ -138,20 +111,36 @@ export default function EditProduct({
               >
                 <Input />
               </Item>
-              <Item label="Descrição do serviço" name="description">
+              <Item
+                label="Descrição do serviço"
+                name="description"
+                initialValue={product?.description}
+              >
                 <Input.TextArea autoSize={{ minRows: 2, maxRows: 6 }} />
               </Item>
-              <Item label="Valor" name="value">
+              <Item label="Valor" name="value" initialValue={product?.value}>
                 <Input />
               </Item>
-              <Item label="Pagamento" name="requiredPayment">
+              <Item
+                label="Pagamento"
+                name="requiredPayment"
+                initialValue={product?.requiredPayment}
+              >
                 <Input />
               </Item>
-              <Item label="Observações" name="notes">
+              <Item
+                label="Observações"
+                name="notes"
+                initialValue={product?.notes}
+              >
                 <Input.TextArea autoSize={{ minRows: 2, maxRows: 10 }} />
               </Item>
-              <Item label="Disponibilidade" name="available">
-                <Select defaultValue="true">
+              <Item
+                label="Disponibilidade"
+                name="available"
+                initialValue={product?.available}
+              >
+                <Select>
                   <Select.Option value="true">Disponível</Select.Option>
                   <Select.Option value="false">Não Disponível</Select.Option>
                 </Select>
@@ -162,6 +151,7 @@ export default function EditProduct({
               <Item
                 label="Identificação"
                 name={['bankInfo', 'identification']}
+                initialValue={product.bankInfo.identification}
                 rules={[
                   {
                     required: true,
@@ -176,13 +166,18 @@ export default function EditProduct({
                 <Input />
               </Item>
 
-              <Item label="Note" name={['bankInfo', 'note']}>
+              <Item
+                label="Note"
+                name={['bankInfo', 'note']}
+                initialValue={product.bankInfo?.note}
+              >
                 <Input />
               </Item>
 
               <Item
                 label="Conta bancária"
                 name={['bankInfo', 'bankAccount']}
+                initialValue={product.bankInfo.bankAccount}
                 rules={[
                   {
                     required: true,
@@ -200,6 +195,7 @@ export default function EditProduct({
               <Item
                 label="Banco"
                 name={['bankInfo', 'bank']}
+                initialValue={product.bankInfo.bank}
                 rules={[
                   {
                     required: true,
@@ -217,6 +213,7 @@ export default function EditProduct({
               <Item
                 label="Agência"
                 name={['bankInfo', 'agency']}
+                initialValue={product.bankInfo.agency}
                 rules={[
                   {
                     required: true,
@@ -325,10 +322,7 @@ export default function EditProduct({
                                         },
                                       ]}
                                     >
-                                      <Select
-                                        defaultValue="string"
-                                        onSelect={() => forceUpdate()}
-                                      >
+                                      <Select onSelect={() => forceUpdate()}>
                                         <Select.Option value="string">
                                           Texto
                                         </Select.Option>
@@ -346,20 +340,21 @@ export default function EditProduct({
                                         </Select.Option>
                                       </Select>
                                     </Item>
-                                    {form.getFieldsValue().fields[index].fields[
-                                      fieldIndex
-                                    ]?.type === 'select' && (
-                                      <Item
-                                        label="Opções"
-                                        name={[field.name, 'options']}
-                                        fieldKey={[field.fieldKey, 'options']}
-                                      >
-                                        <Select
-                                          mode="tags"
-                                          tokenSeparators={[',']}
-                                        />
-                                      </Item>
-                                    )}
+                                    {form.getFieldsValue().fields &&
+                                      form.getFieldsValue().fields[index]
+                                        .fields[fieldIndex]?.type ===
+                                        'select' && (
+                                        <Item
+                                          label="Opções"
+                                          name={[field.name, 'options']}
+                                          fieldKey={[field.fieldKey, 'options']}
+                                        >
+                                          <Select
+                                            mode="tags"
+                                            tokenSeparators={[',']}
+                                          />
+                                        </Item>
+                                      )}
                                   </InputsWrapper>
                                 </Item>
                               ))}
@@ -410,8 +405,19 @@ export default function EditProduct({
   );
 }
 
-EditProduct.getInitialProps = async ({ query: { id } }) => {
-  const response = await api.get(`products/${id}`);
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query: { id },
+}) => {
+  const { token } = req.cookies;
+
+  const response = await api.get(`/products/${id}`, {
+    headers: {
+      Authorization: `Basic ${token}`,
+    },
+  });
   const product = response.data;
-  return { product };
+  return {
+    props: { product },
+  };
 };

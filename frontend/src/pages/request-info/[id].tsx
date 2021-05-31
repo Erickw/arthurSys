@@ -81,10 +81,10 @@ export default function RequestInfo({
               <Descriptions.Item label="Disponibilidade">
                 {product.available ? 'Disponível' : 'Indisponível'}
               </Descriptions.Item>
-              <Descriptions.Item span={5} label="Descrição">
+              <Descriptions.Item span={4} label="Descrição">
                 {product.description}
               </Descriptions.Item>
-              <Descriptions.Item span={5} label="Nota">
+              <Descriptions.Item span={4} label="Nota">
                 {product.notes}
               </Descriptions.Item>
             </Descriptions>
