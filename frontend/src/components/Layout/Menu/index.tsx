@@ -31,15 +31,13 @@ interface MenuProps {
 const Menu: React.FC<MenuProps> = ({ theme }: MenuProps) => {
   const { user } = useAuth();
   const { push } = useRouter();
-  const [isCollapsed] = useState(true);
 
   return (
-    <MenuAntd mode="inline" theme={theme} inlineCollapsed={isCollapsed}>
-      {isCollapsed && (
-        <LogoDiv onClick={() => push('/')}>
-          <Logo />
-        </LogoDiv>
-      )}
+    <MenuAntd mode="inline" theme={theme}>
+      <LogoDiv onClick={() => push('/')}>
+        <Logo />
+      </LogoDiv>
+
       {services.map((service, index) => {
         return (
           <SubMenu
@@ -51,17 +49,17 @@ const Menu: React.FC<MenuProps> = ({ theme }: MenuProps) => {
               <Link href={`/services/${service.route}/novo`}>Novos</Link>
             </Item>
             <Item>
-              <Link href={`/services/${service.route}/em-progresso`}>
+              <Link href={`/services/${service.route}/em-andamento`}>
                 Em Andamento
               </Link>
             </Item>
             <Item>
-              <Link href={`/services/${service.route}/finalizada`}>
+              <Link href={`/services/${service.route}/finalizado`}>
                 Finalizados
               </Link>
             </Item>
             <Item>
-              <Link href={`/services/${service.route}/cancelada`}>
+              <Link href={`/services/${service.route}/cancelado`}>
                 Cancelados
               </Link>
             </Item>
