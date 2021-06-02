@@ -15,6 +15,7 @@ import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import api from '../../clients/api';
+import { getApiClient } from '../../clients/axios';
 import { useAuth } from '../../hooks/auth';
 
 import { Content } from '../../styles/pages/products';
@@ -148,13 +149,20 @@ const Products: React.FC<ProductsProps> = ({ products }: ProductsProps) => {
 export default Products;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const { token } = req.cookies;
+  const { 'ortoSetup.token': token } = req.cookies;
 
-  const response = await api.get('/products', {
-    headers: {
-      Authorization: `Basic ${token}`,
-    },
-  });
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  const apiCLient = getApiClient(token);
+
+  const response = await apiCLient.get('/products');
   const products = response.data;
   return {
     props: { products },

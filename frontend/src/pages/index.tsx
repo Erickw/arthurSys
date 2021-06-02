@@ -24,6 +24,7 @@ import { GetServerSideProps } from 'next';
 import api from '../clients/api';
 
 import { getColumnSearchProps } from '../components/ColumnSearch';
+import { getApiClient } from '../clients/axios';
 
 const { confirm } = Modal;
 interface ServiceProps {
@@ -200,23 +201,26 @@ export default function Home({ requestsFromApi }: ServiceProps): JSX.Element {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const { token } = req.cookies;
-  const user = JSON.parse(req.cookies.user);
+  const { 'ortoSetup.token': token, 'ortoSetup.user': userJson } = req.cookies;
 
-  const productsResponse = await api.get('/products', {
-    headers: {
-      Authorization: `Basic ${token}`,
-    },
-  });
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+  const user = JSON.parse(userJson);
+
+  const apiCLient = getApiClient(token);
+
+  const productsResponse = await apiCLient.get('/products');
 
   const productsFromApi = productsResponse.data;
 
   if (user.admin) {
-    const requestsResponse = await api.get(`/requests/novo`, {
-      headers: {
-        Authorization: `Basic ${token}`,
-      },
-    });
+    const requestsResponse = await apiCLient.get(`/requests/novo`);
 
     const requests = requestsResponse.data.map(request => ({
       ...request,
@@ -230,11 +234,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     };
   }
 
-  const requestsResponse = await api.get(`/requests/${user.id}/novo`, {
-    headers: {
-      Authorization: `Basic ${token}`,
-    },
-  });
+  const requestsResponse = await apiCLient.get(`/requests/${user.id}/novo`);
   const requests = requestsResponse.data.map(request => ({
     ...request,
     key: request.id,

@@ -1,5 +1,7 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
+import { getApiClient } from './axios';
 
-export default axios.create({
-  baseURL: 'https://us-central1-teste-869ba.cloudfunctions.net/api',
-});
+const api = getApiClient();
+
+export default api;

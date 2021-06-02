@@ -15,6 +15,7 @@ import {
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
 import { InputsWrapper } from '../../styles/pages/new-product';
 import API from '../../clients/api';
 import { convertToSnakeCase } from '../../utils/utils';
@@ -355,3 +356,31 @@ const NewProduct: React.FC = () => {
 };
 
 export default NewProduct;
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const { 'ortoSetup.token': token, 'ortoSetup.user': userJson } = req.cookies;
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  const user = JSON.parse(userJson);
+
+  if (!user.admin) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};

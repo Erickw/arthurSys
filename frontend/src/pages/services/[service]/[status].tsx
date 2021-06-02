@@ -22,6 +22,7 @@ import { GetServerSideProps } from 'next';
 import api from '../../../clients/api';
 
 import { getColumnSearchProps } from '../../../components/ColumnSearch';
+import { getApiClient } from '../../../clients/axios';
 
 const { confirm } = Modal;
 
@@ -226,23 +227,27 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
   query: { status },
 }) => {
-  const { token } = req.cookies;
-  const user = JSON.parse(req.cookies.user);
+  const { 'ortoSetup.token': token, 'ortoSetup.user': userJson } = req.cookies;
 
-  const productsResponse = await api.get('/products', {
-    headers: {
-      Authorization: `Basic ${token}`,
-    },
-  });
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  const user = JSON.parse(userJson);
+
+  const apiCLient = getApiClient(token);
+
+  const productsResponse = await apiCLient('/products');
 
   const productsFromApi = productsResponse.data;
 
   if (user.admin) {
-    const requestsResponse = await api.get(`/requests/${status}`, {
-      headers: {
-        Authorization: `Basic ${token}`,
-      },
-    });
+    const requestsResponse = await apiCLient(`/requests/${status}`);
 
     const requests = requestsResponse.data.map(request => ({
       ...request,
@@ -256,11 +261,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     };
   }
 
-  const requestsResponse = await api.get(`/requests/${user.id}/${status}`, {
-    headers: {
-      Authorization: `Basic ${token}`,
-    },
-  });
+  const requestsResponse = await apiCLient(`/requests/${user.id}/${status}`);
   const requests = requestsResponse.data.map(request => ({
     ...request,
     key: request.id,

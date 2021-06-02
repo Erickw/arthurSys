@@ -1,7 +1,8 @@
 import { Button, Form, Input, message } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { GetServerSideProps } from 'next';
 import { LoginWrapper } from '../../styles/pages/login';
 import { useAuth } from '../../hooks/auth';
 import Logo from '../../components/Logo';
@@ -14,7 +15,7 @@ interface RegisterParams {
 }
 
 const Register: React.FC = () => {
-  const { register, isLogged } = useAuth();
+  const { register } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { push } = useRouter();
 
@@ -30,12 +31,6 @@ const Register: React.FC = () => {
     message.success('Usuário criado com sucesso', 4);
     push('/login');
   }
-
-  useEffect(() => {
-    if (isLogged) {
-      push('/');
-    }
-  }, [isLogged, push]);
 
   return (
     <LoginWrapper>
@@ -105,3 +100,20 @@ const Register: React.FC = () => {
 };
 
 export default Register;
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const { 'ortoSetup.token': token } = req.cookies;
+
+  if (token) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};

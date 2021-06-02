@@ -1,7 +1,6 @@
 import { Button, Form, Input } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import { LoginWrapper } from '../../styles/pages/login';
 import Logo from '../../components/Logo';
@@ -13,21 +12,14 @@ interface LoginParams {
 }
 
 const Login: React.FC = () => {
-  const { login, isLogged } = useAuth();
+  const { login } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { push } = useRouter();
 
   async function handleFinish({ email, password }: LoginParams) {
     setIsSubmitting(true);
     await login({ email, password });
     setIsSubmitting(false);
   }
-
-  useEffect(() => {
-    if (isLogged) {
-      push('/');
-    }
-  }, [isLogged, push]);
 
   return (
     <LoginWrapper>
@@ -78,6 +70,17 @@ const Login: React.FC = () => {
 export default Login;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const { 'ortoSetup.token': token } = req.cookies;
+
+  if (token) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
   return {
     props: {},
   };

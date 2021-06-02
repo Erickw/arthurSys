@@ -6,10 +6,12 @@ import React, { useState } from 'react';
 import { Button, Card, Descriptions, Modal, Space, Table, Tag } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/lib/table';
+import { GetServerSideProps } from 'next';
 import api from '../../clients/api';
 import CreateUserModal from './components/CreateUserModal';
 import EditUserModal from './components/EditUserModal';
 import { getColumnSearchProps } from '../../components/ColumnSearch';
+import { getApiClient } from '../../clients/axios';
 
 interface User {
   id: string;
@@ -145,10 +147,35 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
   );
 }
 
-UsersTable.getInitialProps = async () => {
-  const usersFromApi = await api.get('/users');
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const { 'ortoSetup.token': token, 'ortoSetup.user': userJson } = req.cookies;
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  const user = JSON.parse(userJson);
+
+  if (!user.admin) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  const apiCLient = getApiClient(token);
+
+  const usersFromApi = await apiCLient.get('/users');
   const users = usersFromApi.data;
+
   return {
-    users,
+    props: { users },
   };
 };

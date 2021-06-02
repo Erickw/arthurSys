@@ -10,7 +10,6 @@ import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import { message } from 'antd';
 
-import { auth, db } from '../config/firebase';
 import api from '../clients/api';
 
 interface AuthContextData {
@@ -51,8 +50,8 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
   const { push } = useRouter();
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    const userFromLocalStorage = Cookies.getJSON('user');
+    const token = Cookies.get('ortoSetup.token');
+    const userFromLocalStorage = Cookies.getJSON('ortoSetup.user');
 
     if (token && userFromLocalStorage) {
       setUser(userFromLocalStorage);
@@ -61,9 +60,6 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
       api.defaults.headers.authorization = `Bearer ${token}`;
     }
   }, []);
-
-  // const isLogged = true;
-  // useMemo(() => !!Object.keys(user).length, [user])
 
   const register = useCallback(
     async ({ name, email, password, admin }: RegisterProps) => {
@@ -90,8 +86,14 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
         setIsLogged(true);
         setRefreshToken(token);
         setUser(userFromResponse);
-        Cookies.set('token', token);
-        Cookies.set('user', JSON.stringify(userFromResponse));
+
+        Cookies.set('ortoSetup.token', token, {
+          expires: 7, // one week to expire token
+        });
+        Cookies.set('ortoSetup.user', JSON.stringify(userFromResponse), {
+          expires: 7,
+        });
+
         api.defaults.headers.authorization = `Bearer ${token}`;
         push('/');
       } catch (err) {
@@ -105,8 +107,8 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
     setIsLogged(false);
     setRefreshToken('');
     setUser({} as User);
-    Cookies.remove('token');
-    Cookies.remove('user');
+    Cookies.remove('ortoSetup.token');
+    Cookies.remove('ortoSetup.user');
   }, []);
 
   return (

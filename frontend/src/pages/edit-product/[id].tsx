@@ -19,6 +19,7 @@ import { GetServerSideProps } from 'next';
 import { InputsWrapper } from '../../styles/pages/new-product';
 import api from '../../clients/api';
 import { convertToSnakeCase } from '../../utils/utils';
+import { getApiClient } from '../../clients/axios';
 
 const { Item, List, ErrorList } = Form;
 const { Title } = Typography;
@@ -409,13 +410,20 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
   query: { id },
 }) => {
-  const { token } = req.cookies;
+  const { 'ortoSetup.token': token } = req.cookies;
 
-  const response = await api.get(`/products/${id}`, {
-    headers: {
-      Authorization: `Basic ${token}`,
-    },
-  });
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  const apiCLient = getApiClient(token);
+
+  const response = await apiCLient.get(`/products/${id}`);
   const product = response.data;
   return {
     props: { product },

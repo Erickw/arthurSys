@@ -15,6 +15,7 @@ import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import api from '../../clients/api';
+import { getApiClient } from '../../clients/axios';
 import { useAuth } from '../../hooks/auth';
 import AddressForm from '../requests/components/AddressForm';
 import PatientForm from '../requests/components/PatientForm';
@@ -160,23 +161,26 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
   query: { id },
 }) => {
-  const { token } = req.cookies;
+  const { 'ortoSetup.token': token } = req.cookies;
 
-  const responseRequest = await api.get(`/requests`, {
-    headers: {
-      Authorization: `Basic ${token}`,
-    },
-  });
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  const apiCLient = getApiClient(token);
+
+  const responseRequest = await apiCLient.get(`/requests`);
 
   const request = responseRequest.data.find(
     requestItem => requestItem.id === id,
   );
 
-  const responseProduct = await api.get(`products/${request.productId}`, {
-    headers: {
-      Authorization: `Basic ${token}`,
-    },
-  });
+  const responseProduct = await apiCLient.get(`products/${request.productId}`);
 
   const product = responseProduct.data;
 
