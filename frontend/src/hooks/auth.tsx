@@ -65,7 +65,7 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
     async ({ name, email, password, admin }: RegisterProps) => {
       try {
         const userToRegister = { name, email, password, admin };
-        const response = await api.post('/users', userToRegister);
+        await api.post('/users', userToRegister);
       } catch (err) {
         message.error('Erro ao fazer registro, por favor tente novamente.');
       }

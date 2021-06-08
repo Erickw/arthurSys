@@ -12,7 +12,12 @@ import {
   Select,
   Typography,
 } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  DownCircleOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
+  UpCircleOutlined,
+} from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
@@ -29,6 +34,51 @@ const NewProduct: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const forceUpdate = useReducer(() => ({}), {})[1] as () => void;
+
+  function handleMoveGroupOrder(index: number, type: 'up' | 'down') {
+    const formData = form.getFieldsValue();
+    const { fields } = formData;
+    if (type === 'up' && index > 0) {
+      const fieldDataToMoveUp = fields[index];
+      const fieldDataToMoveDown = fields[index - 1];
+      fields[index] = fieldDataToMoveDown;
+      fields[index - 1] = fieldDataToMoveUp;
+    }
+
+    if (type === 'down' && formData.fields.length - 1 > index) {
+      const fieldDataToMoveDown = fields[index];
+      const fieldDataToMoveUp = fields[index + 1];
+      fields[index] = fieldDataToMoveUp;
+      fields[index + 1] = fieldDataToMoveDown;
+    }
+
+    form.setFieldsValue(formData);
+  }
+
+  function handleMoveInputGroupOrder(
+    groupIndex: number,
+    inputIndex: number,
+    type: 'up' | 'down',
+  ) {
+    const formData = form.getFieldsValue();
+    const { fields } = formData;
+    const fieldToChangeOrder = fields[groupIndex];
+
+    if (type === 'up' && inputIndex > 0) {
+      const inputToMoveUp = fieldToChangeOrder.fields[inputIndex];
+      const inputToMoveDown = fieldToChangeOrder.fields[inputIndex - 1];
+      fieldToChangeOrder.fields[inputIndex] = inputToMoveDown;
+      fieldToChangeOrder.fields[inputIndex - 1] = inputToMoveUp;
+    }
+    if (type === 'down' && fieldToChangeOrder.fields.length - 1 > inputIndex) {
+      const inputToMoveDown = fieldToChangeOrder.fields[inputIndex];
+      const inputToMoveUp = fieldToChangeOrder.fields[inputIndex + 1];
+      fieldToChangeOrder.fields[inputIndex] = inputToMoveUp;
+      fieldToChangeOrder.fields[inputIndex + 1] = inputToMoveDown;
+    }
+
+    form.setFieldsValue(formData);
+  }
 
   const handleSubmit = useCallback(
     async data => {
@@ -191,6 +241,17 @@ const NewProduct: React.FC = () => {
                               onClick={() => remove(group.name)}
                               style={{ marginLeft: '16px' }}
                             />
+
+                            <DownCircleOutlined
+                              onClick={() =>
+                                handleMoveGroupOrder(index, 'down')
+                              }
+                              style={{ marginLeft: '16px' }}
+                            />
+                            <UpCircleOutlined
+                              onClick={() => handleMoveGroupOrder(index, 'up')}
+                              style={{ marginLeft: '16px' }}
+                            />
                           </Title>
                         }
                         key={group.name}
@@ -233,6 +294,27 @@ const NewProduct: React.FC = () => {
                                           style={{ marginLeft: '16px' }}
                                         />
                                       )}
+
+                                      <DownCircleOutlined
+                                        onClick={() =>
+                                          handleMoveInputGroupOrder(
+                                            index,
+                                            fieldIndex,
+                                            'down',
+                                          )
+                                        }
+                                        style={{ marginLeft: '12px' }}
+                                      />
+                                      <UpCircleOutlined
+                                        onClick={() =>
+                                          handleMoveInputGroupOrder(
+                                            index,
+                                            fieldIndex,
+                                            'up',
+                                          )
+                                        }
+                                        style={{ marginLeft: '12px' }}
+                                      />
                                     </>
                                   }
                                   key={field.name}
