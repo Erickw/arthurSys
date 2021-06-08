@@ -31,6 +31,7 @@ export default function Requests({ product }: RequestProps): JSX.Element {
     async data => {
       const request = data;
       request.userId = user.id;
+      request.userName = user.name;
       request.productId = product.id;
       request.status = 'novo';
       request.date = new Date();
@@ -45,7 +46,7 @@ export default function Requests({ product }: RequestProps): JSX.Element {
       message.success(`Solicitação do ${product.name} criada com sucesso!`);
       push('/');
     },
-    [product.fields, product.id, product.name, push, user.id],
+    [product.fields, product.id, product.name, push, user.id, user.name],
   );
 
   return (

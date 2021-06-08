@@ -29,11 +29,13 @@ const { confirm } = Modal;
 interface ServiceProps {
   status: string;
   requestsFromApi: RequestProps[];
+  isAdmin: boolean;
 }
 
 export default function Service({
   status,
   requestsFromApi,
+  isAdmin,
 }: ServiceProps): JSX.Element {
   const { push } = useRouter();
   const [requests, setRequests] = useState<RequestProps[] | undefined>(
@@ -149,9 +151,16 @@ export default function Service({
       ),
     },
     {
+      title: 'Solicitante',
+      dataIndex: 'userName',
+      key: 'userName',
+      responsive: ['lg'],
+      ...getColumnSearchProps('userName'),
+    },
+    {
       title: () => {
         return typeof window !== 'undefined' && window.innerWidth < 991
-          ? 'Paciente - Produto'
+          ? 'Solicitante - Paciente - Produto'
           : 'Paciente';
       },
       dataIndex: 'patientName',
@@ -159,6 +168,8 @@ export default function Service({
       render: (text, record) =>
         typeof window !== 'undefined' && window.innerWidth < 991 ? (
           <>
+            {record.userName}
+            <br />
             {record.patientName}
             <br />
             {record.productName}
@@ -184,7 +195,10 @@ export default function Service({
         <span>{new Intl.DateTimeFormat('pt-BR').format(new Date(date))}</span>
       ),
     },
-    {
+  ];
+
+  if (isAdmin) {
+    columns.push({
       title: 'Opções',
       key: 'action',
       responsive: ['sm'],
@@ -202,8 +216,8 @@ export default function Service({
           <a onClick={() => deleteRequestModal(record.id)}>Deletar</a>
         </Space>
       ),
-    },
-  ];
+    });
+  }
 
   useEffect(() => {
     setRequests(requestsFromApi);
@@ -257,7 +271,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       ).name,
     }));
     return {
-      props: { status, requestsFromApi: requests },
+      props: { status, requestsFromApi: requests, isAdmin: true },
     };
   }
 
@@ -271,6 +285,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   }));
 
   return {
-    props: { status, requestsFromApi: requests },
+    props: { status, requestsFromApi: requests, isAdmin: false },
   };
 };

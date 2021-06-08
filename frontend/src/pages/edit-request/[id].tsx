@@ -40,6 +40,7 @@ export default function EditRequest({
       const requestToUpdate = data;
       requestToUpdate.id = request.id;
       requestToUpdate.userId = user.id;
+      requestToUpdate.userName = user.name;
       requestToUpdate.productId = product.id;
       requestToUpdate.status = 'novo';
       requestToUpdate.date = new Date();
@@ -55,7 +56,15 @@ export default function EditRequest({
       message.success(`Solicitação do ${product.name} criada com sucesso!`);
       push('/');
     },
-    [product.fields, product.id, product.name, push, request.id, user.id],
+    [
+      product.fields,
+      product.id,
+      product.name,
+      push,
+      request.id,
+      user.id,
+      user.name,
+    ],
   );
 
   return (
