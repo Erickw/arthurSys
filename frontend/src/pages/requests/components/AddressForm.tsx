@@ -6,102 +6,24 @@ const { Item } = Form;
 export default function AddressForm(): JSX.Element {
   return (
     <>
-      <Item
-        label="Cidade"
-        name={['address', 'city']}
-        rules={[
-          {
-            required: true,
-            message: 'Por favor, insira a cidade!',
-          },
-          {
-            whitespace: true,
-            message: 'Por favor, insira a cidade!',
-          },
-        ]}
-      >
+      <Item label="Cidade" name={['address', 'city']}>
         <Input />
       </Item>
-      <Item
-        label="Estado"
-        name={['address', 'state']}
-        rules={[
-          {
-            required: true,
-            message: 'Por favor, insira o estado!',
-          },
-          {
-            whitespace: true,
-            message: 'Por favor, insira o estado!',
-          },
-        ]}
-      >
+      <Item label="Estado" name={['address', 'state']}>
         <Input />
       </Item>
-      <Item
-        label="Bairro"
-        name={['address', 'district']}
-        rules={[
-          {
-            required: true,
-            message: 'Por favor, insira o bairro!',
-          },
-          {
-            whitespace: true,
-            message: 'Por favor, insira o bairro!',
-          },
-        ]}
-      >
+      <Item label="Bairro" name={['address', 'district']}>
         <Input />
       </Item>
-      <Item
-        label="CEP"
-        name={['address', 'postalCode']}
-        rules={[
-          {
-            required: true,
-            message: 'Por favor, insira o CEP!',
-          },
-          {
-            whitespace: true,
-            message: 'Por favor, insira o CEP!',
-          },
-        ]}
-      >
+      <Item label="CEP" name={['address', 'postalCode']}>
         <Input />
       </Item>
 
-      <Item
-        label="Rua"
-        name={['address', 'street']}
-        rules={[
-          {
-            required: true,
-            message: 'Por favor, insira a rua!',
-          },
-          {
-            whitespace: true,
-            message: 'Por favor, insira a rua!',
-          },
-        ]}
-      >
+      <Item label="Rua" name={['address', 'street']}>
         <Input />
       </Item>
 
-      <Item
-        label="Número"
-        name={['address', 'number']}
-        rules={[
-          {
-            required: true,
-            message: 'Por favor, insira o número!',
-          },
-          {
-            whitespace: true,
-            message: 'Por favor, insira o número!',
-          },
-        ]}
-      >
+      <Item label="Número" name={['address', 'number']}>
         <Input />
       </Item>
       <Item label="Complemento" name={['address', 'complement']}>

@@ -18,6 +18,7 @@ import {
 import React, { useReducer, useState } from 'react';
 
 import { app } from '../../../config/firebase';
+import { convertSnakeCaseToNormal } from '../../../utils/utils';
 
 const { Item } = Form;
 const { Dragger } = Upload;
@@ -82,36 +83,16 @@ export default function ProductDynamicForm({
               <div key={fieldItem.name}>
                 {fieldItem.type === 'string' && (
                   <Item
-                    label={fieldItem.label}
+                    label={convertSnakeCaseToNormal(fieldItem.label)}
                     name={['fieldsValues', index, fieldItem.name]}
-                    rules={[
-                      {
-                        required: true,
-                        message: `Por favor, preencha esse campo!`,
-                      },
-                      {
-                        whitespace: true,
-                        message: 'Por favor, preencha esse campo',
-                      },
-                    ]}
                   >
                     <Input />
                   </Item>
                 )}
                 {fieldItem.type === 'number' && (
                   <Item
-                    label={fieldItem.label}
+                    label={convertSnakeCaseToNormal(fieldItem.label)}
                     name={['fieldsValues', index, fieldItem.name]}
-                    rules={[
-                      {
-                        required: true,
-                        message: `Por favor, preencha esse campo!`,
-                      },
-                      {
-                        whitespace: true,
-                        message: 'Por favor, preencha esse campo',
-                      },
-                    ]}
                   >
                     <Input type="number" />
                   </Item>
@@ -120,18 +101,8 @@ export default function ProductDynamicForm({
                   <>
                     {isFirstValueChanged ? (
                       <Item
-                        label={fieldItem.label}
+                        label={convertSnakeCaseToNormal(fieldItem.label)}
                         name={['fieldsValues', index, fieldItem.name]}
-                        rules={[
-                          {
-                            required: true,
-                            message: `Por favor, preencha esse campo!`,
-                          },
-                          {
-                            whitespace: true,
-                            message: 'Por favor, preencha esse campo',
-                          },
-                        ]}
                       >
                         <Select
                           onSelect={() => {
@@ -170,33 +141,13 @@ export default function ProductDynamicForm({
                           </>
                         }
                         name={['fieldsValues', index, fieldItem.name]}
-                        rules={[
-                          {
-                            required: true,
-                            message: `Por favor, preencha esse campo!`,
-                          },
-                          {
-                            whitespace: true,
-                            message: 'Por favor, preencha esse campo',
-                          },
-                        ]}
                       >
                         <Input />
                       </Item>
                     ) : (
                       <Item
-                        label={fieldItem.label}
+                        label={convertSnakeCaseToNormal(fieldItem.label)}
                         name={['fieldsValues', index, fieldItem.name]}
-                        rules={[
-                          {
-                            required: true,
-                            message: `Por favor, preencha esse campo!`,
-                          },
-                          {
-                            whitespace: true,
-                            message: 'Por favor, preencha esse campo',
-                          },
-                        ]}
                       >
                         <Select onSelect={() => forceUpdate()}>
                           {fieldItem.options.map(option => (
@@ -211,28 +162,16 @@ export default function ProductDynamicForm({
                 )}
                 {fieldItem.type === 'date' && (
                   <Item
-                    label={fieldItem.label}
+                    label={convertSnakeCaseToNormal(fieldItem.label)}
                     name={['fieldsValues', index, fieldItem.name]}
-                    rules={[
-                      {
-                        required: true,
-                        message: `Por favor, preencha esse campo!`,
-                      },
-                    ]}
                   >
                     <DatePicker format="DD/MM/YYYY" />
                   </Item>
                 )}
                 {fieldItem.type === 'file' && (
                   <Item
-                    label={fieldItem.label}
+                    label={convertSnakeCaseToNormal(fieldItem.label)}
                     name={['fieldsValues', index, fieldItem.name]}
-                    rules={[
-                      {
-                        required: true,
-                        message: `Por favor, faça o upload do arquivo ${fieldItem.label}`,
-                      },
-                    ]}
                   >
                     <Dragger
                       name="file"

@@ -42,7 +42,7 @@ export default function EditRequest({
       requestToUpdate.userId = user.id;
       requestToUpdate.userName = user.name;
       requestToUpdate.productId = product.id;
-      requestToUpdate.status = 'novo';
+      requestToUpdate.status = request.status;
       requestToUpdate.date = new Date();
       requestToUpdate.fieldsValues = requestToUpdate.fieldsValues.map(
         (field, index) => ({
@@ -53,7 +53,7 @@ export default function EditRequest({
       setIsSubmitting(true);
       await api.put(`/requests/${request.id}`, requestToUpdate);
       setIsSubmitting(false);
-      message.success(`Solicitação do ${product.name} criada com sucesso!`);
+      message.success(`Solicitação do ${product.name} editada com sucesso!`);
       push('/');
     },
     [
@@ -62,6 +62,7 @@ export default function EditRequest({
       product.name,
       push,
       request.id,
+      request.status,
       user.id,
       user.name,
     ],
@@ -130,20 +131,10 @@ export default function EditRequest({
               <h2>Dados do paciente</h2>
 
               <PatientForm />
-
               <RequestDynamicForm
                 form={form}
                 fieldsFromProduct={product.fields}
                 fieldsFromRequest={request.fieldsValues}
-                onUpdateFile={(
-                  url: string,
-                  index: number,
-                  fieldItemName: string,
-                ) => {
-                  const { fieldsValues } = form.getFieldsValue();
-                  fieldsValues[index][fieldItemName] = url;
-                  form.setFieldsValue({ fieldsValues });
-                }}
               />
 
               <h2>Endereço</h2>

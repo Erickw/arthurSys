@@ -24,29 +24,54 @@ interface RequestDynamicFormProps {
   form: FormInstance;
   fieldsFromProduct?: InputGroupProps[];
   fieldsFromRequest: RequestGroupProps[] | RequestGroupProps;
-  onUpdateFile: (url: string, index: number, fieldItemName: string) => void;
 }
 
 export default function RequestDynamicForm({
   form,
   fieldsFromProduct,
   fieldsFromRequest,
-  onUpdateFile,
 }: RequestDynamicFormProps): JSX.Element {
   const forceUpdate = useReducer(() => ({}), {})[1] as () => void;
 
   const [isFirstValueChanged, setIsFirstValueChanged] = useState(true);
+  const [fieldsFromRequestState, setFieldsFromRequestState] = useState<
+    RequestGroupProps[] | RequestGroupProps
+  >(fieldsFromRequest);
 
-  async function handleUpload(info, index, fieldItemName) {
+  async function handleUpload(info, index: number, fieldItemName: string) {
     const { file } = info;
-    const storageRef = app.storage().ref();
-    const fileRef = storageRef.child(file.name);
-    await fileRef.put(file);
-    const fileUrl = await fileRef.getDownloadURL();
-    onUpdateFile(fileUrl, index, fieldItemName);
 
-    if (file.status === 'done') {
+    const { fieldsValues } = form.getFieldsValue();
+
+    if (file.status === 'uploading') {
+      const storageRef = app.storage().ref();
+      const fileRef = storageRef.child(file.name);
+      await fileRef.put(file);
+      const fileUrl = await fileRef.getDownloadURL();
+      const updateInputFiles = [
+        ...fieldsFromRequestState[index].fields[fieldItemName],
+        fileUrl,
+      ];
+      fieldsValues[index][fieldItemName] = updateInputFiles;
+      form.setFieldsValue({ fieldsValues });
+      setFieldsFromRequestState(
+        form.getFieldsValue().fieldsValues.map((field, indexField) => ({
+          title: fieldsFromRequestState[indexField].title,
+          fields: { ...field },
+        })),
+      );
       message.success(`${info.file.name} arquivo enviado com sucesso.`);
+    } else if (file.status === 'removed') {
+      fieldsValues[index][fieldItemName] = fieldsFromRequestState[index].fields[
+        fieldItemName
+      ].filter(item => item !== file.uid);
+      form.setFieldsValue({ fieldsValues });
+      setFieldsFromRequestState(
+        form.getFieldsValue().fieldsValues.map((field, indexField) => ({
+          title: fieldsFromRequestState[indexField].title,
+          fields: { ...field },
+        })),
+      );
     } else if (file.status === 'error') {
       message.error(`${info.file.name} falha no envio do arquivo.`);
     }
@@ -88,16 +113,6 @@ export default function RequestDynamicForm({
                     initialValue={
                       fieldsFromRequest[index].fields[fieldItem.name]
                     }
-                    rules={[
-                      {
-                        required: true,
-                        message: `Por favor, preencha esse campo!`,
-                      },
-                      {
-                        whitespace: true,
-                        message: 'Por favor, preencha esse campo',
-                      },
-                    ]}
                   >
                     <Input />
                   </Item>
@@ -109,16 +124,6 @@ export default function RequestDynamicForm({
                     initialValue={
                       fieldsFromRequest[index].fields[fieldItem.name]
                     }
-                    rules={[
-                      {
-                        required: true,
-                        message: `Por favor, preencha esse campo!`,
-                      },
-                      {
-                        whitespace: true,
-                        message: 'Por favor, preencha esse campo',
-                      },
-                    ]}
                   >
                     <Input type="number" />
                   </Item>
@@ -132,16 +137,6 @@ export default function RequestDynamicForm({
                         initialValue={
                           fieldsFromRequest[index].fields[fieldItem.name]
                         }
-                        rules={[
-                          {
-                            required: true,
-                            message: `Por favor, preencha esse campo!`,
-                          },
-                          {
-                            whitespace: true,
-                            message: 'Por favor, preencha esse campo',
-                          },
-                        ]}
                       >
                         <Select
                           onSelect={() => {
@@ -183,16 +178,6 @@ export default function RequestDynamicForm({
                         initialValue={
                           fieldsFromRequest[index].fields[fieldItem.name]
                         }
-                        rules={[
-                          {
-                            required: true,
-                            message: `Por favor, preencha esse campo!`,
-                          },
-                          {
-                            whitespace: true,
-                            message: 'Por favor, preencha esse campo',
-                          },
-                        ]}
                       >
                         <Input />
                       </Item>
@@ -203,16 +188,6 @@ export default function RequestDynamicForm({
                         initialValue={
                           fieldsFromRequest[index].fields[fieldItem.name]
                         }
-                        rules={[
-                          {
-                            required: true,
-                            message: `Por favor, preencha esse campo!`,
-                          },
-                          {
-                            whitespace: true,
-                            message: 'Por favor, preencha esse campo',
-                          },
-                        ]}
                       >
                         <Select onSelect={() => forceUpdate()}>
                           {fieldItem.options.map(option => (
@@ -233,12 +208,6 @@ export default function RequestDynamicForm({
                     initialValue={moment(
                       fieldsFromRequest[index].fields[fieldItem.name],
                     )}
-                    rules={[
-                      {
-                        required: true,
-                        message: `Por favor, preencha esse campo!`,
-                      },
-                    ]}
                   >
                     <DatePicker format="DD/MM/YYYY" />
                   </Item>
@@ -251,23 +220,24 @@ export default function RequestDynamicForm({
                     initialValue={
                       fieldsFromRequest[index]?.fields[fieldItem.name]
                     }
-                    rules={[
-                      {
-                        required: true,
-                        message: `Por favor, preencha esse campo!`,
-                      },
-                      {
-                        whitespace: true,
-                        message: 'Por favor, preencha esse campo',
-                      },
-                    ]}
                   >
                     <Dragger
                       name="file"
-                      maxCount={1}
                       onChange={file =>
                         handleUpload(file, index, fieldItem.name)
                       }
+                      fileList={fieldsFromRequestState[index]?.fields[
+                        fieldItem.name
+                      ].map((file: string) => ({
+                        name: file.substring(
+                          file.lastIndexOf('/') + 1,
+                          file.lastIndexOf('?'),
+                        ),
+                        url: file,
+                        uid: file,
+                        size: 10,
+                        type: 'file',
+                      }))}
                     >
                       <p className="ant-upload-drag-icon">
                         <InboxOutlined />

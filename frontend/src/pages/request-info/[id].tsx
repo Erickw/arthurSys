@@ -26,19 +26,29 @@ export default function RequestInfo({
 }: RequestInfoParams): JSX.Element {
   function displayCorrectFormatData(item) {
     const data = item;
-    if (data.slice(0, 38) === 'https://firebasestorage.googleapis.com') {
-      const fileName = data.substring(
-        data.lastIndexOf('/') + 1,
-        data.lastIndexOf('?'),
-      );
-      return (
-        <a href={data} target="_blank" rel="noreferrer">
-          {fileName}
-        </a>
-      );
+    if (Array.isArray(data)) {
+      const test = data.map(file => {
+        if (file.slice(0, 38) === 'https://firebasestorage.googleapis.com') {
+          const fileName = file.substring(
+            file.lastIndexOf('/') + 1,
+            file.lastIndexOf('?'),
+          );
+          return (
+            <div key={file}>
+              <a href={file} target="_blank" rel="noreferrer">
+                {fileName}
+              </a>
+              <br />
+            </div>
+          );
+        }
+        return <></>;
+      });
+
+      return test;
     }
 
-    if (data.substr(data.length - 1) === 'Z') {
+    if (!Array.isArray(data) && data.substr(data.length - 1) === 'Z') {
       // verify if data pass is a date, if is a date return in date format
       try {
         const dateString = new Intl.DateTimeFormat('pt-br').format(
