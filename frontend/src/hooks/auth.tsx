@@ -35,13 +35,13 @@ interface RegisterProps {
   email: string;
   password: string;
   admin: boolean;
-  state: string;
-  city: string;
-  zipCode: string;
-  neighborhood: string;
-  street: string;
-  number: string;
-  contactNumber: string;
+  state?: string;
+  city?: string;
+  zipCode?: string;
+  neighborhood?: string;
+  street?: string;
+  number?: string;
+  contactNumber?: string;
 }
 
 interface AuthProviderProps {

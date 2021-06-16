@@ -21,7 +21,7 @@ interface User {
   admin: boolean;
   state: string;
   city: string;
-  cep: string;
+  zipCode: string;
   neighborhood: string;
   street: string;
   number: string;
