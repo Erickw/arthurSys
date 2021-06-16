@@ -16,8 +16,16 @@ import { getApiClient } from '../../clients/axios';
 interface User {
   id: string;
   name: string;
+  password: string;
   email: string;
   admin: boolean;
+  state: string;
+  city: string;
+  cep: string;
+  neighborhood: string;
+  street: string;
+  number: string;
+  contactNumber: string;
 }
 
 interface UsersTableProps {

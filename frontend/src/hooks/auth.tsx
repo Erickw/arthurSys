@@ -35,6 +35,13 @@ interface RegisterProps {
   email: string;
   password: string;
   admin: boolean;
+  state: string;
+  city: string;
+  zipCode: string;
+  neighborhood: string;
+  street: string;
+  number: string;
+  contactNumber: string;
 }
 
 interface AuthProviderProps {
@@ -62,10 +69,35 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
   }, []);
 
   const register = useCallback(
-    async ({ name, email, password, admin }: RegisterProps) => {
+    async ({
+      name,
+      email,
+      password,
+      admin,
+      state,
+      city,
+      zipCode,
+      neighborhood,
+      street,
+      number,
+      contactNumber,
+    }: RegisterProps) => {
       try {
-        const userToRegister = { name, email, password, admin };
+        const userToRegister = {
+          name,
+          email,
+          password,
+          admin,
+          state,
+          city,
+          zipCode,
+          neighborhood,
+          street,
+          number,
+          contactNumber,
+        };
         await api.post('/users', userToRegister);
+        message.success('Usuário criado com sucesso', 4);
       } catch (err) {
         message.error('Erro ao fazer registro, por favor tente novamente.');
       }
