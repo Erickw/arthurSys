@@ -39,6 +39,7 @@ interface User {
 interface EditUserModalProps {
   modalVisible: boolean;
   close: () => void;
+  // eslint-disable-next-line react/require-default-props
   user: User;
 }
 
@@ -123,24 +124,7 @@ export default function EditUserModal({
         </Button>,
       ]}
     >
-      <Form
-        layout="vertical"
-        id="editUser"
-        form={form}
-        onFinish={handleFinish}
-        initialValues={{
-          name: user.name,
-          email: user.email,
-          admin: user.admin,
-          state: user.state,
-          city: user.city,
-          zipCode: user.zipCode,
-          neighborhood: user.neighborhood,
-          street: user.street,
-          number: user.number,
-          contactNumber: user.contactNumber,
-        }}
-      >
+      <Form layout="vertical" id="editUser" form={form} onFinish={handleFinish}>
         <InputGroupWrapper>
           <Form.Item
             label="Nome completo"
