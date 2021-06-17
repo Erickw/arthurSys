@@ -27,7 +27,7 @@ export const LoginWrapper = styled.main`
       width: 350px;
     }
     h2 {
-      margin-bottom: 32px;
+      margin-bottom: 12px;
     }
     form {
       margin-bottom: 16px;

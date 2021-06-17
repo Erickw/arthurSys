@@ -96,6 +96,7 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
           number,
           contactNumber,
         };
+
         await api.post('/users', userToRegister);
         message.success('Usuário criado com sucesso', 4);
       } catch (err) {
