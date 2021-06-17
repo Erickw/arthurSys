@@ -196,6 +196,27 @@ export default function Home({
         </Space>
       ),
     });
+  } else {
+    columns.push({
+      title: 'Opções',
+      key: 'action',
+      responsive: ['sm'],
+      render: (text, record) => (
+        <Space size="middle">
+          {typeof window !== 'undefined' && window.innerWidth < 991 && (
+            <Link href={`/request-info/${record.id}`}>Requisição</Link>
+          )}
+          <Link href={`/edit-request/${record.id}`}>Editar</Link>
+
+          <Button
+            onClick={() => handleChangeRequestStatus(record, 'finalizado')}
+          >
+            Aprovar solicitação
+          </Button>
+          <a onClick={() => deleteRequestModal(record.id)}>Deletar</a>
+        </Space>
+      ),
+    });
   }
 
   useEffect(() => {
