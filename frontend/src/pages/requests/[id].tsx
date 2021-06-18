@@ -95,19 +95,7 @@ export default function Requests({ product }: RequestProps): JSX.Element {
             <Form layout="vertical" form={form} onFinish={handleSubmit}>
               <h2>Dados do paciente</h2>
               <PatientForm />
-              <ProductDynamicForm
-                form={form}
-                fields={product.fields}
-                onUpdateFile={(
-                  url: string,
-                  index: number,
-                  fieldItemName: string,
-                ) => {
-                  const { fieldsValues } = form.getFieldsValue();
-                  fieldsValues[index][fieldItemName] = url;
-                  form.setFieldsValue({ fieldsValues });
-                }}
-              />
+              <ProductDynamicForm form={form} fields={product.fields} />
               <h2>Endereço</h2>
               <AddressForm />
               <Button
