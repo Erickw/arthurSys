@@ -41,7 +41,7 @@ export default function ProductDynamicForm({
 
     const { fieldsValues } = form.getFieldsValue();
 
-    if (file.status === 'uploading') {
+    if (file.status === 'done') {
       const storageRef = app.storage().ref();
       const fileRef = storageRef.child(file.name);
       await fileRef.put(file);
