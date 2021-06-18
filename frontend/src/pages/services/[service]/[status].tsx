@@ -227,14 +227,16 @@ export default function Service({
           {typeof window !== 'undefined' && window.innerWidth < 991 && (
             <Link href={`/request-info/${record.id}`}>Requisição</Link>
           )}
-          <Link href={`/edit-request/${record.id}`}>Editar</Link>
-
           <Button
             onClick={() => handleChangeRequestStatus(record, 'finalizado')}
+            style={{
+              background: '#34a853',
+              borderColor: '#34a853',
+              color: 'white',
+            }}
           >
             Aprovar solicitação
           </Button>
-          <a onClick={() => deleteRequestModal(record.id)}>Deletar</a>
         </Space>
       ),
     });
