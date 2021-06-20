@@ -14,6 +14,7 @@ import {
   message,
   FormInstance,
   Tooltip,
+  Spin,
 } from 'antd';
 import React, { useEffect, useReducer, useState } from 'react';
 
@@ -35,6 +36,8 @@ export default function ProductDynamicForm({
 
   const [isFirstValueChanged, setIsFirstValueChanged] = useState(true);
   const [fieldsFromRequestState, setFieldsFromRequestState] = useState([]);
+  const [isUploadingFile, setIsUploadingFile] = useState(false);
+  const [fileNameUploading, setFileNameUploading] = useState('');
 
   async function handleAntdUpload(info, index, fieldItemName) {
     const { file } = info;
@@ -64,6 +67,9 @@ export default function ProductDynamicForm({
 
     const { fieldsValues } = form.getFieldsValue();
 
+    setIsUploadingFile(true);
+    setFileNameUploading(file.name);
+
     const storageRef = app.storage().ref();
     const fileRef = storageRef.child(file.name);
     await fileRef.put(file);
@@ -83,6 +89,9 @@ export default function ProductDynamicForm({
         fields: { ...field },
       })),
     );
+
+    setIsUploadingFile(false);
+    setFileNameUploading('');
   }
 
   function handleAlternativeOutput(
@@ -122,7 +131,10 @@ export default function ProductDynamicForm({
   }, [fields]);
 
   return (
-    <>
+    <Spin
+      spinning={isUploadingFile}
+      tip={`Fazendo upload do arquivo ${fileNameUploading}`}
+    >
       {fields &&
         fields.map((field, index) => (
           <div key={field.title}>
@@ -261,6 +273,6 @@ export default function ProductDynamicForm({
             ))}
           </div>
         ))}
-    </>
+    </Spin>
   );
 }

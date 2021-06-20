@@ -12,6 +12,7 @@ import {
   message,
   FormInstance,
   Tooltip,
+  Spin,
 } from 'antd';
 import Dragger from 'antd/lib/upload/Dragger';
 import moment from 'moment';
@@ -37,6 +38,9 @@ export default function RequestDynamicForm({
   const [fieldsFromRequestState, setFieldsFromRequestState] = useState<
     RequestGroupProps[] | RequestGroupProps
   >(fieldsFromRequest);
+
+  const [isUploadingFile, setIsUploadingFile] = useState(false);
+  const [fileNameUploading, setFileNameUploading] = useState('');
 
   async function handleAntdUpload(info, index: number, fieldItemName: string) {
     const { file } = info;
@@ -66,6 +70,9 @@ export default function RequestDynamicForm({
 
     const { fieldsValues } = form.getFieldsValue();
 
+    setIsUploadingFile(true);
+    setFileNameUploading(file.name);
+
     const storageRef = app.storage().ref();
     const fileRef = storageRef.child(file.name);
     await fileRef.put(file);
@@ -82,6 +89,9 @@ export default function RequestDynamicForm({
         fields: { ...field },
       })),
     );
+
+    setIsUploadingFile(false);
+    setFileNameUploading('');
   }
 
   function handleAlternativeOutput(
@@ -106,7 +116,10 @@ export default function RequestDynamicForm({
   }
 
   return (
-    <>
+    <Spin
+      spinning={isUploadingFile}
+      tip={`Fazendo upload do arquivo ${fileNameUploading}`}
+    >
       {fieldsFromProduct &&
         fieldsFromProduct.map((field, index) => (
           <div key={field.title}>
@@ -266,6 +279,6 @@ export default function RequestDynamicForm({
             ))}
           </div>
         ))}
-    </>
+    </Spin>
   );
 }
