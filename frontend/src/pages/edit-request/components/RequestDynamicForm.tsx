@@ -47,9 +47,7 @@ export default function RequestDynamicForm({
 
     const { fieldsValues } = form.getFieldsValue();
 
-    if (file.status === 'done') {
-      message.success(`${info.file.name} arquivo enviado com sucesso.`);
-    } else if (file.status === 'removed') {
+    if (file.status === 'removed') {
       fieldsValues[index][fieldItemName] = fieldsFromRequestState[index].fields[
         fieldItemName
       ].filter(item => item !== file.uid);
@@ -60,8 +58,6 @@ export default function RequestDynamicForm({
           fields: { ...field },
         })),
       );
-    } else if (file.status === 'error') {
-      message.error(`${info.file.name} falha no envio do arquivo.`);
     }
   }
 
@@ -70,28 +66,34 @@ export default function RequestDynamicForm({
 
     const { fieldsValues } = form.getFieldsValue();
 
-    setIsUploadingFile(true);
-    setFileNameUploading(file.name);
+    try {
+      setIsUploadingFile(true);
+      setFileNameUploading(file.name);
 
-    const storageRef = app.storage().ref();
-    const fileRef = storageRef.child(file.name);
-    await fileRef.put(file);
-    const fileUrl = await fileRef.getDownloadURL();
-    const updateInputFiles = [
-      ...fieldsFromRequestState[index].fields[fieldItemName],
-      fileUrl,
-    ];
-    fieldsValues[index][fieldItemName] = updateInputFiles;
-    form.setFieldsValue({ fieldsValues });
-    setFieldsFromRequestState(
-      form.getFieldsValue().fieldsValues.map((field, indexField) => ({
-        title: fieldsFromRequestState[indexField].title,
-        fields: { ...field },
-      })),
-    );
+      const storageRef = app.storage().ref();
+      const fileRef = storageRef.child(file.name);
+      await fileRef.put(file);
+      const fileUrl = await fileRef.getDownloadURL();
+      const updateInputFiles = [
+        ...fieldsFromRequestState[index].fields[fieldItemName],
+        fileUrl,
+      ];
+      fieldsValues[index][fieldItemName] = updateInputFiles;
+      form.setFieldsValue({ fieldsValues });
+      setFieldsFromRequestState(
+        form.getFieldsValue().fieldsValues.map((field, indexField) => ({
+          title: fieldsFromRequestState[indexField].title,
+          fields: { ...field },
+        })),
+      );
 
-    setIsUploadingFile(false);
-    setFileNameUploading('');
+      setIsUploadingFile(false);
+      setFileNameUploading('');
+
+      message.success(`${file.name} arquivo enviado com sucesso.`);
+    } catch (err) {
+      message.error(`${file.name} falha no envio do arquivo.`);
+    }
   }
 
   function handleAlternativeOutput(
@@ -133,6 +135,7 @@ export default function RequestDynamicForm({
                     initialValue={
                       fieldsFromRequest[index].fields[fieldItem.name]
                     }
+                    fieldKey={['fieldsValues', index, fieldItem.name]}
                   >
                     <Input />
                   </Item>
@@ -144,6 +147,7 @@ export default function RequestDynamicForm({
                     initialValue={
                       fieldsFromRequest[index].fields[fieldItem.name]
                     }
+                    fieldKey={['fieldsValues', index, fieldItem.name]}
                   >
                     <Input type="number" />
                   </Item>
@@ -157,6 +161,7 @@ export default function RequestDynamicForm({
                         initialValue={
                           fieldsFromRequest[index].fields[fieldItem.name]
                         }
+                        fieldKey={['fieldsValues', index, fieldItem.name]}
                       >
                         <Select
                           onSelect={() => {
@@ -165,7 +170,7 @@ export default function RequestDynamicForm({
                           }}
                         >
                           {fieldItem.options.map(option => (
-                            <Select.Option value={option}>
+                            <Select.Option key={option} value={option}>
                               {option}
                             </Select.Option>
                           ))}
@@ -198,6 +203,7 @@ export default function RequestDynamicForm({
                         initialValue={
                           fieldsFromRequest[index].fields[fieldItem.name]
                         }
+                        fieldKey={['fieldsValues', index, fieldItem.name]}
                       >
                         <Input />
                       </Item>
@@ -208,6 +214,7 @@ export default function RequestDynamicForm({
                         initialValue={
                           fieldsFromRequest[index].fields[fieldItem.name]
                         }
+                        fieldKey={['fieldsValues', index, fieldItem.name]}
                       >
                         <Select onSelect={() => forceUpdate()}>
                           {fieldItem.options.map(option => (
