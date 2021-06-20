@@ -94,6 +94,7 @@ const Products: React.FC<ProductsProps> = ({ products }: ProductsProps) => {
                       <Button
                         type="primary"
                         onClick={() => push(`/requests/${item.id}`)}
+                        disabled={!item.available}
                       >
                         Solicitar Agora
                       </Button>,
@@ -112,6 +113,7 @@ const Products: React.FC<ProductsProps> = ({ products }: ProductsProps) => {
                       <Button
                         type="primary"
                         onClick={() => push(`/requests/${item.id}`)}
+                        disabled={!item.available}
                       >
                         Solicitar Agora
                       </Button>,

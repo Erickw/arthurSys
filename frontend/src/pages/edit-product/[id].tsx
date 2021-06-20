@@ -189,7 +189,7 @@ export default function EditProduct({
               <Item
                 label="Disponibilidade"
                 name="available"
-                initialValue={product?.available}
+                initialValue={product?.available ? 'true' : 'false'}
               >
                 <Select>
                   <Select.Option value="true">Disponível</Select.Option>

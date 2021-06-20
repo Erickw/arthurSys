@@ -9,9 +9,11 @@ import {
   Row,
 } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
+import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import api from '../../clients/api';
+import { getApiClient } from '../../clients/axios';
 import { useAuth } from '../../hooks/auth';
 import AddressForm from './components/AddressForm';
 import PatientForm from './components/PatientForm';
@@ -114,8 +116,38 @@ export default function Requests({ product }: RequestProps): JSX.Element {
   );
 }
 
-Requests.getInitialProps = async ({ query: { id } }) => {
-  const response = await api.get(`products/${id}`);
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query: { id },
+}) => {
+  const { 'ortoSetup.token': token } = req.cookies;
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  const apiCLient = getApiClient(token);
+
+  const response = await apiCLient.get(`products/${id}`);
   const product = response.data;
-  return { product };
+
+  if (!product.available) {
+    return {
+      redirect: {
+        destination: '/products',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      product,
+    },
+  };
 };
