@@ -9,7 +9,9 @@ class Request {
     this.status = payload.status || "";
     this.date = payload.date || "";
     this.address = payload.address || "";
-    this.bankInfo = payload.bankInfo || "";
+    this.userName = payload.userName || "";
+    this.accepted = payload.accepted || "";
+    this.fieldsValues = payload.fieldsValues || "";
   }
 
   requestInfo() {
@@ -22,7 +24,9 @@ class Request {
       status: this.status,
       date: this.date,
       address: this.address,
-      bankInfo: this.bankInfo,
+      userName: this.userName,
+      accepted: this.accepted,
+      fieldsValues: this.fieldsValues,
     };
   }
 }

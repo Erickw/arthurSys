@@ -7,6 +7,13 @@ class User {
     this.senha = payload.senha || "";
     this.idAvatar = payload.idAvatar || "";
     this.admin = payload.admin || "";
+    this.city = payload.city || "";
+    this.state = payload.state || "";
+    this.neighborhood = payload.neighborhood || "";
+    this.street = payload.street || "";
+    this.zipCode = payload.zipCode || "";
+    this.number = payload.number || "";
+    this.contactNumber = payload.contactNumber || "";
   }
 
   userInfo() {
@@ -16,6 +23,13 @@ class User {
       email: this.email,
       avatar: this.idAvatar,
       admin: this.admin,
+      city: this.city,
+      state: this.state,
+      neighborhood: this.neighborhood,
+      street: this.street,
+      zipCode: this.zipCode,
+      number: this.number,
+      contactNumber: this.contactNumber,
     };
   }
 }

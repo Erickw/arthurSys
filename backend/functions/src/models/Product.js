@@ -9,6 +9,7 @@ class Product {
     this.notes = payload.notes || "";
     this.available = payload.available || "";
     this.fields = payload.fields || "";
+    this.bankInfo = payload.bankInfo || "";
   }
 
   productInfo() {
@@ -21,6 +22,7 @@ class Product {
       notes: this.notes,
       available: this.available,
       fields: this.fields,
+      bankInfo: this.bankInfo,
     };
   }
 }

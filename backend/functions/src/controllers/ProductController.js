@@ -12,7 +12,7 @@ class ProductController {
     const snapshot = await productsCollection.get();
     const products = [];
     if (snapshot.empty) {
-      return res.status(400).json({error: "Error to get product. No matching documents."});
+      return res.status(200).json([]);
     }
     snapshot.forEach((doc) => {
       products.push(new Product(doc.data()).productInfo());

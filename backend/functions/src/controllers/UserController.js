@@ -50,8 +50,9 @@ class UserController {
   // }
 
   async store(req, res) {
-    const {email, password, name} = req.body;
+    const {email, password} = req.body;
     const id = customId({});
+    req.body.id = id;
 
     try {
       await auth.createUserWithEmailAndPassword(email, password);
@@ -59,13 +60,13 @@ class UserController {
       return res.status(406).json({error: error.message});
     }
 
-    await usersCollection.doc(id).set(new User({email, password, name}).userInfo()).catch((e) => console.log("Error: ", e.message));
+    await usersCollection.doc(id).set(new User(req.body).userInfo()).catch((e) => console.log("Error: ", e.message));
     return res.json({message: `User add on database with success, ${email}`});
   }
 
   async update(req, res) {
     const id = req.params.id;
-    const {email, name, password, newPassword} = req.body;
+    const {email, password, newPassword} = req.body;
     const snapshot = await usersCollection.doc(id).get();
 
     if (snapshot.empty) {
@@ -82,21 +83,18 @@ class UserController {
       return res.status(406).json({error: error.message});
     }
 
-    await usersCollection.doc(id).set({email, name}).catch((e) => console.log("Error: ", e.message));
+    await usersCollection.doc(id).set(req.body).catch((e) => console.log("Error: ", e.message));
     return res.json({message: "User updated with success:"});
   }
 
   async delete(req, res) {
     const id = req.params.id;
-    const snapshot = await usersCollection.doc(id).get();
+    const snapshot = await usersCollection.doc(id).delete();
 
     if (snapshot.empty) {
       return res.status(400).json({error: "Error to delete user. No matching documents."});
     }
 
-    snapshot.forEach((doc) => {
-      doc.ref.delete();
-    });
     res.json({message: "User deleted with success"});
   }
 }

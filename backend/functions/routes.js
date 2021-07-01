@@ -4,6 +4,7 @@ const {Router} = require("express");
 const userController = require("./src/controllers/UserController");
 const requestController = require("./src/controllers/RequestController");
 const requestsByStatusController = require("./src/controllers/RequestsByStatusController");
+const requestsByStatusByUserController = require("./src/controllers/RequestsByStatusByUserController");
 const productsController = require("./src/controllers/ProductController");
 const uniqProductController = require("./src/controllers/UniqueProductController");
 const commentsController = require("./src/controllers/CommentController");
@@ -29,7 +30,8 @@ routes.delete("/users/:id", userController.delete);
 
 // Requests
 routes.get("/requests", requestController.index);
-routes.get("/requests/:userId/:status", requestsByStatusController.index);
+routes.get("/requests/:userId/:status", requestsByStatusByUserController.index);
+routes.get("/requests/:status", requestsByStatusController.index);
 routes.post("/requests", requestController.store);
 routes.put("/requests/:id", requestController.update);
 routes.delete("/requests/:id", requestController.delete);

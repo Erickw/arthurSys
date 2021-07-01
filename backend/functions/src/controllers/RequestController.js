@@ -3,9 +3,12 @@
 const admin = require("firebase-admin");
 const db = admin.firestore();
 const requestsCollection = db.collection("requests");
+const usersCollection = db.collection("users");
+const productsCollection = db.collection("products");
 const customId = require("custom-id");
 
 const Request = require("../models/Request");
+const Mail = require("../lib/Mail");
 
 class RequestController {
   async index(req, res) {
@@ -25,6 +28,32 @@ class RequestController {
     const id = customId({});
     request.id = id;
     await requestsCollection.doc(id).set(new Request(request).requestInfo()).catch((e) => console.log("Error: ", e.message));
+
+    const user = await usersCollection.doc(request.userId).get();
+    const product = await productsCollection.doc(request.productId).get();
+
+    if (!user.exists) {
+      return res.status(404).json({error: "User does not exists"});
+    }
+
+    if (!product.exists) {
+      return res.status(400).json({error: "Error to get product. No matching documents."});
+    }
+
+    const {name, email} = user.data();
+    const productData = product.data();
+
+    await Mail.sendMail({
+      to: `${name} <${email}>`,
+      subject: "Nova solicitação criada",
+      template: "request",
+      context: {
+        user: name,
+        patient: request.patientName,
+        product: productData.name,
+      },
+    }).catch((e) => console.log("Error: ", e.message));
+
     return res.json({message: `Request add on database with success, ${request.id}`});
   }
 

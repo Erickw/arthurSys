@@ -6,10 +6,10 @@ const requestsCollection = db.collection("requests");
 
 const Request = require("../models/Request");
 
-class RequestsByStatus {
+class RequestsByStatusByUser {
   async index(req, res) {
-    const {status} = req.params;
-    const snapshot = await requestsCollection.where("status", "==", status).get();
+    const {userId, status} = req.params;
+    const snapshot = await requestsCollection.where("userId", "==", userId).where("status", "==", status).get();
     const requests = [];
 
     if (snapshot.empty) {
@@ -24,4 +24,4 @@ class RequestsByStatus {
   }
 }
 
-module.exports = new RequestsByStatus();
+module.exports = new RequestsByStatusByUser();

@@ -13,7 +13,7 @@ class CommentController {
     const snapshot = await commentsCollection.get();
     const comments = [];
     if (snapshot.empty) {
-      return res.status(400).json({error: "Error to get comment. No matching documents."});
+      return res.status(200).json([]);
     }
     snapshot.forEach((doc) => {
       comments.push(new Comment(doc.data()).commentInfo());

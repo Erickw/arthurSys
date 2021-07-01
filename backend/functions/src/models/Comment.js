@@ -7,6 +7,7 @@ class Comment {
     this.senha = payload.senha || "";
     this.idAvatar = payload.idAvatar || "";
     this.admin = payload.admin || "";
+    this.createdAt = payload.createdAt || "";
   }
 
   commentInfo() {
@@ -14,6 +15,7 @@ class Comment {
       id: this.id,
       authorId: this.authorId,
       content: this.content,
+      createdAt: this.createdAt,
     };
   }
 }
