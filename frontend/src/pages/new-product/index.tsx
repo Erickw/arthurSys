@@ -147,8 +147,12 @@ const NewProduct: React.FC = () => {
               <Item label="Observações" name="notes">
                 <Input.TextArea autoSize={{ minRows: 2, maxRows: 10 }} />
               </Item>
-              <Item label="Disponibilidade" name="available">
-                <Select defaultValue="true">
+              <Item
+                label="Disponibilidade"
+                name="available"
+                initialValue="true"
+              >
+                <Select>
                   <Select.Option value="true">Disponível</Select.Option>
                   <Select.Option value="false">Não Disponível</Select.Option>
                 </Select>

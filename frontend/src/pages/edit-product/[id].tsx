@@ -62,6 +62,17 @@ export default function EditProduct({
     form.setFieldsValue(formData);
   }
 
+  function handleMoveGroupOrderDirectly(index: number, indexToMove) {
+    const formData = form.getFieldsValue();
+    const { fields } = formData;
+    if (indexToMove > 0 && formData.fields.length - 1 > indexToMove) {
+      const fieldDataToMoveDown = fields[index];
+      const fieldDataToMoveUp = fields[index + 1];
+      fields[index] = fieldDataToMoveUp;
+      fields[index + 1] = fieldDataToMoveDown;
+    }
+  }
+
   function handleMoveInputGroupOrder(
     groupIndex: number,
     inputIndex: number,

@@ -179,7 +179,9 @@ export default function EditUserModal({
                   placeholder="Selecione o estado"
                 >
                   {states.map(state => (
-                    <Option value={state}>{state}</Option>
+                    <Option key={state} value={state}>
+                      {state}
+                    </Option>
                   ))}
                 </Select>
               </Form.Item>

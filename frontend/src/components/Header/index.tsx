@@ -27,6 +27,7 @@ const Header: React.FC<HeaderProps> = ({
     <PageHeader
       extra={[
         <Switch
+          key={theme}
           checked={theme === 'dark'}
           checkedChildren="Dark"
           unCheckedChildren="Light"
