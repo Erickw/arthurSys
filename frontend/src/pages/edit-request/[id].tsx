@@ -162,6 +162,8 @@ export const getServerSideProps: GetServerSideProps = async ({
   query: { id },
 }) => {
   const { 'ortoSetup.token': token } = req.cookies;
+  const { 'ortoSetup.user': userJSON } = req.cookies;
+  const user = JSON.parse(userJSON);
 
   if (!token) {
     return {
@@ -179,6 +181,15 @@ export const getServerSideProps: GetServerSideProps = async ({
   const request = responseRequest.data.find(
     requestItem => requestItem.id === id,
   );
+
+  if (!user.admin) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
 
   const responseProduct = await apiCLient.get(`products/${request.productId}`);
 
