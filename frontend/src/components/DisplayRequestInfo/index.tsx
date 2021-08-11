@@ -1,6 +1,6 @@
 import { Descriptions } from 'antd';
 import React from 'react';
-import { RequestInfo } from '../../styles/pages/request';
+import { RequestInfo } from '../../styles/pages/request-info';
 import { convertSnakeCaseToNormal } from '../../utils/utils';
 
 interface DisplayRequestInfoProps {

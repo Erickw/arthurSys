@@ -1,10 +1,13 @@
-import { Card, Descriptions, PageHeader } from 'antd';
+import { Card, Descriptions, message, PageHeader } from 'antd';
 import React from 'react';
-import api from '../../clients/api';
+import { GetServerSideProps } from 'next';
 import { convertSnakeCaseToNormal } from '../../utils/utils';
 import Comments from './components/Comments';
 
-import { RequestInfo as RequestDisplay } from '../../styles/pages/request';
+import { RequestInfo as RequestDisplay } from '../../styles/pages/request-info';
+import ProductPropose from './components/ProductPropose';
+import { getApiClient } from '../../clients/axios';
+import api from '../../clients/api';
 
 interface CommentProps {
   id: string;
@@ -17,12 +20,14 @@ interface RequestInfoParams {
   product: ProductProps;
   request: RequestProps;
   comments: CommentProps[];
+  isAdminCadist: boolean;
 }
 
 export default function RequestInfo({
   product,
   request,
   comments,
+  isAdminCadist,
 }: RequestInfoParams): JSX.Element {
   function displayCorrectFormatData(item) {
     const data = item;
@@ -62,6 +67,23 @@ export default function RequestInfo({
 
     return data;
   }
+
+  async function handleUploadProductProposeFile(fileUrl: string) {
+    const requestToUpdate = request;
+    requestToUpdate.productPropose = fileUrl;
+
+    await api.put(`/requests/${request.id}`, requestToUpdate);
+    message.success(`Proposta da requisição enviada com sucesso!`);
+  }
+
+  async function handleRemoveProductProposeFile() {
+    const requestToUpdate = request;
+    requestToUpdate.productPropose = '';
+
+    await api.put(`/requests/${request.id}`, requestToUpdate);
+    message.success(`Proposta da requisição foi removida.`);
+  }
+
   return (
     <>
       <PageHeader
@@ -162,19 +184,49 @@ export default function RequestInfo({
           </Descriptions>
         </Card>
       </RequestDisplay>
+      <ProductPropose
+        isAdminCadist={isAdminCadist}
+        productPropose={request.productPropose}
+        handleUploadProductProposeFile={fileUrl =>
+          handleUploadProductProposeFile(fileUrl)
+        }
+        handleRemoveProductPropose={() => handleRemoveProductProposeFile()}
+      />
+
       <Comments comments={comments} requestId={request.id} />
     </>
   );
 }
 
-RequestInfo.getInitialProps = async ({ query }) => {
-  const { id } = query;
-  const requestsFromApi = await api.get('/requests');
-  const request = requestsFromApi.data.find(
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query: { id },
+}) => {
+  const { 'ortoSetup.token': token } = req.cookies;
+  const { 'ortoSetup.user': userJSON } = req.cookies;
+  const user = JSON.parse(userJSON);
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  const apiCLient = getApiClient(token);
+
+  const responseRequest = await apiCLient.get('/requests');
+  const request = responseRequest.data.find(
     requestFromApi => requestFromApi.id === id,
   );
-  const { data: product } = await api.get(`/products/${request.productId}`);
-  const { data: comments } = await api.get(`/comments/request/${id}`);
+
+  const responseProduct = await apiCLient.get(`products/${request.productId}`);
+  const product = responseProduct.data;
+
+  const { data: comments } = await apiCLient.get(`/comments/request/${id}`);
+
   const commentsSorted = comments
     .slice()
     .sort(
@@ -182,9 +234,14 @@ RequestInfo.getInitialProps = async ({ query }) => {
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
 
+  const isAdminCadist = !!user.admin;
+
   return {
-    request,
-    product,
-    comments: commentsSorted,
+    props: {
+      request,
+      product,
+      comments: commentsSorted,
+      isAdminCadist,
+    },
   };
 };

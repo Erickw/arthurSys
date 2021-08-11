@@ -11,6 +11,7 @@ type RequestProps = {
   date: Date;
   address: Address;
   fieldsValues: RequestGroupProps[];
+  productPropose: string;
 };
 
 type RequestGroupProps = {
