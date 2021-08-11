@@ -148,7 +148,7 @@ export default function Comments({
           />
         ))
       ) : (
-        <Empty />
+        <Empty description="Sem comentários" />
       )}
       <Form
         layout="vertical"
