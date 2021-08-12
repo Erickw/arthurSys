@@ -12,6 +12,7 @@ class Request {
     this.userName = payload.userName || "";
     this.accepted = payload.accepted || "";
     this.fieldsValues = payload.fieldsValues || "";
+    this.productPropose = payload.productPropose || "";
   }
 
   requestInfo() {
@@ -27,6 +28,7 @@ class Request {
       userName: this.userName,
       accepted: this.accepted,
       fieldsValues: this.fieldsValues,
+      productPropose: this.productPropose,
     };
   }
 }
