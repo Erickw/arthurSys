@@ -12,7 +12,9 @@ const { confirm } = Modal;
 
 interface ProductProposeParams {
   isAdminCadist: boolean;
-  productPropose: ProductPropose;
+  proposeFile: string;
+  proposeAnswered: boolean;
+  proposeAccepted: boolean;
   handleUploadProductProposeFile: (fileUrl: string) => void;
   handleRemoveProductPropose: () => void;
   handleAcceptProductPropose: (answer: boolean) => void;
@@ -21,20 +23,21 @@ interface ProductProposeParams {
 
 export default function ProductPropose({
   isAdminCadist,
-  productPropose,
+  proposeFile,
+  proposeAnswered,
+  proposeAccepted,
   handleUploadProductProposeFile,
   handleRemoveProductPropose,
   handleAcceptProductPropose,
   handleChangeProductProposeAnswer,
 }: ProductProposeParams): JSX.Element {
   const [productProposeFile, setProductProposeFile] = useState<string>(
-    productPropose.file,
+    proposeFile,
   );
   const [isUploadingFile, setIsUploadingFile] = useState(false);
 
-  // const { answered, accepted } = productPropose;
-  const [answered, setAnswered] = useState(productPropose.answered);
-  const [accepted, setAccepted] = useState(productPropose.accepted);
+  const [answered, setAnswered] = useState(proposeAnswered);
+  const [accepted, setAccepted] = useState(proposeAccepted);
 
   async function handleUploadFile(file) {
     try {
@@ -114,10 +117,12 @@ export default function ProductPropose({
             fileList={[
               {
                 uid: '1',
-                name: productProposeFile.substring(
-                  productProposeFile.lastIndexOf('/') + 1,
-                  productProposeFile.lastIndexOf('?'),
-                ),
+                name: productProposeFile
+                  ? productProposeFile.substring(
+                      productProposeFile.lastIndexOf('/') + 1,
+                      productProposeFile.lastIndexOf('?'),
+                    )
+                  : '',
                 url: productProposeFile,
                 thumbUrl: productProposeFile,
                 size: 10,

@@ -202,7 +202,9 @@ export default function RequestInfo({
       </RequestDisplay>
       <ProductPropose
         isAdminCadist={isAdminCadist}
-        productPropose={request.productPropose}
+        proposeFile={request.productPropose.file}
+        proposeAnswered={request.productPropose.answered}
+        proposeAccepted={request.productPropose.accepted}
         handleUploadProductProposeFile={fileUrl =>
           handleUploadProductProposeFile(fileUrl)
         }
