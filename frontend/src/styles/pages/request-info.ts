@@ -25,3 +25,20 @@ export const ProductProposeContainer = styled.div<ProductProposeContainerProps>`
     display: ${({ isClient }) => isClient && 'none'};
   }
 `;
+
+export const AproveRecuseButtons = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  margin: 2rem auto 2rem;
+
+  h3 {
+    margin: 1rem 0 2rem;
+    text-align: center;
+  }
+
+  div {
+    display: flex;
+    justify-content: space-evenly;
+  }
+`;

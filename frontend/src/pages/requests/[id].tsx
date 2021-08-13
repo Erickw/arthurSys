@@ -41,6 +41,11 @@ export default function Requests({ product }: RequestProps): JSX.Element {
         title: product.fields[index].title,
         fields: { ...field },
       }));
+      request.productProppose = {
+        file: '',
+        answered: false,
+        accepted: false,
+      };
 
       setIsSubmitting(true);
       await api.post('/requests', request);

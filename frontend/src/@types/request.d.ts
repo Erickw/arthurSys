@@ -11,7 +11,7 @@ type RequestProps = {
   date: Date;
   address: Address;
   fieldsValues: RequestGroupProps[];
-  productPropose: string;
+  productPropose: ProductPropose;
 };
 
 type RequestGroupProps = {
@@ -31,4 +31,10 @@ type Address = {
   district: string;
   postalCode: number;
   number: number;
+};
+
+type ProductPropose = {
+  file: string;
+  answered: boolean;
+  accepted: boolean;
 };

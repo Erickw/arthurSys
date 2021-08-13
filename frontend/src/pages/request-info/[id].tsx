@@ -70,7 +70,7 @@ export default function RequestInfo({
 
   async function handleUploadProductProposeFile(fileUrl: string) {
     const requestToUpdate = request;
-    requestToUpdate.productPropose = fileUrl;
+    requestToUpdate.productPropose.file = fileUrl;
 
     await api.put(`/requests/${request.id}`, requestToUpdate);
     message.success(`Proposta da requisição enviada com sucesso!`);
@@ -78,10 +78,26 @@ export default function RequestInfo({
 
   async function handleRemoveProductProposeFile() {
     const requestToUpdate = request;
-    requestToUpdate.productPropose = '';
+    requestToUpdate.productPropose.file = '';
 
     await api.put(`/requests/${request.id}`, requestToUpdate);
     message.success(`Proposta da requisição foi removida.`);
+  }
+
+  async function handleAcceptProductPropose(answer: boolean) {
+    const requestToUpdate = request;
+    requestToUpdate.productPropose.answered = true;
+    requestToUpdate.productPropose.accepted = answer;
+
+    await api.put(`/requests/${request.id}`, requestToUpdate);
+  }
+
+  async function handleChangeProductProposeAnswer() {
+    const requestToUpdate = request;
+    requestToUpdate.productPropose.answered = false;
+    requestToUpdate.productPropose.accepted = false;
+
+    await api.put(`/requests/${request.id}`, requestToUpdate);
   }
 
   return (
@@ -191,6 +207,12 @@ export default function RequestInfo({
           handleUploadProductProposeFile(fileUrl)
         }
         handleRemoveProductPropose={() => handleRemoveProductProposeFile()}
+        handleAcceptProductPropose={answer =>
+          handleAcceptProductPropose(answer)
+        }
+        handleChangeProductProposeAnswer={() =>
+          handleChangeProductProposeAnswer()
+        }
       />
 
       <Comments comments={comments} requestId={request.id} />

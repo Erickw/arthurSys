@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
-import { InboxOutlined } from '@ant-design/icons';
-import { Card, Upload, Result, message, Spin } from 'antd';
+import { ExclamationCircleOutlined, InboxOutlined } from '@ant-design/icons';
+import { Card, Upload, Result, message, Spin, Button, Modal } from 'antd';
 import { app } from '../../../config/firebase';
-import { ProductProposeContainer } from '../../../styles/pages/request-info';
+import {
+  AproveRecuseButtons,
+  ProductProposeContainer,
+} from '../../../styles/pages/request-info';
 
 const { Dragger } = Upload;
+const { confirm } = Modal;
 
 interface ProductProposeParams {
   isAdminCadist: boolean;
-  productPropose: string;
+  productPropose: ProductPropose;
   handleUploadProductProposeFile: (fileUrl: string) => void;
   handleRemoveProductPropose: () => void;
+  handleAcceptProductPropose: (answer: boolean) => void;
+  handleChangeProductProposeAnswer: () => void;
 }
 
 export default function ProductPropose({
@@ -18,11 +24,17 @@ export default function ProductPropose({
   productPropose,
   handleUploadProductProposeFile,
   handleRemoveProductPropose,
+  handleAcceptProductPropose,
+  handleChangeProductProposeAnswer,
 }: ProductProposeParams): JSX.Element {
   const [productProposeFile, setProductProposeFile] = useState<string>(
-    productPropose,
+    productPropose.file,
   );
   const [isUploadingFile, setIsUploadingFile] = useState(false);
+
+  // const { answered, accepted } = productPropose;
+  const [answered, setAnswered] = useState(productPropose.answered);
+  const [accepted, setAccepted] = useState(productPropose.accepted);
 
   async function handleUploadFile(file) {
     try {
@@ -43,11 +55,42 @@ export default function ProductPropose({
   }
 
   async function handleRemoveFile(file) {
-    // console.log(file);
     if (file.status === 'removed') {
       setProductProposeFile('');
       handleRemoveProductPropose();
     }
+  }
+
+  function productProposeAnswerModal(answer: boolean) {
+    confirm({
+      title: answer
+        ? 'Você deseja aceitar essa proposta ?'
+        : 'Você deseja recusar essa proposta ?',
+      icon: <ExclamationCircleOutlined />,
+      okText: 'Sim',
+      okType: answer ? 'primary' : 'danger',
+      cancelText: 'Não',
+      onOk() {
+        setAccepted(answer);
+        setAnswered(true);
+        handleAcceptProductPropose(answer);
+      },
+    });
+  }
+
+  function alterProductProposeAnswer() {
+    confirm({
+      title: 'Você deseja alterar a resposta ?',
+      icon: <ExclamationCircleOutlined />,
+      okText: 'Sim',
+      okType: 'danger',
+      cancelText: 'Não',
+      onOk() {
+        setAccepted(false);
+        setAnswered(false);
+        handleChangeProductProposeAnswer();
+      },
+    });
   }
 
   return (
@@ -61,7 +104,7 @@ export default function ProductPropose({
           {!isAdminCadist && productProposeFile === '' && (
             <Result
               status="404"
-              subTitle="Parece que ainda não foi feito uma proposta para essa requisição."
+              subTitle="Parece que ainda não foi feita uma proposta para essa requisição."
             />
           )}
           <Dragger
@@ -94,6 +137,43 @@ export default function ProductPropose({
               Você deve fazer o upload da proposta do produto aqui.
             </p>
           </Dragger>
+
+          {answered && (
+            <Result
+              status={accepted ? 'success' : 'error'}
+              subTitle={
+                accepted ? 'A proposta foi aceita' : 'A proposta não foi aceita'
+              }
+              extra={
+                !isAdminCadist && (
+                  <Button onClick={() => alterProductProposeAnswer()}>
+                    Alterar resposta
+                  </Button>
+                )
+              }
+            />
+          )}
+          {productProposeFile !== '' && !isAdminCadist && !answered && (
+            <AproveRecuseButtons>
+              <h3>Você aceita essa proposta ?</h3>
+
+              <div>
+                <Button
+                  type="primary"
+                  onClick={() => productProposeAnswerModal(true)}
+                >
+                  Aceitar
+                </Button>
+                <Button
+                  danger
+                  type="primary"
+                  onClick={() => productProposeAnswerModal(false)}
+                >
+                  Recusar
+                </Button>
+              </div>
+            </AproveRecuseButtons>
+          )}
         </Card>
       </ProductProposeContainer>
     </Spin>
