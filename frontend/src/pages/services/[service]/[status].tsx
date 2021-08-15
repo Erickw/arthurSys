@@ -293,8 +293,17 @@ export const getServerSideProps: GetServerSideProps = async ({
         product => product.id === request.productId,
       ).name,
     }));
+
+    // filter request for test
+    const requestsWithoutTestRequest = requests.filter(
+      request => request.id !== '11TY57BI',
+    );
     return {
-      props: { status, requestsFromApi: requests, isAdmin: true },
+      props: {
+        status,
+        requestsFromApi: requestsWithoutTestRequest,
+        isAdmin: true,
+      },
     };
   }
 
