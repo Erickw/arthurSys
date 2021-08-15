@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { Menu as MenuAntd } from 'antd';
 import { useRouter } from 'next/router';
@@ -47,6 +47,11 @@ const Menu: React.FC<MenuProps> = ({ theme }: MenuProps) => {
           >
             <Item>
               <Link href={`/services/${service.route}/novo`}>Novos</Link>
+            </Item>
+            <Item>
+              <Link href={`/services/${service.route}/aguardando-aprovacao`}>
+                Aguardando Aprovação
+              </Link>
             </Item>
             <Item>
               <Link href={`/services/${service.route}/em-andamento`}>

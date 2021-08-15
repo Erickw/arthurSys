@@ -71,6 +71,7 @@ export default function RequestInfo({
   async function handleUploadProductProposeFile(fileUrl: string) {
     const requestToUpdate = request;
     requestToUpdate.productPropose.file = fileUrl;
+    requestToUpdate.status = 'aguardando-aprovacao';
 
     await api.put(`/requests/${request.id}`, requestToUpdate);
     message.success(`Proposta da requisição enviada com sucesso!`);
@@ -88,6 +89,9 @@ export default function RequestInfo({
     const requestToUpdate = request;
     requestToUpdate.productPropose.answered = true;
     requestToUpdate.productPropose.accepted = answer;
+    if (answer) {
+      requestToUpdate.status = 'finalizado';
+    }
 
     await api.put(`/requests/${request.id}`, requestToUpdate);
   }
@@ -96,6 +100,7 @@ export default function RequestInfo({
     const requestToUpdate = request;
     requestToUpdate.productPropose.answered = false;
     requestToUpdate.productPropose.accepted = false;
+    requestToUpdate.status = 'aguardando-aprovacao';
 
     await api.put(`/requests/${request.id}`, requestToUpdate);
   }

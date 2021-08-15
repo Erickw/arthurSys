@@ -103,6 +103,19 @@ export default function Service({
         </Checkbox>
       </Menu.Item>
       <Menu.Item
+        key="aguardando-aprovacao"
+        onClick={() =>
+          handleChangeRequestStatus(request, 'aguardando-aprovacao')
+        }
+      >
+        <Checkbox
+          disabled={request.status === 'aguardando-aprovacao'}
+          checked={request.status === 'aguardando-aprovacao'}
+        >
+          Aguardando Aprovação
+        </Checkbox>
+      </Menu.Item>
+      <Menu.Item
         key="em-andamento"
         onClick={() => handleChangeRequestStatus(request, 'em-andamento')}
       >
@@ -110,7 +123,7 @@ export default function Service({
           disabled={request.status === 'em-andamento'}
           checked={request.status === 'em-andamento'}
         >
-          Em-Progresso
+          Em Andamento
         </Checkbox>
       </Menu.Item>
       <Menu.Item

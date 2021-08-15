@@ -41,7 +41,7 @@ export default function Requests({ product }: RequestProps): JSX.Element {
         title: product.fields[index].title,
         fields: { ...field },
       }));
-      request.productProppose = {
+      request.productPropose = {
         file: '',
         answered: false,
         accepted: false,

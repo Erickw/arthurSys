@@ -41,7 +41,7 @@ const Layout: React.FC = ({ children }: LayoutProps) => {
           {children}
         </Content>
         <Footer style={{ textAlign: 'center' }}>
-          Copyright © Litesense 2021
+          Copyright © Orto Setup 2021
         </Footer>
       </LayoutANTD>
     </LayoutANTD>
