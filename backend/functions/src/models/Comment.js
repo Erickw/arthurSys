@@ -6,7 +6,7 @@ class Comment {
     this.content = payload.content || "";
     this.senha = payload.senha || "";
     this.idAvatar = payload.idAvatar || "";
-    this.admin = payload.admin || "";
+    this.type = payload.type || "";
     this.createdAt = payload.createdAt || "";
   }
 

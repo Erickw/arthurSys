@@ -27,13 +27,13 @@ class SessionController {
       }
 
       snapshot.forEach((doc) => {
-        const {id, email, name, admin} = new User(doc.data()).userInfo();
+        const {id, email, name, type} = new User(doc.data()).userInfo();
         return res.json({
           user: {
             id,
             email,
             name,
-            admin,
+            type,
           },
           token: jwt.sign({id}, authConfig.secret, {
             expiresIn: authConfig.expiresIn,

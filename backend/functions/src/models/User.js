@@ -6,7 +6,7 @@ class User {
     this.email = payload.email || "";
     this.senha = payload.senha || "";
     this.idAvatar = payload.idAvatar || "";
-    this.admin = payload.admin || "";
+    this.type = payload.type || "";
     this.city = payload.city || "";
     this.state = payload.state || "";
     this.neighborhood = payload.neighborhood || "";
@@ -22,7 +22,7 @@ class User {
       name: this.name,
       email: this.email,
       avatar: this.idAvatar,
-      admin: this.admin,
+      type: this.type,
       city: this.city,
       state: this.state,
       neighborhood: this.neighborhood,
