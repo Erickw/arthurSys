@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Checkbox, Form, Input, Select } from 'antd';
+import { Button, Form, Input, Select } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import Modal from 'antd/lib/modal/Modal';
 import cepPromise from 'cep-promise';
@@ -12,7 +12,7 @@ interface RegisterParams {
   name: string;
   email: string;
   password: string;
-  admin: boolean;
+  type: 'admin' | 'cadist' | 'client';
   state: string;
   city: string;
   zipCode: string;
@@ -48,14 +48,14 @@ export default function CreateUserModal({
     street,
     number,
     contactNumber,
-    admin = false,
+    type = 'client',
   }: RegisterParams) {
     setIsSubmitting(true);
     await register({
       name,
       email,
       password,
-      admin,
+      type,
       state,
       city,
       zipCode,
@@ -205,8 +205,21 @@ export default function CreateUserModal({
             <Input />
           </Form.Item>
 
-          <Form.Item name="admin" valuePropName="checked">
-            <Checkbox>Admin</Checkbox>
+          <Form.Item
+            label="Tipo de usuário"
+            name="admin"
+            rules={[
+              {
+                required: true,
+                message: 'Por favor, selecione o tipo do usuário',
+              },
+            ]}
+          >
+            <Select defaultValue="comum">
+              <Option value="admin">Admin</Option>
+              <Option value="cadist">Cadista</Option>
+              <Option value="common">Comum</Option>
+            </Select>
           </Form.Item>
         </InputGroupWrapper>
       </Form>

@@ -296,7 +296,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   const productsFromApi = productsResponse.data;
 
-  if (user.admin) {
+  if (user.type === 'admin') {
     const requestsResponse = await apiCLient(`/requests/${status}`);
 
     const requests = requestsResponse.data.map(request => ({

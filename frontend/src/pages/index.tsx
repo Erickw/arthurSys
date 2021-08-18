@@ -271,7 +271,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
   const productsFromApi = productsResponse.data;
 
-  if (user.admin) {
+  if (user.type === 'admin') {
     const requestsResponse = await apiCLient.get(`/requests/novo`);
 
     const requests = requestsResponse.data.map(request => ({
@@ -287,7 +287,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       request => request.id !== '11TY57BI',
     );
     return {
-      props: { requestsFromApi: requestsWithoutTestRequest, isAdmin: true },
+      props: { requestsFromApi: requests, isAdmin: true },
     };
   }
 

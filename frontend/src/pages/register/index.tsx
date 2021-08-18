@@ -16,7 +16,7 @@ interface RegisterParams {
   name: string;
   email: string;
   password: string;
-  admin: boolean;
+  type: 'admin' | 'cadist' | 'client';
   state: string;
   city: string;
   zipCode: string;
@@ -38,7 +38,7 @@ const Register: React.FC = () => {
     name,
     email,
     password,
-    admin = false,
+    type = 'client',
     state,
     city,
     zipCode,
@@ -52,7 +52,7 @@ const Register: React.FC = () => {
       name,
       email,
       password,
-      admin,
+      type,
       state,
       city,
       zipCode,

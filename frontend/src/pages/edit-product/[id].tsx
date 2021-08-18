@@ -503,11 +503,22 @@ export const getServerSideProps: GetServerSideProps = async ({
   query: { id },
 }) => {
   const { 'ortoSetup.token': token } = req.cookies;
+  const { 'ortoSetup.user': userJSON } = req.cookies;
+  const user = JSON.parse(userJSON);
 
   if (!token) {
     return {
       redirect: {
         destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  if (user.type === 'admin') {
+    return {
+      redirect: {
+        destination: '/products',
         permanent: false,
       },
     };

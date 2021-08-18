@@ -457,7 +457,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
   const user = JSON.parse(userJson);
 
-  if (!user.admin) {
+  if (user.type === 'admin') {
     return {
       redirect: {
         destination: '/',

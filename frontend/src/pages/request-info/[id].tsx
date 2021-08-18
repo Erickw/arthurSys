@@ -263,7 +263,7 @@ export const getServerSideProps: GetServerSideProps = async ({
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
 
-  const isAdminCadist = !!user.admin;
+  const isAdminCadist = user.type === 'admin';
 
   return {
     props: {

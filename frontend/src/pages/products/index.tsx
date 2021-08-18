@@ -89,7 +89,7 @@ const Products: React.FC<ProductsProps> = ({ products }: ProductsProps) => {
             <List.Item
               key={item.id}
               actions={
-                user.admin
+                user.type === 'admin'
                   ? [
                       <Button
                         type="primary"

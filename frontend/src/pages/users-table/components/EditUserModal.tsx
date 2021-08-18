@@ -11,7 +11,7 @@ import { InputGroupWrapper } from '../../../styles/pages/users-table';
 interface EditUserParams {
   name: string;
   email: string;
-  admin: boolean;
+  type: 'admin' | 'cadist' | 'client';
   state: string;
   city: string;
   zipCode: string;
@@ -26,7 +26,7 @@ interface User {
   name: string;
   email: string;
   password: string;
-  admin: boolean;
+  type: 'admin' | 'cadist' | 'client';
   state: string;
   city: string;
   zipCode: string;
@@ -56,7 +56,7 @@ export default function EditUserModal({
   async function handleFinish({
     name,
     email,
-    admin = false,
+    type = 'client',
     state,
     city,
     zipCode,
@@ -70,7 +70,7 @@ export default function EditUserModal({
       id: user.id,
       name,
       email,
-      admin,
+      type,
       state,
       city,
       zipCode,

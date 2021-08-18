@@ -18,7 +18,7 @@ interface User {
   name: string;
   password: string;
   email: string;
-  admin: boolean;
+  type: 'admin' | 'cadist' | 'client';
   state: string;
   city: string;
   zipCode: string;
@@ -94,16 +94,16 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
       ...getColumnSearchProps('email'),
     },
     {
-      title: 'Admin',
-      dataIndex: 'admin',
-      key: 'admin',
+      title: 'Tipo',
+      dataIndex: 'type',
+      key: 'type',
       responsive: ['md'],
       // eslint-disable-next-line no-nested-ternary
-      sorter: (a, b) => (a.admin === b.admin ? 0 : a.admin ? -1 : 1),
+      sorter: (a, b) => (a.type === b.type ? 0 : a.type ? -1 : 1),
       render: record => (
         <span>
-          <Tag color={record ? 'blue' : 'green'}>
-            {record ? 'Admin' : 'Comum'}
+          <Tag color={record === 'admin' ? 'blue' : 'green'}>
+            {record === 'admin' ? 'Admin' : 'Comum'}
           </Tag>
         </span>
       ),
@@ -169,7 +169,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
   const user = JSON.parse(userJson);
 
-  if (!user.admin) {
+  if (user.type === 'admin') {
     return {
       redirect: {
         destination: '/',

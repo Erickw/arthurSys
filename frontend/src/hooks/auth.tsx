@@ -27,14 +27,14 @@ interface User {
   name: string;
   email: string;
   password: string;
-  admin: boolean;
+  type: 'admin' | 'cadist' | 'client';
 }
 
 interface RegisterProps {
   name: string;
   email: string;
   password: string;
-  admin: boolean;
+  type: 'admin' | 'cadist' | 'client';
   state?: string;
   city?: string;
   zipCode?: string;
@@ -73,7 +73,7 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
       name,
       email,
       password,
-      admin,
+      type,
       state,
       city,
       zipCode,
@@ -87,7 +87,7 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
           name,
           email,
           password,
-          admin,
+          type,
           state,
           city,
           zipCode,
