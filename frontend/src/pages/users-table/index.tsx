@@ -18,7 +18,7 @@ interface User {
   name: string;
   password: string;
   email: string;
-  type: 'admin' | 'cadist' | 'client';
+  type: 'admin' | 'cadista' | 'cliente';
   state: string;
   city: string;
   zipCode: string;
@@ -169,7 +169,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
   const user = JSON.parse(userJson);
 
-  if (user.type === 'admin') {
+  if (user.type !== 'admin') {
     return {
       redirect: {
         destination: '/',

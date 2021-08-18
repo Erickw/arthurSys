@@ -12,7 +12,7 @@ interface RegisterParams {
   name: string;
   email: string;
   password: string;
-  type: 'admin' | 'cadist' | 'client';
+  type: 'admin' | 'cadista' | 'cliente';
   state: string;
   city: string;
   zipCode: string;
@@ -48,7 +48,7 @@ export default function CreateUserModal({
     street,
     number,
     contactNumber,
-    type = 'client',
+    type,
   }: RegisterParams) {
     setIsSubmitting(true);
     await register({
@@ -207,7 +207,7 @@ export default function CreateUserModal({
 
           <Form.Item
             label="Tipo de usuário"
-            name="admin"
+            name="type"
             rules={[
               {
                 required: true,
@@ -217,8 +217,8 @@ export default function CreateUserModal({
           >
             <Select defaultValue="comum">
               <Option value="admin">Admin</Option>
-              <Option value="cadist">Cadista</Option>
-              <Option value="common">Comum</Option>
+              <Option value="cadista">Cadista</Option>
+              <Option value="cliente">Cliente</Option>
             </Select>
           </Form.Item>
         </InputGroupWrapper>

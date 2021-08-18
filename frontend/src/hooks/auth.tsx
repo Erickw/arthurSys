@@ -27,14 +27,14 @@ interface User {
   name: string;
   email: string;
   password: string;
-  type: 'admin' | 'cadist' | 'client';
+  type: 'admin' | 'cadista' | 'cliente';
 }
 
 interface RegisterProps {
   name: string;
   email: string;
   password: string;
-  type: 'admin' | 'cadist' | 'client';
+  type: 'admin' | 'cadista' | 'cliente';
   state?: string;
   city?: string;
   zipCode?: string;

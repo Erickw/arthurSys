@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, message, Select } from 'antd';
+import { Button, Form, Input, message, Select } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import Modal from 'antd/lib/modal/Modal';
 import React, { useEffect, useState } from 'react';
@@ -11,7 +11,7 @@ import { InputGroupWrapper } from '../../../styles/pages/users-table';
 interface EditUserParams {
   name: string;
   email: string;
-  type: 'admin' | 'cadist' | 'client';
+  type: 'admin' | 'cadista' | 'cliente';
   state: string;
   city: string;
   zipCode: string;
@@ -26,7 +26,7 @@ interface User {
   name: string;
   email: string;
   password: string;
-  type: 'admin' | 'cadist' | 'client';
+  type: 'admin' | 'cadista' | 'cliente';
   state: string;
   city: string;
   zipCode: string;
@@ -56,7 +56,7 @@ export default function EditUserModal({
   async function handleFinish({
     name,
     email,
-    type = 'client',
+    type = 'cliente',
     state,
     city,
     zipCode,
@@ -206,8 +206,21 @@ export default function EditUserModal({
             <Input />
           </Form.Item>
 
-          <Form.Item name="admin" valuePropName="checked">
-            <Checkbox>Admin</Checkbox>
+          <Form.Item
+            label="Tipo de usuário"
+            name="type"
+            rules={[
+              {
+                required: true,
+                message: 'Por favor, selecione o tipo do usuário',
+              },
+            ]}
+          >
+            <Select defaultValue="comum">
+              <Option value="admin">Admin</Option>
+              <Option value="cadista">Cadista</Option>
+              <Option value="cliente">Cliente</Option>
+            </Select>
           </Form.Item>
         </InputGroupWrapper>
       </Form>
