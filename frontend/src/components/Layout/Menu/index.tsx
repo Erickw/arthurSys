@@ -74,7 +74,7 @@ const Menu: React.FC<MenuProps> = ({ theme }: MenuProps) => {
       <Item title="Nova solicitaçã" icon={<CreditCardOutlined />}>
         <Link href="/products">Nova solicitação</Link>
       </Item>
-      {user.admin && (
+      {user.type === 'admin' && (
         <SubMenu title="Área administrativa" icon={<TeamOutlined />}>
           <Item>
             <Link href="/new-product">Criar novo produto</Link>
