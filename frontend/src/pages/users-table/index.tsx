@@ -79,6 +79,21 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
     setStateUsers(updateStateUsers.map(user => ({ ...user, key: user.id })));
   }
 
+  function getTypeUserColor(type: string) {
+    switch (type) {
+      case 'admin':
+        return 'blue';
+      case 'cadista':
+        return 'red';
+      default:
+        return 'green';
+    }
+  }
+
+  function userTypeCapitalizeFirstLetter(type: string) {
+    return type.charAt(0).toUpperCase() + type.slice(1);
+  }
+
   const columns: ColumnsType<any> = [
     {
       title: 'Nome',
@@ -99,11 +114,11 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
       key: 'type',
       responsive: ['md'],
       // eslint-disable-next-line no-nested-ternary
-      sorter: (a, b) => (a.type === b.type ? 0 : a.type ? -1 : 1),
-      render: record => (
+      sorter: (a, b) => (a.type < b.type ? -1 : 1),
+      render: (record: string) => (
         <span>
-          <Tag color={record === 'admin' ? 'blue' : 'green'}>
-            {record === 'admin' ? 'Admin' : 'Comum'}
+          <Tag color={getTypeUserColor(record)}>
+            {userTypeCapitalizeFirstLetter(record)}
           </Tag>
         </span>
       ),
