@@ -13,6 +13,7 @@ class Request {
     this.accepted = payload.accepted || "";
     this.fieldsValues = payload.fieldsValues || "";
     this.productPropose = payload.productPropose || "";
+    this.additionalFields = payload.additionalFields || "";
   }
 
   requestInfo() {
@@ -29,8 +30,10 @@ class Request {
       accepted: this.accepted,
       fieldsValues: this.fieldsValues,
       productPropose: this.productPropose,
+      additionalFields: this.additionalFields,
     };
   }
 }
 
 module.exports = Request;
+
