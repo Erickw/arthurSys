@@ -271,7 +271,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
   const productsFromApi = productsResponse.data;
 
-  if (user.type === 'admin') {
+  if (user.type === 'admin' || user.type === 'cadista') {
     const requestsResponse = await apiCLient.get(`/requests/novo`);
 
     const requests = requestsResponse.data.map(request => ({
