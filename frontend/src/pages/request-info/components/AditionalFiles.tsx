@@ -14,7 +14,7 @@ export default function AditionalFiles({
   aditionalFiles,
   handleUploadAditionalFile,
 }: AditionalFilesParams): JSX.Element {
-  const [files, setFiles] = useState(aditionalFiles);
+  const [files, setFiles] = useState<string[]>(aditionalFiles ?? []);
   const [isUploadingFile, setIsUploadingFile] = useState(false);
 
   async function handleUploadFile(file) {
