@@ -8,6 +8,7 @@ import { RequestInfo as RequestDisplay } from '../../styles/pages/request-info';
 import ProductPropose from './components/ProductPropose';
 import { getApiClient } from '../../clients/axios';
 import api from '../../clients/api';
+import AditionalFiles from './components/AditionalFiles';
 
 interface CommentProps {
   id: string;
@@ -101,6 +102,13 @@ export default function RequestInfo({
     requestToUpdate.productPropose.answered = false;
     requestToUpdate.productPropose.accepted = false;
     requestToUpdate.status = 'aguardando-aprovacao';
+
+    await api.put(`/requests/${request.id}`, requestToUpdate);
+  }
+
+  async function handleUploadAditionalFile(files) {
+    const requestToUpdate = request;
+    requestToUpdate.additionalFields = files;
 
     await api.put(`/requests/${request.id}`, requestToUpdate);
   }
@@ -205,6 +213,18 @@ export default function RequestInfo({
           </Descriptions>
         </Card>
       </RequestDisplay>
+
+      <AditionalFiles
+        aditionalFiles={
+          // eslint-disable-next-line no-nested-ternary
+          request.additionalFields === ''
+            ? []
+            : Array.isArray(request.additionalFields)
+            ? request.additionalFields
+            : [request.additionalFields]
+        }
+        handleUploadAditionalFile={files => handleUploadAditionalFile(files)}
+      />
       <ProductPropose
         isAdminCadist={isAdminCadist}
         proposeFile={request.productPropose.file}
@@ -263,7 +283,7 @@ export const getServerSideProps: GetServerSideProps = async ({
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
 
-  const isAdminCadist = user.type === 'admin';
+  const isAdminCadist = user.type === 'admin' || user.type === 'cadista';
 
   return {
     props: {

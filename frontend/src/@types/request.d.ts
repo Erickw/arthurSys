@@ -12,6 +12,7 @@ type RequestProps = {
   address: Address;
   fieldsValues: RequestGroupProps[];
   productPropose: ProductPropose;
+  additionalFields?: string[] | string;
 };
 
 type RequestGroupProps = {
