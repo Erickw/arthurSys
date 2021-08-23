@@ -515,7 +515,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     };
   }
 
-  if (user.type === 'admin') {
+  if (user.type !== 'admin') {
     return {
       redirect: {
         destination: '/products',

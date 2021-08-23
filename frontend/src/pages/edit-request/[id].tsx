@@ -182,10 +182,10 @@ export const getServerSideProps: GetServerSideProps = async ({
     requestItem => requestItem.id === id,
   );
 
-  if (user.type === 'admin') {
+  if (user.type !== 'admin') {
     return {
       redirect: {
-        destination: '/login',
+        destination: '/',
         permanent: false,
       },
     };
