@@ -258,7 +258,7 @@ export default function RequestDynamicForm({
                       }
                       fileList={fieldsFromRequestState[index]?.fields[
                         fieldItem.name
-                      ].map((file: string) => ({
+                      ]?.map((file: string) => ({
                         name: file.substring(
                           file.lastIndexOf('/') + 1,
                           file.lastIndexOf('?'),
