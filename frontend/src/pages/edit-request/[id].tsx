@@ -39,8 +39,8 @@ export default function EditRequest({
     async data => {
       const requestToUpdate = data;
       requestToUpdate.id = request.id;
-      requestToUpdate.userId = user.id;
-      requestToUpdate.userName = user.name;
+      requestToUpdate.userId = request.userId;
+      requestToUpdate.userName = request.userName;
       requestToUpdate.productId = product.id;
       requestToUpdate.status = request.status;
       requestToUpdate.date = new Date();
@@ -63,8 +63,8 @@ export default function EditRequest({
       push,
       request.id,
       request.status,
-      user.id,
-      user.name,
+      request.userId,
+      request.userName,
     ],
   );
 
