@@ -16,7 +16,6 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import api from '../../clients/api';
 import { getApiClient } from '../../clients/axios';
-import { useAuth } from '../../hooks/auth';
 import AddressForm from '../requests/components/AddressForm';
 import PatientForm from '../requests/components/PatientForm';
 import RequestDynamicForm from './components/RequestDynamicForm';
@@ -32,7 +31,6 @@ export default function EditRequest({
 }: EditRequestProps): JSX.Element {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { push } = useRouter();
-  const { user } = useAuth();
   const [form] = useForm();
 
   const handleSubmit = useCallback(
@@ -50,6 +48,11 @@ export default function EditRequest({
           fields: { ...field },
         }),
       );
+      requestToUpdate.productPropose = {
+        file: '',
+        answered: false,
+        accepted: false,
+      };
       setIsSubmitting(true);
       await api.put(`/requests/${request.id}`, requestToUpdate);
       setIsSubmitting(false);
