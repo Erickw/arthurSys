@@ -48,11 +48,8 @@ export default function EditRequest({
           fields: { ...field },
         }),
       );
-      requestToUpdate.productPropose = {
-        file: '',
-        answered: false,
-        accepted: false,
-      };
+      requestToUpdate.productPropose = request.productPropose;
+      requestToUpdate.additionalFields = request.additionalFields;
       setIsSubmitting(true);
       await api.put(`/requests/${request.id}`, requestToUpdate);
       setIsSubmitting(false);
@@ -64,7 +61,9 @@ export default function EditRequest({
       product.id,
       product.name,
       push,
+      request.additionalFields,
       request.id,
+      request.productPropose,
       request.status,
       request.userId,
       request.userName,
