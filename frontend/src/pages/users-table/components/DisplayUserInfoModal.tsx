@@ -38,7 +38,6 @@ export default function DisplayUserInfoModal({
   user,
 }: DisplayUserInfoModalProps): JSX.Element {
   if (!user) {
-    console.log('chegou');
     return null;
   }
   return (
