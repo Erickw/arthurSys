@@ -12,6 +12,8 @@ import CreateUserModal from './components/CreateUserModal';
 import EditUserModal from './components/EditUserModal';
 import { getColumnSearchProps } from '../../components/ColumnSearch';
 import { getApiClient } from '../../clients/axios';
+import DisplayUserInfoModal from './components/DisplayUserInfoModal';
+import { capitalizeFirstLetter, getTypeUserColor } from '../../utils/utils';
 
 interface User {
   id: string;
@@ -41,7 +43,11 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
 
   const [createUserModalVisible, setCreateUserModalVisible] = useState(false);
   const [editUserModalVisible, setEditUserModalVisible] = useState(false);
-  const [userToEdit, setUserToEdit] = useState<User>();
+  const [
+    displayUserInfoModalVisible,
+    setDisplayUserInfoModalVisible,
+  ] = useState(false);
+  const [userToUseInModal, setUserToUseInModal] = useState<User>();
 
   function deleteRequestModal(user: User) {
     confirm({
@@ -61,8 +67,13 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
   }
 
   function handleEditUser(user: User) {
-    setUserToEdit(user);
+    setUserToUseInModal(user);
     setEditUserModalVisible(true);
+  }
+
+  function handleDisplayUserInfo(user: User) {
+    setUserToUseInModal(user);
+    setDisplayUserInfoModalVisible(true);
   }
 
   async function handleCloseCreateUserModal() {
@@ -79,19 +90,8 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
     setStateUsers(updateStateUsers.map(user => ({ ...user, key: user.id })));
   }
 
-  function getTypeUserColor(type: string) {
-    switch (type) {
-      case 'admin':
-        return 'blue';
-      case 'cadista':
-        return 'red';
-      default:
-        return 'green';
-    }
-  }
-
-  function userTypeCapitalizeFirstLetter(type: string) {
-    return type.charAt(0).toUpperCase() + type.slice(1);
+  function handleCloseDisplayUserInfoModal() {
+    setDisplayUserInfoModalVisible(false);
   }
 
   const columns: ColumnsType<any> = [
@@ -118,7 +118,7 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
       render: (record: string) => (
         <span>
           <Tag color={getTypeUserColor(record)}>
-            {userTypeCapitalizeFirstLetter(record)}
+            {capitalizeFirstLetter(record)}
           </Tag>
         </span>
       ),
@@ -129,6 +129,9 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
       render: (text, record) => (
         <Space size="middle">
           <a onClick={() => handleEditUser(record)}>Editar</a>
+          <a onClick={() => handleDisplayUserInfo(record)}>
+            Visualizar Informações
+          </a>
           <a onClick={() => deleteRequestModal(record)}>Deletar</a>
         </Space>
       ),
@@ -153,12 +156,20 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
         modalVisible={createUserModalVisible}
       />
 
-      {userToEdit && (
-        <EditUserModal
-          close={() => handleCloseEditUserModal()}
-          modalVisible={editUserModalVisible}
-          user={userToEdit}
-        />
+      {userToUseInModal && (
+        <>
+          <EditUserModal
+            close={() => handleCloseEditUserModal()}
+            modalVisible={editUserModalVisible}
+            user={userToUseInModal}
+          />
+
+          <DisplayUserInfoModal
+            close={() => handleCloseDisplayUserInfoModal()}
+            modalVisible={displayUserInfoModalVisible}
+            user={userToUseInModal}
+          />
+        </>
       )}
 
       <Table
