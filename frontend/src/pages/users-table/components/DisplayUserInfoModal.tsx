@@ -1,10 +1,4 @@
-import {
-  HomeOutlined,
-  HomeTwoTone,
-  PhoneOutlined,
-  PhoneTwoTone,
-  UserOutlined,
-} from '@ant-design/icons';
+import { HomeTwoTone, PhoneTwoTone, UserOutlined } from '@ant-design/icons';
 import { Modal, Tag } from 'antd';
 import React from 'react';
 
