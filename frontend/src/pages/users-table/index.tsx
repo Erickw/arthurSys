@@ -47,7 +47,7 @@ export default function UsersTable({ users }: UsersTableProps): JSX.Element {
     displayUserInfoModalVisible,
     setDisplayUserInfoModalVisible,
   ] = useState(false);
-  const [userToUseInModal, setUserToUseInModal] = useState<User>();
+  const [userToUseInModal, setUserToUseInModal] = useState<User>(undefined);
 
   function deleteRequestModal(user: User) {
     confirm({

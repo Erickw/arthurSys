@@ -37,6 +37,10 @@ export default function DisplayUserInfoModal({
   close,
   user,
 }: DisplayUserInfoModalProps): JSX.Element {
+  if (!user) {
+    console.log('chegou');
+    return null;
+  }
   return (
     <Modal
       destroyOnClose
