@@ -1,7 +1,7 @@
 import { InboxOutlined } from '@ant-design/icons';
 import { Card, message, Spin, Upload } from 'antd';
 import React, { useState } from 'react';
-import { app } from '../../../config/firebase';
+import uploadFile from '../../../utils/uploadFile';
 
 const { Dragger } = Upload;
 
@@ -21,10 +21,7 @@ export default function AditionalFiles({
     try {
       setIsUploadingFile(true);
 
-      const storageRef = app.storage().ref();
-      const fileRef = storageRef.child(file.name);
-      await fileRef.put(file);
-      const fileUrl = await fileRef.getDownloadURL();
+      const fileUrl = await uploadFile(file);
 
       const updateFiles = [...files];
       updateFiles.push(fileUrl);

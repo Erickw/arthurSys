@@ -18,6 +18,7 @@ import Dragger from 'antd/lib/upload/Dragger';
 import moment from 'moment';
 import React, { useReducer, useState } from 'react';
 import { app } from '../../../config/firebase';
+import uploadFile from '../../../utils/uploadFile';
 
 const { Item } = Form;
 
@@ -70,10 +71,8 @@ export default function RequestDynamicForm({
       setIsUploadingFile(true);
       setFileNameUploading(file.name);
 
-      const storageRef = app.storage().ref();
-      const fileRef = storageRef.child(file.name);
-      await fileRef.put(file);
-      const fileUrl = await fileRef.getDownloadURL();
+      const fileUrl = await uploadFile(file);
+
       const updateInputFiles = [
         ...fieldsFromRequestState[index].fields[fieldItemName],
         fileUrl,

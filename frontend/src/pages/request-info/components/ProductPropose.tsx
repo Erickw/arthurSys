@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { ExclamationCircleOutlined, InboxOutlined } from '@ant-design/icons';
 import { Card, Upload, Result, message, Spin, Button, Modal } from 'antd';
-import { app } from '../../../config/firebase';
 import {
   AproveRecuseButtons,
   ProductProposeContainer,
 } from '../../../styles/pages/request-info';
+import uploadFile from '../../../utils/uploadFile';
 
 const { Dragger } = Upload;
 const { confirm } = Modal;
@@ -43,10 +43,7 @@ export default function ProductPropose({
     try {
       setIsUploadingFile(true);
 
-      const storageRef = app.storage().ref();
-      const fileRef = storageRef.child(file.name);
-      await fileRef.put(file);
-      const fileUrl = await fileRef.getDownloadURL();
+      const fileUrl = await uploadFile(file);
 
       setProductProposeFile(fileUrl);
 
