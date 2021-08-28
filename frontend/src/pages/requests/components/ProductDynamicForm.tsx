@@ -18,7 +18,6 @@ import {
 } from 'antd';
 import React, { useEffect, useReducer, useState } from 'react';
 
-import { app } from '../../../config/firebase';
 import uploadFile from '../../../utils/uploadFile';
 import { convertSnakeCaseToNormal } from '../../../utils/utils';
 

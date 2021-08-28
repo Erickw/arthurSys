@@ -17,7 +17,6 @@ import {
 import Dragger from 'antd/lib/upload/Dragger';
 import moment from 'moment';
 import React, { useReducer, useState } from 'react';
-import { app } from '../../../config/firebase';
 import uploadFile from '../../../utils/uploadFile';
 
 const { Item } = Form;
