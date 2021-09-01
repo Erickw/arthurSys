@@ -24,7 +24,7 @@ routes.use(authMiddleware);
 
 // Users
 routes.get("/users", userController.index);
-// routes.get("/users/:id", userController.getOneUser);
+routes.get("/users/:id", userController.getOneUser);
 routes.put("/users/:id", userController.update);
 routes.delete("/users/:id", userController.delete);
 

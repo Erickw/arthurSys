@@ -27,20 +27,17 @@ class UserController {
     return res.json(users);
   }
 
-  // async getOneUser(req, res) {
-  //   const id = req.params.id;
-  //   const snapshot = await usersCollection.doc(id).get();
+  async getOneUser(req, res) {
+    const id = req.params.id;
+    const snapshot = await usersCollection.doc(id).get();
 
-  //   const requestsSnapshot = await db.collection(`users/${id}/requests`).get();
 
-  //   if (snapshot.empty) {
-  //     return res.status(400).json({error: "Error to get user. No matching documents."});
-  //   }
+    if (snapshot.empty) {
+      return res.status(400).json({error: "Error to get user. No matching documents."});
+    }
 
-  //   requestsSnapshot.forEach((doc) => {
-  //     return res.json({"user": doc.data()});
-  //   });
-  // }
+    return res.json(new User(snapshot.data()).userInfo());
+  }
 
   // async createDbUser(user) {
   //   const id = customId({email: user.email});
