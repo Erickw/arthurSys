@@ -20,7 +20,12 @@ const Layout: React.FC = ({ children }: LayoutProps) => {
   const [theme, setTheme] = useState<Menutheme>('dark');
 
   useEffect(() => {
-    if (pathname !== '/login' && pathname !== '/register' && !isLogged) {
+    if (
+      pathname !== '/login' &&
+      pathname !== '/register' &&
+      pathname.split('/')[1] !== 'reset-password' &&
+      !isLogged
+    ) {
       push('/login');
     }
   }, [isLogged, pathname, push]);

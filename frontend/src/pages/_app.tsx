@@ -10,13 +10,16 @@ import GlobalStyle from '../styles/GlobalStyle';
 
 function MyApp({ Component, pageProps }): JSX.Element {
   const { pathname } = useRouter();
+
   return (
     <AuthProvider>
       <Head>
         <title>Orto Setup</title>
       </Head>
       <GlobalStyle />
-      {pathname === '/login' || pathname === '/register' ? (
+      {pathname === '/login' ||
+      pathname === '/register' ||
+      pathname.split('/')[1] === 'reset-password' ? (
         <Component {...pageProps} />
       ) : (
         <Layout>
