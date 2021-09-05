@@ -1,4 +1,5 @@
 import { Button, Form, Input } from 'antd';
+import { GetServerSideProps } from 'next';
 import React, { useState } from 'react';
 import Logo from '../../components/Logo';
 import { Container, LogoContainer } from '../../styles/pages/reset-password';
@@ -70,3 +71,17 @@ export default function ResetPassword(): JSX.Element {
     </Container>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query: { id },
+}) => {
+  const { 'ortoSetup.token': token } = req.cookies;
+
+  return {
+    redirect: {
+      destination: '/login',
+      permanent: false,
+    },
+  };
+};
