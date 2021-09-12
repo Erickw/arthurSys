@@ -13,6 +13,7 @@ type RequestProps = {
   fieldsValues: RequestGroupProps[];
   productPropose: ProductPropose;
   additionalFields?: string[] | string;
+  notifications: Notifications;
 };
 
 type RequestGroupProps = {
@@ -38,4 +39,9 @@ type ProductPropose = {
   file: string;
   answered: boolean;
   accepted: boolean;
+};
+
+type Notifications = {
+  hasNewCommentAdmin: boolean;
+  hasNewCommentUser: boolean;
 };
