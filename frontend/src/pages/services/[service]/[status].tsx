@@ -168,8 +168,8 @@ export default function Service({
           onClick={() => push(`/request-info/${requestId}`)}
         >
           Vizualizar requisição
-          {((isAdmin && request?.hasNewCommentUser) ||
-            (!isAdmin && request?.hasNewCommentAdmin)) && (
+          {((isAdmin && !!request?.hasNewCommentUser) ||
+            (!isAdmin && !!request?.hasNewCommentAdmin)) && (
             <Tooltip title="Essa requisição tem um comentário não lido.">
               <ExclamationCircleTwoTone />
             </Tooltip>
@@ -328,7 +328,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     return {
       props: {
         status,
-        requestsFromApi: requestsWithoutTestRequest,
+        requestsFromApi: requests,
         isAdmin: true,
       },
     };

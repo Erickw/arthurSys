@@ -303,17 +303,16 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   const isAdminCadist = user.type === 'admin' || user.type === 'cadista';
 
-  if (request.hasNewCommentAdmin && !isAdminCadist) {
+  if (!!request.hasNewCommentAdmin && !isAdminCadist) {
     const updateRequest = { ...request };
     updateRequest.hasNewCommentAdmin = false;
 
     await apiCLient.put(`/requests/${request.id}`, updateRequest);
   }
 
-  if (request.hasNewCommentUser && isAdminCadist) {
+  if (!!request.hasNewCommentUser && isAdminCadist) {
     const updateRequest = { ...request };
     updateRequest.hasNewCommentUser = false;
-
     await apiCLient.put(`/requests/${request.id}`, updateRequest);
   }
 
