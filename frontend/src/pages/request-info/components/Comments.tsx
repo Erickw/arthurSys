@@ -20,6 +20,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import api from '../../../clients/api';
 import { useAuth } from '../../../hooks/auth';
+import { getTypeUserColor } from '../../../utils/utils';
 
 interface CommentType {
   id: string;
@@ -37,7 +38,7 @@ interface CommentProps {
 interface User {
   id: string;
   name: string;
-  admin: boolean;
+  type: 'admin' | 'cadista' | 'cliente';
 }
 
 const { confirm } = Modal;
@@ -121,15 +122,17 @@ export default function Comments({
         commentsState.map(commentItem => (
           <Comment
             key={commentItem.id}
-            actions={[
-              <Tooltip key="comment-basic-like" title="Deletar">
-                <span onClick={() => deleteCommentModal(commentItem.id)}>
-                  <DeleteOutlined
-                    style={{ fontSize: '16px', color: '#cc0600' }}
-                  />
-                </span>
-              </Tooltip>,
-            ]}
+            actions={
+              commentItem.authorId === user.id && [
+                <Tooltip key="comment-basic-like" title="Deletar">
+                  <span onClick={() => deleteCommentModal(commentItem.id)}>
+                    <DeleteOutlined
+                      style={{ fontSize: '16px', color: '#cc0600' }}
+                    />
+                  </span>
+                </Tooltip>,
+              ]
+            }
             author={
               users.find(userItem => userItem.id === commentItem.authorId)?.name
             }
@@ -137,11 +140,10 @@ export default function Comments({
             avatar={
               <Avatar
                 style={{
-                  backgroundColor: users.find(
-                    userItem => userItem.id === commentItem.authorId,
-                  )?.admin
-                    ? '#87d068'
-                    : '#1890ff',
+                  backgroundColor: getTypeUserColor(
+                    users.find(userItem => userItem.id === commentItem.authorId)
+                      ?.type,
+                  ),
                 }}
                 icon={<UserOutlined />}
               />
