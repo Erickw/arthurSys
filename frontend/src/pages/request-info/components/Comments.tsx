@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import {
   DeleteOutlined,
@@ -30,6 +31,7 @@ interface CommentType {
 interface CommentProps {
   comments: CommentType[];
   requestId: string;
+  handleAddComment: (commentData: Omit<CommentType, 'id'>) => Promise<void>;
 }
 
 interface User {
@@ -43,6 +45,7 @@ const { confirm } = Modal;
 export default function Comments({
   comments,
   requestId,
+  handleAddComment,
 }: CommentProps): JSX.Element {
   const { user } = useAuth();
   const [form] = useForm();
@@ -71,7 +74,7 @@ export default function Comments({
       content: comment,
       createdAt: new Date(),
     };
-    await api.post(`/comments/request/${requestId}`, commentData);
+    await handleAddComment(commentData);
     setIsSubmitting(false);
     form.resetFields();
     loadComments();
@@ -121,7 +124,6 @@ export default function Comments({
             actions={[
               <Tooltip key="comment-basic-like" title="Deletar">
                 <span onClick={() => deleteCommentModal(commentItem.id)}>
-                  {}
                   <DeleteOutlined
                     style={{ fontSize: '16px', color: '#cc0600' }}
                   />
@@ -170,7 +172,6 @@ export default function Comments({
             enterButton="Enviar"
             loading={isSubmitting}
             onSearch={() => form.submit()}
-            onPressEnter={() => {}}
           />
         </Form.Item>
       </Form>

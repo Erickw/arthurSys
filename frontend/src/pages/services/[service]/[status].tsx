@@ -13,8 +13,13 @@ import {
   Dropdown,
   Menu,
   Checkbox,
+  Tooltip,
 } from 'antd';
-import { DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import {
+  DownOutlined,
+  ExclamationCircleOutlined,
+  ExclamationCircleTwoTone,
+} from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ColumnsType } from 'antd/lib/table';
@@ -157,9 +162,18 @@ export default function Service({
       dataIndex: 'id',
       key: 'id',
       responsive: ['lg'],
-      render: (request: string) => (
-        <Button type="primary" onClick={() => push(`/request-info/${request}`)}>
+      render: (requestId: string, request: RequestProps) => (
+        <Button
+          type="primary"
+          onClick={() => push(`/request-info/${requestId}`)}
+        >
           Vizualizar requisição
+          {((isAdmin && request?.hasNewCommentUser) ||
+            (!isAdmin && request?.hasNewCommentAdmin)) && (
+            <Tooltip title="Essa requisição tem um comentário não lido.">
+              <ExclamationCircleTwoTone />
+            </Tooltip>
+          )}
         </Button>
       ),
     },
@@ -314,7 +328,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     return {
       props: {
         status,
-        requestsFromApi: requests,
+        requestsFromApi: requestsWithoutTestRequest,
         isAdmin: true,
       },
     };

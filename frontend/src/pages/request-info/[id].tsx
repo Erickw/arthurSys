@@ -113,6 +113,20 @@ export default function RequestInfo({
     await api.put(`/requests/${request.id}`, requestToUpdate);
   }
 
+  async function handleAddComment(
+    commentData: Omit<CommentProps, 'id'>,
+  ): Promise<void> {
+    const updateRequest = request;
+    if (isAdminCadist) {
+      updateRequest.hasNewCommentAdmin = true;
+    } else {
+      updateRequest.hasNewCommentUser = true;
+    }
+
+    await api.put(`/requests/${request.id}`, updateRequest);
+    await api.post(`/comments/request/${request.id}`, commentData);
+  }
+
   return (
     <>
       <PageHeader
@@ -242,7 +256,11 @@ export default function RequestInfo({
         }
       />
 
-      <Comments comments={comments} requestId={request.id} />
+      <Comments
+        comments={comments}
+        requestId={request.id}
+        handleAddComment={commentData => handleAddComment(commentData)}
+      />
     </>
   );
 }
@@ -267,7 +285,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   const apiCLient = getApiClient(token);
 
   const responseRequest = await apiCLient.get('/requests');
-  const request = responseRequest.data.find(
+  const request: RequestProps = responseRequest.data.find(
     requestFromApi => requestFromApi.id === id,
   );
 
@@ -284,6 +302,20 @@ export const getServerSideProps: GetServerSideProps = async ({
     );
 
   const isAdminCadist = user.type === 'admin' || user.type === 'cadista';
+
+  if (request.hasNewCommentAdmin && !isAdminCadist) {
+    const updateRequest = { ...request };
+    updateRequest.hasNewCommentAdmin = false;
+
+    await apiCLient.put(`/requests/${request.id}`, updateRequest);
+  }
+
+  if (request.hasNewCommentUser && isAdminCadist) {
+    const updateRequest = { ...request };
+    updateRequest.hasNewCommentUser = false;
+
+    await apiCLient.put(`/requests/${request.id}`, updateRequest);
+  }
 
   return {
     props: {
