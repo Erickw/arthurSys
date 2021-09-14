@@ -325,6 +325,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     const requestsWithoutTestRequest = requests.filter(
       request => request.id !== '11TY57BI',
     );
+
     return {
       props: {
         status,
