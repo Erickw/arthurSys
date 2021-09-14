@@ -64,6 +64,8 @@ export default function EditRequest({
       product.name,
       push,
       request.additionalFields,
+      request.hasNewCommentAdmin,
+      request.hasNewCommentUser,
       request.id,
       request.productPropose,
       request.status,
