@@ -47,6 +47,8 @@ export default function Requests({ product }: RequestProps): JSX.Element {
         accepted: false,
       };
 
+      request.hasNewCommentAdmin = false;
+      request.hasNewCommentUser = false;
       setIsSubmitting(true);
       await api.post('/requests', request);
       setIsSubmitting(false);

@@ -50,6 +50,8 @@ export default function EditRequest({
       );
       requestToUpdate.productPropose = request.productPropose;
       requestToUpdate.additionalFields = request.additionalFields;
+      requestToUpdate.hasNewCommentAdmin = request.hasNewCommentAdmin;
+      requestToUpdate.hasNewCommentUser = request.hasNewCommentUser;
       setIsSubmitting(true);
       await api.put(`/requests/${request.id}`, requestToUpdate);
       setIsSubmitting(false);
