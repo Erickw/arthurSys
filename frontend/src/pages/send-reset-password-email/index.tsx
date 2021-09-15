@@ -27,12 +27,13 @@ const SendResetPasswordEmail: React.FC = () => {
         'Um email com o link para resetar a senha foi enviado para o seu email.',
         10,
       );
-      setIsSubmitting(false);
       push('/login');
     } catch (err) {
       if (err.code === 'auth/user-not-found') {
         message.error('O email não está cadastrado sistema!');
       }
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
