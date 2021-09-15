@@ -30,7 +30,7 @@ const SendResetPasswordEmail: React.FC = () => {
       push('/login');
     } catch (err) {
       if (err.code === 'auth/user-not-found') {
-        message.error('O email não está cadastrado sistema!');
+        message.error('O email não está cadastrado no sistema!');
       }
     } finally {
       setIsSubmitting(false);

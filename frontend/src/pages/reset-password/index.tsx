@@ -29,7 +29,7 @@ export default function ResetPassword({
       message.success('A sua senha foi resetada.');
     } catch (err) {
       message.error(
-        'Ocorreu um erro ao resetar a sua senha, porfavor tente novamente!',
+        'Ocorreu um erro ao resetar a sua senha, por favor tente novamente.',
       );
     } finally {
       setIsSubmitting(false);
