@@ -1,26 +1,39 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/jsx-no-bind */
-import { Button, Form, Input } from 'antd';
+
+import { Button, Form, Input, message } from 'antd';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import { LoginWrapper } from '../../styles/pages/login';
 import Logo from '../../components/Logo';
-import { useAuth } from '../../hooks/auth';
+import { auth } from '../../config/firebase';
 
-interface LoginParams {
+interface SendResetPasswordEmailParams {
   email: string;
-  password: string;
 }
 
-const Login: React.FC = () => {
-  const { login } = useAuth();
+const SendResetPasswordEmail: React.FC = () => {
+  const { push } = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function handleFinish({ email, password }: LoginParams) {
-    setIsSubmitting(true);
-    await login({ email, password });
-    setIsSubmitting(false);
+  async function handleSendResetPasswordEmail({
+    email,
+  }: SendResetPasswordEmailParams) {
+    try {
+      setIsSubmitting(true);
+      await auth.sendPasswordResetEmail(email);
+      message.success(
+        'Um email com o link para resetar a senha foi enviado para o seu email.',
+        10,
+      );
+      setIsSubmitting(false);
+      push('/login');
+    } catch (err) {
+      if (err.code === 'auth/user-not-found') {
+        message.error('O email não está cadastrado sistema!');
+      }
+    }
   }
 
   return (
@@ -30,8 +43,13 @@ const Login: React.FC = () => {
           <div>
             <Logo />
           </div>
-          <h2>Login</h2>
-          <Form layout="vertical" onFinish={handleFinish}>
+          <h2>Esqueceu a sua senha ?</h2>
+
+          <span>
+            Digite o seu email, e iremos enviar um link para você resetar a sua
+            senha.
+          </span>
+          <Form layout="vertical" onFinish={handleSendResetPasswordEmail}>
             <Form.Item
               label="Email"
               name="email"
@@ -42,28 +60,17 @@ const Login: React.FC = () => {
             >
               <Input type="email" />
             </Form.Item>
-            <Form.Item
-              label="Senha"
-              name="password"
-              rules={[
-                { required: true, message: 'Por favor, preencha sua senha!' },
-                { whitespace: true, message: 'Por favor, preencha sua senha!' },
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
             <Button
               type="primary"
               htmlType="submit"
               block
               loading={isSubmitting}
             >
-              Entrar
+              Enviar
             </Button>
           </Form>
 
-          <Link href="/send-reset-password-email">Esqueci minha senha.</Link>
-          <Link href="/register">Não possuo conta, quero me registrar!</Link>
+          <Link href="/login">Voltar para a página de login.</Link>
         </div>
       </section>
       <section className="auxiliary" />
@@ -71,7 +78,7 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default SendResetPasswordEmail;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const { 'ortoSetup.token': token } = req.cookies;

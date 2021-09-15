@@ -25,6 +25,8 @@ export const LoginWrapper = styled.main`
     > div {
       /* border: 2px solid red; */
       width: 350px;
+      display: flex;
+      flex-direction: column;
     }
     h2 {
       margin-bottom: 12px;
@@ -34,6 +36,10 @@ export const LoginWrapper = styled.main`
     }
     a {
       width: 100%;
+      margin-bottom: 0.6rem;
+    }
+    span {
+      margin-bottom: 0.6rem;
     }
     > div > div {
       display: flex;

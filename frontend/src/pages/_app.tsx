@@ -19,6 +19,7 @@ function MyApp({ Component, pageProps }): JSX.Element {
       <GlobalStyle />
       {pathname === '/login' ||
       pathname === '/register' ||
+      pathname === '/send-reset-password-email' ||
       pathname.split('/')[1] === 'reset-password' ? (
         <Component {...pageProps} />
       ) : (
