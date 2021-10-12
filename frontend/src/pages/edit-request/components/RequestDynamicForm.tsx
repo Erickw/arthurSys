@@ -24,7 +24,7 @@ const { Item } = Form;
 interface RequestDynamicFormProps {
   form: FormInstance;
   fieldsFromProduct?: InputGroupProps[];
-  fieldsFromRequest: RequestGroupProps[] | RequestGroupProps;
+  fieldsFromRequest: RequestGroupProps[] | RequestGroupProps | '';
 }
 
 export default function RequestDynamicForm({
@@ -36,7 +36,7 @@ export default function RequestDynamicForm({
 
   const [isFirstValueChanged, setIsFirstValueChanged] = useState(true);
   const [fieldsFromRequestState, setFieldsFromRequestState] = useState<
-    RequestGroupProps[] | RequestGroupProps
+    RequestGroupProps[] | RequestGroupProps | ''
   >(fieldsFromRequest);
 
   const [isUploadingFile, setIsUploadingFile] = useState(false);
