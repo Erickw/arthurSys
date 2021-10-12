@@ -27,6 +27,7 @@ import { convertToSnakeCase } from '../../utils/utils';
 
 const { Item, List, ErrorList } = Form;
 const { Title } = Typography;
+const { TextArea } = Input;
 
 const NewProduct: React.FC = () => {
   const [form] = useForm();
@@ -92,7 +93,8 @@ const NewProduct: React.FC = () => {
       if (data.fields) {
         data.fields = data.fields.map(field => ({
           title: field.title,
-          fields: field.fields.map(fieldItem => ({
+          comments: field.comments,
+          fields: field.fields?.map(fieldItem => ({
             ...fieldItem,
             label: fieldItem.name,
             name: convertToSnakeCase(fieldItem.name),
@@ -276,6 +278,13 @@ const NewProduct: React.FC = () => {
                           ]}
                         >
                           <Input />
+                        </Item>
+                        <Item
+                          label="Comentários do Grupo"
+                          name={[group.name, 'comments']}
+                          fieldKey={[group.fieldKey, 'comments']}
+                        >
+                          <TextArea autoSize={{ minRows: 3, maxRows: 6 }} />
                         </Item>
                         <List name={[group.name, 'fields']}>
                           {(

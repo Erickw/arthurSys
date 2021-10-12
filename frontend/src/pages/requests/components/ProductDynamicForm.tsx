@@ -117,7 +117,7 @@ export default function ProductDynamicForm({
     // load file input with a empty array
     const updateFileFieldsToArray = fields.map(field => {
       const fieldToReturn = {};
-      field.fields.forEach(item => {
+      field.fields?.forEach(item => {
         fieldToReturn[item.name] = [];
       });
       return {
@@ -137,7 +137,14 @@ export default function ProductDynamicForm({
         fields.map((field, index) => (
           <div key={field.title}>
             <h2>{field.title}</h2>
-            {field.fields.map(fieldItem => (
+
+            {field?.comments && field.comments !== '' && (
+              <h4 style={{ color: 'grey', whiteSpace: 'pre-wrap' }}>
+                * {field.comments}
+              </h4>
+            )}
+
+            {field.fields?.map(fieldItem => (
               <div key={fieldItem.name}>
                 {fieldItem.type === 'string' && (
                   <Item

@@ -10,7 +10,7 @@ type RequestProps = {
   status: string;
   date: Date;
   address: Address;
-  fieldsValues: RequestGroupProps[];
+  fieldsValues: RequestGroupProps[] | '';
   productPropose: ProductPropose;
   additionalFields?: string[] | string;
   hasNewCommentAdmin: boolean;

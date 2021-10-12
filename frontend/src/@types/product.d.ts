@@ -21,6 +21,7 @@ type BankInfoProps = {
 
 type InputGroupProps = {
   title: string;
+  comments: string;
   fields: InputProps[];
 };
 

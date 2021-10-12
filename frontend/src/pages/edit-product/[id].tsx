@@ -28,6 +28,7 @@ import { getApiClient } from '../../clients/axios';
 
 const { Item, List, ErrorList } = Form;
 const { Title } = Typography;
+const { TextArea } = Input;
 
 type EditProductProps = {
   product: ProductProps;
@@ -111,7 +112,8 @@ export default function EditProduct({
       if (data.fields) {
         data.fields = data.fields.map(field => ({
           title: field.title,
-          fields: field.fields.map(fieldItem => ({
+          comments: field.comments,
+          fields: field.fields?.map(fieldItem => ({
             ...fieldItem,
             label: fieldItem.name,
             name: convertToSnakeCase(fieldItem.name),
@@ -133,7 +135,8 @@ export default function EditProduct({
           ? []
           : product.fields.map(field => ({
               title: field.title,
-              fields: field.fields.map(fieldItem => ({
+              comments: field.comments,
+              fields: field.fields?.map(fieldItem => ({
                 name: fieldItem.label,
                 label: fieldItem.label,
                 type: fieldItem.type,
@@ -334,6 +337,13 @@ export default function EditProduct({
                           ]}
                         >
                           <Input />
+                        </Item>
+                        <Item
+                          label="Comentários do Grupo"
+                          name={[group.name, 'comments']}
+                          fieldKey={[group.fieldKey, 'comments']}
+                        >
+                          <TextArea autoSize={{ minRows: 3, maxRows: 6 }} />
                         </Item>
                         <List name={[group.name, 'fields']}>
                           {(

@@ -217,13 +217,14 @@ export default function RequestInfo({
             bordered
             column={{ xxl: 5, xl: 3, lg: 2, md: 2, sm: 1, xs: 1 }}
           >
-            {request.fieldsValues.map(fieldValue =>
-              Object.entries(fieldValue.fields).map(item => (
-                <Descriptions.Item label={convertSnakeCaseToNormal(item[0])}>
-                  {displayCorrectFormatData(item[1])}
-                </Descriptions.Item>
-              )),
-            )}
+            {request.fieldsValues !== '' &&
+              request.fieldsValues.map(fieldValue =>
+                Object.entries(fieldValue.fields).map(item => (
+                  <Descriptions.Item label={convertSnakeCaseToNormal(item[0])}>
+                    {displayCorrectFormatData(item[1])}
+                  </Descriptions.Item>
+                )),
+              )}
           </Descriptions>
         </Card>
       </RequestDisplay>
