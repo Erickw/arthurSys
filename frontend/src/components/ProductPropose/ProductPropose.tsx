@@ -4,8 +4,8 @@ import { Card, Upload, Result, message, Spin, Button, Modal } from 'antd';
 import {
   AproveRecuseButtons,
   ProductProposeContainer,
-} from '../../../styles/pages/request-info';
-import uploadFile from '../../../utils/uploadFile';
+} from '../../styles/pages/request-info';
+import uploadFile from '../../utils/uploadFile';
 
 const { Dragger } = Upload;
 const { confirm } = Modal;

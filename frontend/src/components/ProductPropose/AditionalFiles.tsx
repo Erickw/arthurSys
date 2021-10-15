@@ -1,7 +1,7 @@
 import { InboxOutlined } from '@ant-design/icons';
 import { Card, message, Spin, Upload } from 'antd';
 import React, { useState } from 'react';
-import uploadFile from '../../../utils/uploadFile';
+import uploadFile from '../../utils/uploadFile';
 
 const { Dragger } = Upload;
 

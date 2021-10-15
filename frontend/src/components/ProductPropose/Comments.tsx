@@ -18,9 +18,9 @@ import {
 import { useForm } from 'antd/lib/form/Form';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import api from '../../../clients/api';
-import { useAuth } from '../../../hooks/auth';
-import { getTypeUserColor } from '../../../utils/utils';
+import api from '../../clients/api';
+import { useAuth } from '../../hooks/auth';
+import { getTypeUserColor } from '../../utils/utils';
 
 interface CommentType {
   id: string;
