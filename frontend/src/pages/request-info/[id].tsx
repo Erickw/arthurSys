@@ -69,18 +69,18 @@ export default function RequestInfo({
     return data;
   }
 
-  async function handleUploadProductProposeFile(fileUrl: string) {
+  async function handleUploadProductProposeFile(filesUrl: string[]) {
     const requestToUpdate = request;
-    requestToUpdate.productPropose.file = fileUrl;
+    requestToUpdate.productPropose.files = filesUrl;
     requestToUpdate.status = 'aguardando-aprovacao';
 
     await api.put(`/requests/${request.id}`, requestToUpdate);
     message.success(`Proposta da requisição enviada com sucesso!`);
   }
 
-  async function handleRemoveProductProposeFile() {
+  async function handleRemoveProductProposeFile(filesUrl: string[]) {
     const requestToUpdate = request;
-    requestToUpdate.productPropose.file = '';
+    requestToUpdate.productPropose.files = filesUrl;
 
     await api.put(`/requests/${request.id}`, requestToUpdate);
     message.success(`Proposta da requisição foi removida.`);
@@ -242,13 +242,15 @@ export default function RequestInfo({
       />
       <ProductPropose
         isAdminCadist={isAdminCadist}
-        proposeFile={request.productPropose.file}
+        proposeFile={request.productPropose.files}
         proposeAnswered={request.productPropose.answered}
         proposeAccepted={request.productPropose.accepted}
         handleUploadProductProposeFile={fileUrl =>
           handleUploadProductProposeFile(fileUrl)
         }
-        handleRemoveProductPropose={() => handleRemoveProductProposeFile()}
+        handleRemoveProductPropose={filesUrl =>
+          handleRemoveProductProposeFile(filesUrl)
+        }
         handleAcceptProductPropose={answer =>
           handleAcceptProductPropose(answer)
         }

@@ -37,7 +37,7 @@ type Address = {
 };
 
 type ProductPropose = {
-  file: string;
+  files: string[];
   answered: boolean;
   accepted: boolean;
 };

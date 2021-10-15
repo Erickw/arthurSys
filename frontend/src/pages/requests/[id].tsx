@@ -42,7 +42,7 @@ export default function Requests({ product }: RequestProps): JSX.Element {
         fields: { ...field },
       }));
       request.productPropose = {
-        file: '',
+        files: [],
         answered: false,
         accepted: false,
       };

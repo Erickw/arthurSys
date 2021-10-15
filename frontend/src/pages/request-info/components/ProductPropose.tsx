@@ -12,11 +12,11 @@ const { confirm } = Modal;
 
 interface ProductProposeParams {
   isAdminCadist: boolean;
-  proposeFile: string;
+  proposeFile: string[];
   proposeAnswered: boolean;
   proposeAccepted: boolean;
-  handleUploadProductProposeFile: (fileUrl: string) => void;
-  handleRemoveProductPropose: () => void;
+  handleUploadProductProposeFile: (filesUrl: string[]) => void;
+  handleRemoveProductPropose: (filesUrl: string[]) => void;
   handleAcceptProductPropose: (answer: boolean) => void;
   handleChangeProductProposeAnswer: () => void;
 }
@@ -31,7 +31,7 @@ export default function ProductPropose({
   handleAcceptProductPropose,
   handleChangeProductProposeAnswer,
 }: ProductProposeParams): JSX.Element {
-  const [productProposeFile, setProductProposeFile] = useState<string>(
+  const [productProposeFile, setProductProposeFile] = useState<string[]>(
     proposeFile,
   );
   const [isUploadingFile, setIsUploadingFile] = useState(false);
@@ -44,11 +44,12 @@ export default function ProductPropose({
       setIsUploadingFile(true);
 
       const fileUrl = await uploadFile(file);
+      const updatedProductProposeFiles = [...productProposeFile, fileUrl];
 
-      setProductProposeFile(fileUrl);
+      setProductProposeFile(updatedProductProposeFiles);
 
       setIsUploadingFile(false);
-      handleUploadProductProposeFile(fileUrl);
+      handleUploadProductProposeFile(updatedProductProposeFiles);
     } catch (err) {
       message.error(`${file.name} falha no envio do arquivo.`);
     }
@@ -56,8 +57,11 @@ export default function ProductPropose({
 
   async function handleRemoveFile(file) {
     if (file.status === 'removed') {
-      setProductProposeFile('');
-      handleRemoveProductPropose();
+      const updatedProductProposeFiles = [...productProposeFile].filter(
+        fileItem => fileItem !== file.url,
+      );
+      setProductProposeFile(updatedProductProposeFiles);
+      handleRemoveProductPropose(updatedProductProposeFiles);
     }
   }
 
@@ -101,7 +105,7 @@ export default function ProductPropose({
           style={{ marginTop: 24, minWidth: 450 }}
           bordered={false}
         >
-          {!isAdminCadist && productProposeFile === '' && (
+          {!isAdminCadist && productProposeFile.length <= 0 && (
             <Result
               status="404"
               subTitle="Parece que ainda não foi feita uma proposta para essa requisição."
@@ -110,22 +114,20 @@ export default function ProductPropose({
           <Dragger
             name="file"
             listType="picture"
-            showUploadList={productProposeFile !== ''}
-            fileList={[
-              {
-                uid: '1',
-                name: productProposeFile
-                  ? productProposeFile.substring(
-                      productProposeFile.lastIndexOf('/') + 1,
-                      productProposeFile.lastIndexOf('?'),
-                    )
-                  : '',
-                url: productProposeFile,
-                thumbUrl: productProposeFile,
-                size: 10,
-                type: 'file',
-              },
-            ]}
+            showUploadList={productProposeFile.length > 0}
+            fileList={productProposeFile.map(fileItem => ({
+              uid: fileItem,
+              name: fileItem
+                ? fileItem.substring(
+                    fileItem.lastIndexOf('/') + 1,
+                    fileItem.lastIndexOf('?'),
+                  )
+                : '',
+              url: fileItem,
+              thumbUrl: fileItem,
+              size: 10,
+              type: 'file',
+            }))}
             onChange={({ file }) => handleRemoveFile(file)}
             customRequest={({ file }) => handleUploadFile(file)}
           >
@@ -155,7 +157,7 @@ export default function ProductPropose({
               }
             />
           )}
-          {productProposeFile !== '' && !isAdminCadist && !answered && (
+          {productProposeFile.length > 0 && !isAdminCadist && !answered && (
             <AproveRecuseButtons>
               <h3>Você aceita essa proposta ?</h3>
 
