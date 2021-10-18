@@ -329,7 +329,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     return {
       props: {
         status,
-        requestsFromApi: requestsWithoutTestRequest,
+        requestsFromApi: requests,
         isAdmin: true,
       },
     };
