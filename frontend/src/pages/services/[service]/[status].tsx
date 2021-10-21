@@ -24,6 +24,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ColumnsType } from 'antd/lib/table';
 import { GetServerSideProps } from 'next';
+import Cookies from 'js-cookie';
 import api from '../../../clients/api';
 
 import { getColumnSearchProps } from '../../../components/ColumnSearch';
@@ -156,6 +157,12 @@ export default function Service({
     </Menu>
   );
 
+  function handleDateOrder(sorter) {
+    if (sorter.columnKey === 'date') {
+      Cookies.set('ortoSetup.tableDateSortOrder', sorter.order);
+    }
+  }
+
   const columns: ColumnsType<any> = [
     {
       title: 'Requisição',
@@ -218,6 +225,9 @@ export default function Service({
       dataIndex: 'date',
       key: 'date',
       sorter: (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+      defaultSortOrder: Cookies.get('ortoSetup.tableDateSortOrder') as
+        | 'ascend'
+        | 'descend',
       render: (date: Date) => (
         <span>{new Intl.DateTimeFormat('pt-BR').format(new Date(date))}</span>
       ),
@@ -281,7 +291,11 @@ export default function Service({
         style={{ marginBottom: 24, minWidth: 450 }}
       />
       <Card bordered={false} style={{ minWidth: 450 }}>
-        <Table columns={columns} dataSource={requests} />
+        <Table
+          columns={columns}
+          dataSource={requests}
+          onChange={(pagination, filters, sorter) => handleDateOrder(sorter)}
+        />
       </Card>
     </>
   );
@@ -329,7 +343,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     return {
       props: {
         status,
-        requestsFromApi: requests,
+        requestsFromApi: requestsWithoutTestRequest,
         isAdmin: true,
       },
     };
