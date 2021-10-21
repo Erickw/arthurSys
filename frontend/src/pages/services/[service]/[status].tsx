@@ -36,12 +36,14 @@ interface ServiceProps {
   status: string;
   requestsFromApi: RequestProps[];
   isAdmin: boolean;
+  dateSortOrder: 'ascend' | 'descend';
 }
 
 export default function Service({
   status,
   requestsFromApi,
   isAdmin,
+  dateSortOrder,
 }: ServiceProps): JSX.Element {
   const { push } = useRouter();
   const [requests, setRequests] = useState<RequestProps[] | undefined>(
@@ -225,9 +227,7 @@ export default function Service({
       dataIndex: 'date',
       key: 'date',
       sorter: (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-      defaultSortOrder: Cookies.get('ortoSetup.tableDateSortOrder') as
-        | 'ascend'
-        | 'descend',
+      defaultSortOrder: dateSortOrder,
       render: (date: Date) => (
         <span>{new Intl.DateTimeFormat('pt-BR').format(new Date(date))}</span>
       ),
@@ -305,7 +305,11 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
   query: { status },
 }) => {
-  const { 'ortoSetup.token': token, 'ortoSetup.user': userJson } = req.cookies;
+  const {
+    'ortoSetup.token': token,
+    'ortoSetup.user': userJson,
+    'ortoSetup.tableDateSortOrder': dateSortOrder,
+  } = req.cookies;
 
   if (!token) {
     return {
@@ -345,6 +349,7 @@ export const getServerSideProps: GetServerSideProps = async ({
         status,
         requestsFromApi: requestsWithoutTestRequest,
         isAdmin: true,
+        dateSortOrder,
       },
     };
   }
@@ -359,6 +364,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   }));
 
   return {
-    props: { status, requestsFromApi: requests, isAdmin: false },
+    props: { status, requestsFromApi: requests, isAdmin: false, dateSortOrder },
   };
 };
