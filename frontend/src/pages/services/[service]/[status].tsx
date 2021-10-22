@@ -175,12 +175,13 @@ export default function Service({
         <Button
           type="primary"
           onClick={() => push(`/request-info/${requestId}`)}
+          style={{ maxWidth: '162px' }}
         >
           Vizualizar requisição
           {((isAdmin && !!request?.hasNewCommentUser) ||
             (!isAdmin && !!request?.hasNewCommentAdmin)) && (
             <Tooltip title="Essa requisição tem um comentário não lido.">
-              <ExclamationCircleTwoTone />
+              <ExclamationCircleTwoTone style={{ marginLeft: '1.7px' }} />
             </Tooltip>
           )}
         </Button>
