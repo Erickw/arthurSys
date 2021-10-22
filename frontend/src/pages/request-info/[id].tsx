@@ -2,13 +2,13 @@ import { Card, Descriptions, message, PageHeader } from 'antd';
 import React from 'react';
 import { GetServerSideProps } from 'next';
 import { convertSnakeCaseToNormal } from '../../utils/utils';
-import Comments from '../../components/ProductPropose/Comments';
+import Comments from '../../components/RequestInfo/Comments';
 
 import { RequestInfo as RequestDisplay } from '../../styles/pages/request-info';
-import ProductPropose from '../../components/ProductPropose/ProductPropose';
+import ProductPropose from '../../components/RequestInfo/ProductPropose';
 import { getApiClient } from '../../clients/axios';
 import api from '../../clients/api';
-import AditionalFiles from '../../components/ProductPropose/AditionalFiles';
+import AditionalFiles from '../../components/RequestInfo/AditionalFiles';
 
 interface CommentProps {
   id: string;
