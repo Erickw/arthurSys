@@ -12,6 +12,7 @@ type RequestProps = {
   address: Address;
   fieldsValues: RequestGroupProps[] | '';
   productPropose: ProductPropose;
+  responsible?: Responsible;
   additionalFields?: string[] | string;
   hasNewCommentAdmin: boolean;
   hasNewCommentUser: boolean;
@@ -40,4 +41,9 @@ type ProductPropose = {
   files: string[];
   answered: boolean;
   accepted: boolean;
+};
+
+type Responsible = {
+  id: string;
+  name: string;
 };

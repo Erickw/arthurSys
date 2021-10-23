@@ -9,6 +9,7 @@ import ProductPropose from '../../components/RequestInfo/ProductPropose';
 import { getApiClient } from '../../clients/axios';
 import api from '../../clients/api';
 import AditionalFiles from '../../components/RequestInfo/AditionalFiles';
+import { useAuth } from '../../hooks/auth';
 
 interface CommentProps {
   id: string;
@@ -30,6 +31,8 @@ export default function RequestInfo({
   comments,
   isAdminCadist,
 }: RequestInfoParams): JSX.Element {
+  const { user } = useAuth();
+
   function displayCorrectFormatData(item) {
     const data = item;
     if (Array.isArray(data)) {
@@ -74,6 +77,11 @@ export default function RequestInfo({
     requestToUpdate.productPropose.files = filesUrl;
     requestToUpdate.status = 'aguardando-aprovacao';
 
+    requestToUpdate.responsible = {
+      id: user.id,
+      name: user.name,
+    };
+
     await api.put(`/requests/${request.id}`, requestToUpdate);
     message.success(`Proposta da requisição enviada com sucesso!`);
   }
@@ -81,6 +89,10 @@ export default function RequestInfo({
   async function handleRemoveProductProposeFile(filesUrl: string[]) {
     const requestToUpdate = request;
     requestToUpdate.productPropose.files = filesUrl;
+
+    if (filesUrl.length === 0) {
+      requestToUpdate.responsible = undefined;
+    }
 
     await api.put(`/requests/${request.id}`, requestToUpdate);
     message.success(`Proposta da requisição foi removida.`);
@@ -109,6 +121,16 @@ export default function RequestInfo({
   async function handleUploadAditionalFile(files) {
     const requestToUpdate = request;
     requestToUpdate.additionalFields = files;
+
+    await api.put(`/requests/${request.id}`, requestToUpdate);
+  }
+
+  async function handleProductProposeResponsible(id: string, name: string) {
+    const requestToUpdate = request;
+    requestToUpdate.responsible = {
+      id,
+      name,
+    };
 
     await api.put(`/requests/${request.id}`, requestToUpdate);
   }
@@ -241,10 +263,8 @@ export default function RequestInfo({
         handleUploadAditionalFile={files => handleUploadAditionalFile(files)}
       />
       <ProductPropose
+        request={request}
         isAdminCadist={isAdminCadist}
-        proposeFile={request.productPropose.files}
-        proposeAnswered={request.productPropose.answered}
-        proposeAccepted={request.productPropose.accepted}
         handleUploadProductProposeFile={fileUrl =>
           handleUploadProductProposeFile(fileUrl)
         }
@@ -256,6 +276,9 @@ export default function RequestInfo({
         }
         handleChangeProductProposeAnswer={() =>
           handleChangeProductProposeAnswer()
+        }
+        handleProductProposeResponsible={(id, name) =>
+          handleProductProposeResponsible(id, name)
         }
       />
 

@@ -1,43 +1,63 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ExclamationCircleOutlined, InboxOutlined } from '@ant-design/icons';
-import { Card, Upload, Result, message, Spin, Button, Modal } from 'antd';
+import {
+  Card,
+  Upload,
+  Result,
+  message,
+  Spin,
+  Button,
+  Modal,
+  Select,
+} from 'antd';
 import {
   AproveRecuseButtons,
   ProductProposeContainer,
 } from '../../styles/pages/request-info';
 import uploadFile from '../../utils/uploadFile';
+import api from '../../clients/api';
+import { useAuth } from '../../hooks/auth';
 
+const { Option } = Select;
 const { Dragger } = Upload;
 const { confirm } = Modal;
 
 interface ProductProposeParams {
+  request: RequestProps;
   isAdminCadist: boolean;
-  proposeFile: string[];
-  proposeAnswered: boolean;
-  proposeAccepted: boolean;
   handleUploadProductProposeFile: (filesUrl: string[]) => void;
   handleRemoveProductPropose: (filesUrl: string[]) => void;
   handleAcceptProductPropose: (answer: boolean) => void;
   handleChangeProductProposeAnswer: () => void;
+  handleProductProposeResponsible: (id: string, name: string) => void;
+}
+
+interface User {
+  id: string;
+  name: string;
+  type: 'admin' | 'cadista' | 'cliente';
 }
 
 export default function ProductPropose({
+  request,
   isAdminCadist,
-  proposeFile,
-  proposeAnswered,
-  proposeAccepted,
   handleUploadProductProposeFile,
   handleRemoveProductPropose,
   handleAcceptProductPropose,
   handleChangeProductProposeAnswer,
+  handleProductProposeResponsible,
 }: ProductProposeParams): JSX.Element {
+  const { user } = useAuth();
+
   const [productProposeFile, setProductProposeFile] = useState<string[]>(
-    proposeFile,
+    request.productPropose.files,
   );
+  const [allAdmins, setAdmins] = useState<User[]>([]);
   const [isUploadingFile, setIsUploadingFile] = useState(false);
 
-  const [answered, setAnswered] = useState(proposeAnswered);
-  const [accepted, setAccepted] = useState(proposeAccepted);
+  const [answered, setAnswered] = useState(request.productPropose.answered);
+  const [accepted, setAccepted] = useState(request.productPropose.accepted);
+  const [responsible, setResponsible] = useState(request.responsible.id);
 
   async function handleUploadFile(file) {
     try {
@@ -45,6 +65,8 @@ export default function ProductPropose({
 
       const fileUrl = await uploadFile(file);
       const updatedProductProposeFiles = [...productProposeFile, fileUrl];
+
+      setResponsible(user.id);
 
       setProductProposeFile(updatedProductProposeFiles);
 
@@ -97,6 +119,23 @@ export default function ProductPropose({
     });
   }
 
+  function handleResponsible(id: string) {
+    const adminSelected = allAdmins.find(admin => admin.id === id);
+    handleProductProposeResponsible(adminSelected.id, adminSelected.name);
+    setResponsible(id);
+  }
+
+  useEffect(() => {
+    async function getAllUsers() {
+      const { data: allUsers } = await api.get('/users');
+      const adminUsers = allUsers.filter(
+        userItem => userItem.type === 'admin' || userItem.type === 'cadista',
+      );
+      setAdmins(adminUsers);
+    }
+    getAllUsers();
+  }, []);
+
   return (
     <Spin spinning={isUploadingFile} tip="Fazendo upload da prosposta.">
       <ProductProposeContainer isClient={!isAdminCadist}>
@@ -141,7 +180,21 @@ export default function ProductPropose({
               Você deve fazer o upload da proposta do produto aqui.
             </p>
           </Dragger>
-
+          {productProposeFile.length > 0 && (
+            <Select
+              style={{ width: '100%', marginTop: '1rem' }}
+              placeholder="Escolha um responsável"
+              optionFilterProp="children"
+              value={responsible}
+              onSelect={value => handleResponsible(value.toString())}
+            >
+              {allAdmins.map(adminUser => (
+                <Option key={adminUser.id} value={adminUser.id}>
+                  {adminUser.name}
+                </Option>
+              ))}
+            </Select>
+          )}
           {answered && (
             <Result
               status={accepted ? 'success' : 'error'}
