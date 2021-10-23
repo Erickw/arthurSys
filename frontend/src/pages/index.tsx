@@ -286,8 +286,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const {
     'ortoSetup.token': token,
     'ortoSetup.user': userJson,
-    'ortoSetup.tableDateSortOrder': dateSortOrder,
+    'ortoSetup.tableDateSortOrder': dateSortOrderFromCookies,
   } = req.cookies;
+
+  const dateSortOrder =
+    dateSortOrderFromCookies === undefined ? null : dateSortOrderFromCookies;
 
   if (!token) {
     return {
