@@ -217,6 +217,20 @@ export default function Service({
       ...getColumnSearchProps('patientName'),
     },
     {
+      title: 'Responsável',
+      dataIndex: ['responsible', 'name'],
+      key: 'responsible.name',
+      responsive: ['lg'],
+      ...getColumnSearchProps('responsible.name'),
+      onFilter: (value: string, record) =>
+        record.responsible.name
+          ? record.responsible.name
+              .toString()
+              .toLowerCase()
+              .includes(value.toLowerCase())
+          : '',
+    },
+    {
       title: 'Produto',
       dataIndex: 'productName',
       key: 'productName',
