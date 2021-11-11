@@ -75,7 +75,10 @@ export default function RequestInfo({
   async function handleUploadProductProposeFile(filesUrl: string[]) {
     const requestToUpdate = request;
     requestToUpdate.productPropose.files = filesUrl;
-    requestToUpdate.status = 'aguardando-aprovacao';
+
+    if (requestToUpdate.status !== 'finalizado') {
+      requestToUpdate.status = 'aguardando-aprovacao';
+    }
 
     requestToUpdate.responsible = {
       id: user.id,
