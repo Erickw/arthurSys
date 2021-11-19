@@ -14,6 +14,10 @@ class Request {
     this.fieldsValues = payload.fieldsValues || "";
     this.productPropose = payload.productPropose || "";
     this.additionalFields = payload.additionalFields || "";
+    this.hasNewCommentAdmin = payload.hasNewCommentAdmin || "";
+    this.hasNewCommentUser = payload.hasNewCommentUser || "";
+    this.responsible = payload.responsible || "";
+    this.productName = payload.productName || "";
   }
 
   requestInfo() {
@@ -31,6 +35,10 @@ class Request {
       fieldsValues: this.fieldsValues,
       productPropose: this.productPropose,
       additionalFields: this.additionalFields,
+      hasNewCommentAdmin: this.hasNewCommentAdmin,
+      hasNewCommentUser: this.hasNewCommentUser,
+      responsible: this.responsible,
+      productName: this.productName,
     };
   }
 }
