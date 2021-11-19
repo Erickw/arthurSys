@@ -8,8 +8,8 @@ const Request = require("../models/Request");
 
 class RequestsByProduct {
   async index(req, res) {
-    const {userId, productName} = req.params;
-    const snapshot = await requestsCollection.where("userId", "==", userId).where("productName", "==", productName).get();
+    const {userId, productId} = req.params;
+    const snapshot = await requestsCollection.where("userId", "==", userId).where("productId", "==", productId).get();
     const requests = [];
 
     if (snapshot.empty) {

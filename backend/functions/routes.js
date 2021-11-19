@@ -32,7 +32,7 @@ routes.delete("/users/:id", userController.delete);
 // Requests
 routes.get("/requests", requestController.index);
 routes.get("/requests/:userId/:status", requestsByStatusByUserController.index);
-routes.get("/requests/:userId/:productName", requestsByProductController.index);
+routes.get("/requests/:userId/:productId", requestsByProductController.index);
 routes.get("/requests/:status", requestsByStatusController.index);
 routes.post("/requests", requestController.store);
 routes.put("/requests/:id", requestController.update);
