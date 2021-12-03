@@ -35,6 +35,7 @@ const { confirm } = Modal;
 interface ServiceProps {
   status: string;
   requestsFromApi: RequestProps[];
+  productName: string;
   isAdmin: boolean;
   dateSortOrder: 'ascend' | 'descend';
 }
@@ -42,6 +43,7 @@ interface ServiceProps {
 export default function Service({
   status,
   requestsFromApi,
+  productName,
   isAdmin,
   dateSortOrder,
 }: ServiceProps): JSX.Element {
@@ -69,16 +71,19 @@ export default function Service({
 
   function displayPageTitle() {
     if (status === 'novo') {
-      return 'Requisições novas';
+      return `Requisições novas`;
+    }
+    if (status === 'aguardando-aprovacao') {
+      return `Requisições aguardando aprovação`;
     }
     if (status === 'em-andamento') {
-      return 'Requisições em andamento';
+      return `Requisições em andamento`;
     }
     if (status === 'finalizado') {
-      return 'Requisições finalizadas';
+      return `Requisições finalizadas`;
     }
     if (status === 'cancelado') {
-      return 'Requisições canceladas';
+      return `Requisições canceladas`;
     }
 
     return 'Requisições';
@@ -172,19 +177,30 @@ export default function Service({
       key: 'id',
       responsive: ['lg'],
       render: (requestId: string, request: RequestProps) => (
-        <Button
-          type="primary"
-          onClick={() => push(`/request-info/${requestId}`)}
-          style={{ maxWidth: '162px' }}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
         >
-          Vizualizar requisição
+          <Button
+            type="primary"
+            onClick={() => push(`/request-info/${requestId}`)}
+            style={{ maxWidth: '162px' }}
+          >
+            Vizualizar requisição
+          </Button>
           {((isAdmin && !!request?.hasNewCommentUser) ||
             (!isAdmin && !!request?.hasNewCommentAdmin)) && (
             <Tooltip title="Essa requisição tem um comentário não lido.">
-              <ExclamationCircleTwoTone style={{ marginLeft: '1.7px' }} />
+              <ExclamationCircleTwoTone
+                twoToneColor="#fc0900"
+                style={{ marginLeft: '5px' }}
+              />
             </Tooltip>
           )}
-        </Button>
+        </div>
       ),
     },
     {
@@ -302,14 +318,16 @@ export default function Service({
     <>
       <PageHeader
         title={displayPageTitle()}
+        subTitle={productName}
         ghost={false}
-        style={{ marginBottom: 24, minWidth: 450 }}
+        style={{ minWidth: 450 }}
       />
       <Card bordered={false} style={{ minWidth: 450 }}>
         <Table
           columns={columns}
           dataSource={requests}
           onChange={(pagination, filters, sorter) => handleDateOrder(sorter)}
+          size="small"
         />
       </Card>
     </>
@@ -318,8 +336,13 @@ export default function Service({
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
-  query: { status },
+  query,
 }) => {
+  const { slug } = query;
+
+  const status = slug.length > 1 ? slug[1] : slug[0];
+  const productId = slug.length > 1 ? slug[0] : undefined;
+
   const {
     'ortoSetup.token': token,
     'ortoSetup.user': userJson,
@@ -347,14 +370,18 @@ export const getServerSideProps: GetServerSideProps = async ({
   const productsFromApi = productsResponse.data;
 
   if (user.type === 'admin' || user.type === 'cadista') {
-    const requestsResponse = await apiCLient(`/requests/${status}`);
+    const productName = productsFromApi.find(
+      product => product.id === productId,
+    ).name;
 
-    const requests = requestsResponse.data.map(request => ({
+    const { data: requestsResponse } = await apiCLient(
+      `/requestsbytypes/?productId=${productId}&status=${status}`,
+    );
+
+    const requests = requestsResponse.map(request => ({
       ...request,
       key: request.id,
-      productName: productsFromApi.find(
-        product => product.id === request.productId,
-      ).name,
+      productName,
     }));
 
     // filter request for test
@@ -365,7 +392,8 @@ export const getServerSideProps: GetServerSideProps = async ({
     return {
       props: {
         status,
-        requestsFromApi: requestsWithoutTestRequest,
+        requestsFromApi: requests,
+        productName,
         isAdmin: true,
         dateSortOrder,
       },
@@ -382,6 +410,11 @@ export const getServerSideProps: GetServerSideProps = async ({
   }));
 
   return {
-    props: { status, requestsFromApi: requests, isAdmin: false, dateSortOrder },
+    props: {
+      status,
+      requestsFromApi: requests,
+      isAdmin: false,
+      dateSortOrder,
+    },
   };
 };

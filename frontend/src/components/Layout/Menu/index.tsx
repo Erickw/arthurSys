@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Menu as MenuAntd } from 'antd';
 import { useRouter } from 'next/router';
@@ -8,10 +8,15 @@ import {
   PieChartOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
+import Cookies from 'js-cookie';
+
+import RequestsMenu from './RequestsMenu';
+
 import Logo from '../../Logo';
 import { useAuth } from '../../../hooks/auth';
 
 import { LogoDiv } from '../../../styles/components/menu';
+import { getApiClient } from '../../../clients/axios';
 
 const { Item, SubMenu } = MenuAntd;
 
@@ -33,61 +38,34 @@ const Menu: React.FC<MenuProps> = ({ theme }: MenuProps) => {
   const { push } = useRouter();
 
   return (
-    <MenuAntd mode="inline" theme={theme}>
-      <LogoDiv onClick={() => push('/')}>
-        <Logo />
-      </LogoDiv>
+    <>
+      <MenuAntd mode="vertical" theme={theme}>
+        <LogoDiv onClick={() => push('/')}>
+          <Logo />
+        </LogoDiv>
+      </MenuAntd>
 
-      {services.map((service, index) => {
-        return (
-          <SubMenu
-            key={index.toString()}
-            title={service.name}
-            icon={<PieChartOutlined />}
-          >
+      <RequestsMenu theme={theme} />
+
+      <MenuAntd mode="inline" theme={theme}>
+        <Item title="Nova solicitaçã" icon={<CreditCardOutlined />}>
+          <Link href="/products">Nova solicitação</Link>
+        </Item>
+        {user.type === 'admin' && (
+          <SubMenu title="Área administrativa" icon={<TeamOutlined />}>
             <Item>
-              <Link href={`/services/${service.route}/novo`}>Novos</Link>
+              <Link href="/new-product">Criar novo produto</Link>
             </Item>
             <Item>
-              <Link href={`/services/${service.route}/aguardando-aprovacao`}>
-                Aguardando Aprovação
-              </Link>
-            </Item>
-            <Item>
-              <Link href={`/services/${service.route}/em-andamento`}>
-                Em Andamento
-              </Link>
-            </Item>
-            <Item>
-              <Link href={`/services/${service.route}/finalizado`}>
-                Finalizados
-              </Link>
-            </Item>
-            <Item>
-              <Link href={`/services/${service.route}/cancelado`}>
-                Cancelados
-              </Link>
+              <Link href="/users-table">Tabela de usuários</Link>
             </Item>
           </SubMenu>
-        );
-      })}
-      <Item title="Nova solicitaçã" icon={<CreditCardOutlined />}>
-        <Link href="/products">Nova solicitação</Link>
-      </Item>
-      {user.type === 'admin' && (
-        <SubMenu title="Área administrativa" icon={<TeamOutlined />}>
-          <Item>
-            <Link href="/new-product">Criar novo produto</Link>
-          </Item>
-          <Item>
-            <Link href="/users-table">Tabela de usuários</Link>
-          </Item>
-        </SubMenu>
-      )}
-      <Item icon={<SettingOutlined />}>
-        <Link href="/settings">Configuracões</Link>
-      </Item>
-    </MenuAntd>
+        )}
+        <Item icon={<SettingOutlined />}>
+          <Link href="/settings">Configuracões</Link>
+        </Item>
+      </MenuAntd>
+    </>
   );
 };
 
