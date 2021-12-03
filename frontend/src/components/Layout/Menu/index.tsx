@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { Menu as MenuAntd } from 'antd';
 import { useRouter } from 'next/router';
 import {
   CreditCardOutlined,
   TeamOutlined,
-  PieChartOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
-import Cookies from 'js-cookie';
 
 import RequestsMenu from './RequestsMenu';
 
@@ -16,16 +14,8 @@ import Logo from '../../Logo';
 import { useAuth } from '../../../hooks/auth';
 
 import { LogoDiv } from '../../../styles/components/menu';
-import { getApiClient } from '../../../clients/axios';
 
 const { Item, SubMenu } = MenuAntd;
-
-const services = [
-  {
-    name: 'Solicitações',
-    route: 'solicitacoes',
-  },
-];
 
 type Menutheme = 'light' | 'dark';
 
