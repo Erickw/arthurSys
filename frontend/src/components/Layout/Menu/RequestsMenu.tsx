@@ -110,8 +110,8 @@ export default function RequestsMenu({
                   >
                     {`Finalizados (${
                       productsRequestsAmount[product.id] &&
-                      productsRequestsAmount[product.id].Finalizados
-                        ? productsRequestsAmount[product.id].Finalizados
+                      productsRequestsAmount[product.id].finalizado
+                        ? productsRequestsAmount[product.id].finalizado
                         : '0'
                     })`}
                   </Link>
@@ -122,8 +122,8 @@ export default function RequestsMenu({
                   >
                     {`Cancelados (${
                       productsRequestsAmount[product.id] &&
-                      productsRequestsAmount[product.id].Cancelados
-                        ? productsRequestsAmount[product.id].Cancelados
+                      productsRequestsAmount[product.id].cancelado
+                        ? productsRequestsAmount[product.id].cancelado
                         : '0'
                     })`}
                   </Link>
