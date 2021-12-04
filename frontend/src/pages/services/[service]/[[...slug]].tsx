@@ -29,6 +29,7 @@ import api from '../../../clients/api';
 
 import { getColumnSearchProps } from '../../../components/ColumnSearch';
 import { getApiClient } from '../../../clients/axios';
+import { useAuth } from '../../../hooks/auth';
 
 const { confirm } = Modal;
 
@@ -48,6 +49,7 @@ export default function Service({
   dateSortOrder,
 }: ServiceProps): JSX.Element {
   const { push } = useRouter();
+  const { user } = useAuth();
   const [requests, setRequests] = useState<RequestProps[] | undefined>(
     requestsFromApi,
   );
@@ -93,8 +95,14 @@ export default function Service({
     requestToUpdate: RequestProps,
     statusToChange: string,
   ) {
-    api.put(`requests/${requestToUpdate.id}`, {
-      ...requestToUpdate,
+    const requestUpdated = requestToUpdate;
+    if (statusToChange === 'em-andamento') {
+      requestUpdated.responsible.id = user.id;
+      requestUpdated.responsible.name = user.name;
+    }
+
+    api.put(`requests/${requestUpdated.id}`, {
+      ...requestUpdated,
       status: statusToChange,
     });
     setRequests(oldState =>
