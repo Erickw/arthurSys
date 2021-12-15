@@ -31,6 +31,7 @@ import api from '../clients/api';
 
 import { getColumnSearchProps } from '../components/ColumnSearch';
 import { getApiClient } from '../clients/axios';
+import { useAuth } from '../hooks/auth';
 
 const { confirm } = Modal;
 interface ServiceProps {
@@ -45,6 +46,7 @@ export default function Home({
   dateSortOrder,
 }: ServiceProps): JSX.Element {
   const { push } = useRouter();
+  const { user } = useAuth();
   const [requests, setRequests] = useState<RequestProps[] | undefined>();
 
   function deleteRequestModal(requestId: string) {
@@ -68,10 +70,18 @@ export default function Home({
     requestToUpdate: RequestProps,
     statusToChange: string,
   ) {
-    api.put(`requests/${requestToUpdate.id}`, {
-      ...requestToUpdate,
+    const requestUpdated = requestToUpdate;
+    if (statusToChange === 'em-andamento') {
+      requestUpdated.responsible = {
+        id: user.id,
+        name: user.name,
+      };
+    }
+    api.put(`requests/${requestUpdated.id}`, {
+      ...requestUpdated,
       status: statusToChange,
     });
+
     setRequests(oldState =>
       oldState.filter(request => request.id !== requestToUpdate.id),
     );

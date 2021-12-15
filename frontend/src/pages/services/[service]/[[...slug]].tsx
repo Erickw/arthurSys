@@ -97,10 +97,11 @@ export default function Service({
   ) {
     const requestUpdated = requestToUpdate;
     if (statusToChange === 'em-andamento') {
-      requestUpdated.responsible.id = user.id;
-      requestUpdated.responsible.name = user.name;
+      requestUpdated.responsible = {
+        id: user.id,
+        name: user.name,
+      };
     }
-
     api.put(`requests/${requestUpdated.id}`, {
       ...requestUpdated,
       status: statusToChange,
