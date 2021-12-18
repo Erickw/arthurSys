@@ -37,16 +37,18 @@ export default function RequestsMenu({
       const amount = {};
 
       requestsResponse.forEach(request => {
-        if (
-          amount[request.productId] &&
-          amount[request.productId][request.status]
-        ) {
-          amount[request.productId][request.status] += 1;
-        } else if (amount[request.productId]) {
-          amount[request.productId][request.status] = 1;
-        } else {
-          amount[request.productId] = {};
-          amount[request.productId][request.status] = 1;
+        if (request.id !== '11TY57BI') {
+          if (
+            amount[request.productId] &&
+            amount[request.productId][request.status]
+          ) {
+            amount[request.productId][request.status] += 1;
+          } else if (amount[request.productId]) {
+            amount[request.productId][request.status] = 1;
+          } else {
+            amount[request.productId] = {};
+            amount[request.productId][request.status] = 1;
+          }
         }
       });
 
