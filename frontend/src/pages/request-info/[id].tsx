@@ -107,6 +107,8 @@ export default function RequestInfo({
     requestToUpdate.productPropose.accepted = answer;
     if (answer) {
       requestToUpdate.status = 'finalizado';
+    } else {
+      requestToUpdate.status = 'em-andamento';
     }
 
     await api.put(`/requests/${request.id}`, requestToUpdate);
@@ -147,6 +149,8 @@ export default function RequestInfo({
     } else {
       updateRequest.hasNewCommentUser = true;
     }
+
+    updateRequest.status = 'em-andamento';
 
     await api.put(`/requests/${request.id}`, updateRequest);
     await api.post(`/comments/request/${request.id}`, commentData);
