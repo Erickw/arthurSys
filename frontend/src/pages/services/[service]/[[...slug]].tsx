@@ -18,7 +18,7 @@ import {
 import {
   DownOutlined,
   ExclamationCircleOutlined,
-  ExclamationCircleTwoTone,
+  MessageTwoTone,
 } from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -203,7 +203,7 @@ export default function Service({
           {((isAdmin && !!request?.hasNewCommentUser) ||
             (!isAdmin && !!request?.hasNewCommentAdmin)) && (
             <Tooltip title="Essa requisição tem um comentário não lido.">
-              <ExclamationCircleTwoTone
+              <MessageTwoTone
                 twoToneColor="#fc0900"
                 style={{ marginLeft: '5px' }}
               />
