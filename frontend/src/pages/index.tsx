@@ -194,13 +194,18 @@ export default function Home({
       key: 'patientName',
       render: (text, record) =>
         typeof window !== 'undefined' && window.innerWidth < 991 ? (
-          <>
-            {record.userName}
-            <br />
-            {record.patientName}
-            <br />
-            {record.productName}
-          </>
+          <Tooltip title="Ver requisição">
+            <Button
+              onClick={() => push(`/request-info/${record.id}`)}
+              style={{ height: '100%' }}
+            >
+              {record.userName}
+              <br />
+              {record.patientName}
+              <br />
+              {record.productName}
+            </Button>
+          </Tooltip>
         ) : (
           record.patientName
         ),
@@ -232,9 +237,6 @@ export default function Home({
       responsive: ['sm'],
       render: (text, record) => (
         <Space size="middle">
-          {typeof window !== 'undefined' && window.innerWidth < 991 && (
-            <Link href={`/request-info/${record.id}`}>Requisição</Link>
-          )}
           <Link href={`/edit-request/${record.id}`}>Editar</Link>
           <Dropdown overlay={changeStatusDropdown(record)} trigger={['click']}>
             <a>
