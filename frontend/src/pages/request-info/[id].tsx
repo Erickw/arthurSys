@@ -1,6 +1,7 @@
 import { Card, Descriptions, message, PageHeader } from 'antd';
 import React from 'react';
 import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import { convertSnakeCaseToNormal } from '../../utils/utils';
 import Comments from '../../components/RequestInfo/Comments';
 
@@ -31,6 +32,7 @@ export default function RequestInfo({
   comments,
   isAdminCadist,
 }: RequestInfoParams): JSX.Element {
+  const { back } = useRouter();
   const { user } = useAuth();
 
   function displayCorrectFormatData(item) {
@@ -162,6 +164,7 @@ export default function RequestInfo({
         title={`Requisição ${request.id}`}
         ghost={false}
         subTitle={product.name}
+        onBack={() => back()}
         style={{ marginBottom: 24, minWidth: 450 }}
       />
       <RequestDisplay>
