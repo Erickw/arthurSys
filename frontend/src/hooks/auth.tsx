@@ -142,7 +142,8 @@ const AuthProvider: React.FC = ({ children }: AuthProviderProps) => {
     setUser({} as User);
     Cookies.remove('ortoSetup.token');
     Cookies.remove('ortoSetup.user');
-  }, []);
+    push('/login');
+  }, [push]);
 
   return (
     <AuthContext.Provider
