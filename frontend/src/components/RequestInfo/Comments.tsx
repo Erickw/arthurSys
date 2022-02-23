@@ -17,7 +17,7 @@ import {
 } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import api from '../../clients/api';
 import { useAuth } from '../../hooks/auth';
 import { getTypeUserColor } from '../../utils/utils';
@@ -32,6 +32,7 @@ interface CommentType {
 interface CommentProps {
   comments: CommentType[];
   requestId: string;
+  users: User[];
   handleAddComment: (commentData: Omit<CommentType, 'id'>) => Promise<void>;
 }
 
@@ -46,14 +47,13 @@ const { confirm } = Modal;
 export default function Comments({
   comments,
   requestId,
+  users,
   handleAddComment,
 }: CommentProps): JSX.Element {
   const { user } = useAuth();
   const [form] = useForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoadingComments, setIsLoadingComments] = useState(true);
   const [commentsState, setCommentsState] = useState<CommentType[]>(comments);
-  const [users, setUsers] = useState<User[]>([]);
 
   async function loadComments() {
     const { data: newComments } = await api.get(
@@ -101,22 +101,11 @@ export default function Comments({
     });
   }
 
-  useEffect(() => {
-    async function loadCommentUsers() {
-      const { data: usersFromApi } = await api.get('/users');
-      setUsers(usersFromApi);
-      setIsLoadingComments(false);
-    }
-
-    loadCommentUsers();
-  }, []);
-
   return (
     <Card
       title="Comentários"
       style={{ marginTop: 24, minWidth: 450 }}
       bordered={false}
-      loading={isLoadingComments}
     >
       {commentsState && commentsState.length > 0 ? (
         commentsState.map(commentItem => (

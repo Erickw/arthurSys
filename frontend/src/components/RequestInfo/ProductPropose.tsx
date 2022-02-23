@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ExclamationCircleOutlined, InboxOutlined } from '@ant-design/icons';
 import {
   Card,
@@ -15,7 +15,6 @@ import {
   ProductProposeContainer,
 } from '../../styles/pages/request-info';
 import uploadFile from '../../utils/uploadFile';
-import api from '../../clients/api';
 import { useAuth } from '../../hooks/auth';
 
 const { Option } = Select;
@@ -25,6 +24,7 @@ const { confirm } = Modal;
 interface ProductProposeParams {
   request: RequestProps;
   isAdminCadist: boolean;
+  allAdmins: User[];
   handleUploadProductProposeFile: (filesUrl: string[]) => void;
   handleRemoveProductPropose: (filesUrl: string[]) => void;
   handleAcceptProductPropose: (answer: boolean) => void;
@@ -41,6 +41,7 @@ interface User {
 export default function ProductPropose({
   request,
   isAdminCadist,
+  allAdmins,
   handleUploadProductProposeFile,
   handleRemoveProductPropose,
   handleAcceptProductPropose,
@@ -52,7 +53,6 @@ export default function ProductPropose({
   const [productProposeFile, setProductProposeFile] = useState<string[]>(
     request.productPropose.files,
   );
-  const [allAdmins, setAdmins] = useState<User[]>([]);
   const [isUploadingFile, setIsUploadingFile] = useState(false);
 
   const [answered, setAnswered] = useState(request.productPropose.answered);
@@ -124,17 +124,6 @@ export default function ProductPropose({
     handleProductProposeResponsible(adminSelected.id, adminSelected.name);
     setResponsible(id);
   }
-
-  useEffect(() => {
-    async function getAllUsers() {
-      const { data: allUsers } = await api.get('/users');
-      const adminUsers = allUsers.filter(
-        userItem => userItem.type === 'admin' || userItem.type === 'cadista',
-      );
-      setAdmins(adminUsers);
-    }
-    getAllUsers();
-  }, []);
 
   return (
     <Spin spinning={isUploadingFile} tip="Fazendo upload da prosposta.">

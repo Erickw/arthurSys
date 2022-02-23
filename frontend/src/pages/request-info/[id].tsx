@@ -19,10 +19,17 @@ interface CommentProps {
   createdAt: Date;
 }
 
+interface User {
+  id: string;
+  name: string;
+  type: 'admin' | 'cadista' | 'cliente';
+}
+
 interface RequestInfoParams {
   product: ProductProps;
   request: RequestProps;
   comments: CommentProps[];
+  users: User[];
   isAdminCadist: boolean;
 }
 
@@ -30,6 +37,7 @@ export default function RequestInfo({
   product,
   request,
   comments,
+  users,
   isAdminCadist,
 }: RequestInfoParams): JSX.Element {
   const { back } = useRouter();
@@ -275,6 +283,9 @@ export default function RequestInfo({
       <ProductPropose
         request={request}
         isAdminCadist={isAdminCadist}
+        allAdmins={users.filter(
+          userItem => userItem.type === 'admin' || userItem.type === 'cadista',
+        )}
         handleUploadProductProposeFile={fileUrl =>
           handleUploadProductProposeFile(fileUrl)
         }
@@ -295,6 +306,7 @@ export default function RequestInfo({
       <Comments
         comments={comments}
         requestId={request.id}
+        users={users}
         handleAddComment={commentData => handleAddComment(commentData)}
       />
     </>
@@ -337,6 +349,8 @@ export const getServerSideProps: GetServerSideProps = async ({
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
 
+  const { data: users } = await apiCLient.get('/users');
+
   const isAdminCadist = user.type === 'admin' || user.type === 'cadista';
 
   if (!!request.hasNewCommentAdmin && !isAdminCadist) {
@@ -357,6 +371,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       request,
       product,
       comments: commentsSorted,
+      users,
       isAdminCadist,
     },
   };
