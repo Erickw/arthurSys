@@ -87,7 +87,7 @@ export default function Comments({
       commentId,
     };
     confirm({
-      title: `Você tem certeza que deseja deletar esse comentário ?`,
+      title: `Você tem certeza que deseja deletar essa mensagem ?`,
       icon: <ExclamationCircleOutlined />,
       okText: 'Sim',
       okType: 'danger',
@@ -103,7 +103,7 @@ export default function Comments({
 
   return (
     <Card
-      title="Comentários"
+      title="Solicitar alterações no setup"
       style={{ marginTop: 24, minWidth: 450 }}
       bordered={false}
     >
@@ -141,7 +141,7 @@ export default function Comments({
           />
         ))
       ) : (
-        <Empty description="Sem comentários" />
+        <Empty description="Sem solicitações" />
       )}
       <Form
         layout="vertical"
@@ -154,12 +154,12 @@ export default function Comments({
           rules={[
             {
               required: true,
-              message: 'Por favor, insira o comentário!',
+              message: 'Insira a solicitação',
             },
           ]}
         >
           <Input.Search
-            placeholder="Fazer um comentário"
+            placeholder="Fazer uma solicitação"
             enterButton="Enviar"
             loading={isSubmitting}
             onSearch={() => form.submit()}
