@@ -31,7 +31,9 @@ export default function RequestsMenu({
     async function loadRequestsData() {
       const token = Cookies.get('ortoSetup.token');
       const apiClient = getApiClient(token);
-      const { data: productsResponse } = await apiClient.get('/products');
+      const productsResponse: ProductProps[] = await (
+        await apiClient.get('/products')
+      ).data;
 
       const { data: requestsResponse } = await apiClient.get('/requests');
       const amount = {};
@@ -54,6 +56,7 @@ export default function RequestsMenu({
 
       setProductsRequestsAmount(amount);
 
+      productsResponse.sort((a, b) => a.name.localeCompare(b.name));
       setProducts(productsResponse);
     }
     loadRequestsData();
