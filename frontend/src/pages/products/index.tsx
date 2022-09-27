@@ -165,7 +165,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const apiCLient = getApiClient(token);
 
   const response = await apiCLient.get('/products');
-  const products = response.data;
+  const products = response.data.sort((a, b) => a.name.localeCompare(b.name));
   return {
     props: { products },
   };
